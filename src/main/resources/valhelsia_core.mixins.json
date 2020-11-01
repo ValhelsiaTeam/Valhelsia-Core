@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "package": "net.valhelsia.valhelsia_core.mixin",
+  "refmap": "valhelsia_core.refmap.json",
+  "mixins": [
+    "FlintAndSteelItemMixin",
+    "PotionEntityMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
