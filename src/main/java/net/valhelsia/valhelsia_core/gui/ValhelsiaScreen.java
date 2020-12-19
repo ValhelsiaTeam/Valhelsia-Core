@@ -11,8 +11,11 @@ public class ValhelsiaScreen extends Screen {
 
     public ValhelsiaScreenManager manager;
 
-    public int sizeX;
-    public int sizeY;
+    private int sizeX;
+    private int sizeY;
+
+    private int guiLeft;
+    private int guiTop;
 
     protected ValhelsiaScreen(ITextComponent titleIn, int sizeX, int sizeY) {
         super(titleIn);
@@ -24,7 +27,9 @@ public class ValhelsiaScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        manager.initAllElements();
+        removeAllElements();
+        this.guiLeft = (this.width - this.sizeX) / 2;
+        this.guiTop = (this.height - this.sizeY) / 2;
     }
 
     @Override
@@ -55,11 +60,33 @@ public class ValhelsiaScreen extends Screen {
         return manager.removeElement(element);
     }
 
+    public void removeAllElements() {
+        manager.removeAllElements();
+    }
+
     public int getSizeX() {
         return sizeX;
     }
 
+    public void setSizeX(int sizeX) {
+        this.sizeX = sizeX;
+        this.guiLeft = (this.width - this.sizeX) / 2;
+    }
+
     public int getSizeY() {
         return sizeY;
+    }
+
+    public void setSizeY(int sizeY) {
+        this.sizeY = sizeY;
+        this.guiTop = (this.height - this.sizeY) / 2;
+    }
+
+    public int getGuiLeft() {
+        return guiLeft;
+    }
+
+    public int getGuiTop() {
+        return guiTop;
     }
 }

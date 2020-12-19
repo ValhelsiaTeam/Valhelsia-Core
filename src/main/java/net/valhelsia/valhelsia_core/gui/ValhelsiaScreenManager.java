@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ValhelsiaScreenManager {
 
-    private List<GuiElement> elements = new ArrayList<>();
+    private final List<GuiElement> elements = new ArrayList<>();
 
     protected List<GuiElement> getElements() {
         return elements;
@@ -18,7 +18,10 @@ public class ValhelsiaScreenManager {
         if (elements.contains(element)) {
             return false;
         }
-        return elements.add(element);
+        elements.add(element);
+        initElement(element);
+
+        return true;
     }
 
     protected boolean removeElement(GuiElement element) {
@@ -28,8 +31,12 @@ public class ValhelsiaScreenManager {
         return elements.remove(element);
     }
 
-    protected void initAllElements() {
-        elements.forEach(GuiElement::init);
+    protected void removeAllElements() {
+        elements.clear();
+    }
+
+    protected void initElement(GuiElement element) {
+        getElements().get(getElements().indexOf(element)).init();
     }
 
     protected void renderAllElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
@@ -43,8 +50,10 @@ public class ValhelsiaScreenManager {
 
     protected boolean onClicked(double posX, double posY, int button) {
         for (GuiElement element : elements) {
-            if (element.onClicked(posX, posY, button)) {
-                return true;
+            if (element.isMouseOver(posX, posY)) {
+                if (element.onClicked(posX, posY, button)) {
+                    return true;
+                }
             }
         }
         return false;

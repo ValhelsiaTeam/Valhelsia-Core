@@ -61,6 +61,7 @@ public abstract class GuiElement {
         if (childElements.contains(element)) {
             return false;
         }
+        element.init();
         return childElements.add(element);
     }
 
