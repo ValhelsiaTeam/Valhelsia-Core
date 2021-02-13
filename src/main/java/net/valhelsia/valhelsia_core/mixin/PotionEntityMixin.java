@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 @Mixin(PotionEntity.class)
@@ -28,12 +29,12 @@ public abstract class PotionEntityMixin extends ProjectileItemEntity {
     private void valhelsia_extinguishFires(BlockPos pos, Direction direction, CallbackInfo ci) {
         BlockState state = world.getBlockState(pos);
 
-        for (Map.Entry<Predicate<BlockState>, Pair<BlockState, FireExtinguishHelper.IExtinguishEffect>> entry : FireExtinguishHelper.getExtinguishFireEffects().entrySet()) {
+        for (Map.Entry<Predicate<BlockState>, Pair<Function<BlockState, BlockState>, FireExtinguishHelper.IExtinguishEffect>> entry : FireExtinguishHelper.getExtinguishFireEffects().entrySet()) {
             if (entry.getKey().test(state)) {
                 if (entry.getValue().getValue() != null) {
                     entry.getValue().getValue().playEffect(world, pos);
                 }
-                world.setBlockState(pos, entry.getValue().getKey());
+                world.setBlockState(pos, entry.getValue().getKey().apply(state));
             }
         }
     }

@@ -61,6 +61,10 @@ public class VoxelShapeHelper {
         return rotatedShapes.stream().reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
     }
 
+    public static VoxelShape rotateShapeDirection(VoxelShape shape, Direction direction) {
+        return rotateShape(shape, RotationAmount.getRotationAmountFromDirection(direction));
+    }
+
     public static VoxelShape rotateShapeAxis(VoxelShape shape, Direction.Axis axis) {
         Set<VoxelShape> rotatedShapes = new HashSet<>();
         shape.forEachBox((x1, y1, z1, x2, y2, z2) -> {

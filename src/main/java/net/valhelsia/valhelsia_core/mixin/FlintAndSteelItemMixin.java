@@ -28,7 +28,7 @@ public class FlintAndSteelItemMixin {
                 if (use.getUseEffect() != null) {
                     use.getUseEffect().playEffect(player, world, pos);
                 }
-                world.setBlockState(pos, use.getLitState());
+                world.setBlockState(pos, use.getLitState().apply(state));
 
                 if (player != null) {
                     context.getItem().damageItem(1, player, (playerEntity -> playerEntity.sendBreakAnimation(context.getHand())));

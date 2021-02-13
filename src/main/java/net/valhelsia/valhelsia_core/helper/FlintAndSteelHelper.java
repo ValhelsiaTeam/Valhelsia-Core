@@ -9,17 +9,25 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * Flint And Steel Helper
+ * Valhelsia Core - net.valhelsia.valhelsia_core.helper.FlintAndSteelHelper
+ *
+ * @author Valhelsia Team
+ * @version 16.0.2
+ */
 public class FlintAndSteelHelper {
 
     private static final List<FlintAndSteelUse> USES = new ArrayList<>();
 
-    public static void addUse(Predicate<BlockState> unlitState, BlockState litState, IActionResultType resultType) {
+    public static void addUse(Predicate<BlockState> unlitState, Function<BlockState, BlockState> litState, IActionResultType resultType) {
         addUse(unlitState, litState, null, resultType);
     }
 
-    public static void addUse(Predicate<BlockState> unlitState, BlockState litState, @Nullable IUseEffect useEffect, IActionResultType resultType) {
+    public static void addUse(Predicate<BlockState> unlitState, Function<BlockState, BlockState>  litState, @Nullable IUseEffect useEffect, IActionResultType resultType) {
         USES.add(new FlintAndSteelUse(unlitState, litState, useEffect, resultType));
     }
 
@@ -30,11 +38,11 @@ public class FlintAndSteelHelper {
     public static class FlintAndSteelUse {
 
         private final Predicate<BlockState> unlitState;
-        private final BlockState litState;
+        private final Function<BlockState, BlockState>  litState;
         private final @Nullable IUseEffect useEffect;
         private final IActionResultType resultType;
 
-        private FlintAndSteelUse(Predicate<BlockState> unlitState, BlockState litState, @Nullable IUseEffect useEffect, IActionResultType resultType) {
+        private FlintAndSteelUse(Predicate<BlockState> unlitState, Function<BlockState, BlockState>  litState, @Nullable IUseEffect useEffect, IActionResultType resultType) {
             this.unlitState = unlitState;
             this.litState = litState;
             this.useEffect = useEffect;
@@ -45,7 +53,7 @@ public class FlintAndSteelHelper {
             return unlitState;
         }
 
-        public BlockState getLitState() {
+        public Function<BlockState, BlockState>  getLitState() {
             return litState;
         }
 
