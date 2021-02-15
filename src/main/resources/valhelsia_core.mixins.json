@@ -5,6 +5,7 @@
   "package": "net.valhelsia.valhelsia_core.mixin",
   "refmap": "valhelsia_core.refmap.json",
   "mixins": [
+    "FireBlockAccessor",
     "FlintAndSteelItemMixin",
     "PotionEntityMixin"
   ],

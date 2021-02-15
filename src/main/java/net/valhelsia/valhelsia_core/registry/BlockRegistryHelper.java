@@ -12,6 +12,7 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.valhelsia.valhelsia_core.helper.FlammableHelper;
 
 /**
  * Block Registry Helper
@@ -24,6 +25,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
 
     private ItemGroup defaultGroup = null;
+    private final FlammableHelper flammableHelper = new FlammableHelper();
 
     @Override
     public IForgeRegistry<Block> getRegistry() {
@@ -40,6 +42,10 @@ public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
 
     public ItemRegistryHelper getItemRegistryHelper() {
         return this.getRegistryManager().getItemHelper();
+    }
+
+    public FlammableHelper getFlammableHelper() {
+        return flammableHelper;
     }
 
     public <T extends Block> RegistryObject<T> register(String name, T block) {
