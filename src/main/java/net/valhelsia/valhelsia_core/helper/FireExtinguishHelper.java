@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.helper;
 
-import javafx.util.Pair;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

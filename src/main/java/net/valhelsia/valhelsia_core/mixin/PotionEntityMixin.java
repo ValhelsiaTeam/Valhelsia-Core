@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.mixin;
 
-import javafx.util.Pair;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.PotionEntity;
@@ -31,10 +31,10 @@ public abstract class PotionEntityMixin extends ProjectileItemEntity {
 
         for (Map.Entry<Predicate<BlockState>, Pair<Function<BlockState, BlockState>, FireExtinguishHelper.IExtinguishEffect>> entry : FireExtinguishHelper.getExtinguishFireEffects().entrySet()) {
             if (entry.getKey().test(state)) {
-                if (entry.getValue().getValue() != null) {
-                    entry.getValue().getValue().playEffect(world, pos);
+                if (entry.getValue().getSecond() != null) {
+                    entry.getValue().getSecond().playEffect(world, pos);
                 }
-                world.setBlockState(pos, entry.getValue().getKey().apply(state));
+                world.setBlockState(pos, entry.getValue().getFirst().apply(state));
             }
         }
     }
