@@ -8,8 +8,12 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.valhelsia.valhelsia_core.registry.RegistryManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mod(ValhelsiaCore.MOD_ID)
 public class ValhelsiaCore {
@@ -17,6 +21,10 @@ public class ValhelsiaCore {
     public static final String MOD_ID = "valhelsia_core";
 
     private static final Logger LOGGER = LogManager.getLogger();
+
+    public static final List<RegistryManager> REGISTRY_MANAGERS = new ArrayList<>();
+
+    public static boolean allConfigsValidated = false;
 
     public ValhelsiaCore() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();

@@ -3,7 +3,10 @@ package net.valhelsia.valhelsia_core.registry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.valhelsia.valhelsia_core.ValhelsiaCore;
+import net.valhelsia.valhelsia_core.util.AbstractConfigValidator;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +32,8 @@ public class RegistryManager {
         return modId;
     }
 
+    private AbstractConfigValidator configValidator = null;
+
     private void addHelper(AbstractRegistryHelper<?> registryHelper) {
         helpers.put(registryHelper.getRegistry(), registryHelper);
     }
@@ -51,6 +56,15 @@ public class RegistryManager {
 
     public void register(IEventBus eventBus) {
         this.helpers.forEach((forgeRegistry, abstractRegistryHelper) -> abstractRegistryHelper.register(eventBus));
+    }
+
+    public void registerConfigValidator(AbstractConfigValidator configValidator) {
+        this.configValidator = configValidator;
+    }
+
+    @Nullable
+    public AbstractConfigValidator getConfigValidator() {
+        return configValidator;
     }
 
     public static class Builder {
@@ -77,6 +91,7 @@ public class RegistryManager {
         }
 
         public RegistryManager build() {
+            ValhelsiaCore.REGISTRY_MANAGERS.add(this.registryManager);
             return this.registryManager;
         }
     }
