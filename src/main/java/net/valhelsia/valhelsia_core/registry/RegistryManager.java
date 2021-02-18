@@ -4,6 +4,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
+import net.valhelsia.valhelsia_core.registry.block.BlockRegistryHelper;
 import net.valhelsia.valhelsia_core.util.AbstractConfigValidator;
 
 import javax.annotation.Nullable;

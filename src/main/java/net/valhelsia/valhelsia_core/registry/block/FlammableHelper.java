@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.helper;
+package net.valhelsia.valhelsia_core.registry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -6,7 +6,7 @@ import net.valhelsia.valhelsia_core.mixin.FireBlockAccessor;
 
 /**
  * Flammable Helper
- * Valhelsia Core - net.valhelsia.valhelsia_core.helper.FlammableHelper
+ * Valhelsia Core - net.valhelsia.valhelsia_core.registry.block.FlammableHelper
  *
  * @author Valhelsia Team
  * @version 16.0.3

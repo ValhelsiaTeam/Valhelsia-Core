@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.registry;
+package net.valhelsia.valhelsia_core.registry.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.RotatedPillarBlock;
@@ -12,11 +12,12 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.valhelsia.valhelsia_core.helper.FlammableHelper;
+import net.valhelsia.valhelsia_core.registry.AbstractRegistryHelper;
+import net.valhelsia.valhelsia_core.registry.ItemRegistryHelper;
 
 /**
  * Block Registry Helper
- * Valhelsia Core - net.valhelsia.valhelsia_core.registry.BlockRegistryHelper
+ * Valhelsia Core - net.valhelsia.valhelsia_core.registry.block.BlockRegistryHelper
  *
  * @author Valhelsia Team
  * @version 16.0.2
@@ -26,6 +27,7 @@ public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
 
     private ItemGroup defaultGroup = null;
     private final FlammableHelper flammableHelper = new FlammableHelper();
+    private final CompostableHelper compostableHelper = new CompostableHelper();
 
     @Override
     public IForgeRegistry<Block> getRegistry() {
@@ -46,6 +48,10 @@ public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
 
     public FlammableHelper getFlammableHelper() {
         return flammableHelper;
+    }
+
+    public CompostableHelper getCompostableHelper() {
+        return compostableHelper;
     }
 
     public <T extends Block> RegistryObject<T> register(String name, T block) {
