@@ -34,7 +34,7 @@ public class TargetItemGroupFiller implements IItemGroupFiller {
         if (stack.getItem().isInGroup(group)) {
             int index = -1;
 
-            for (int i = 0; i <= items.size(); i++) {
+            for (int i = 0; i < items.size(); i++) {
                 if (items.get(i).getItem() == this.target.get()) {
                     index = i;
                     break;
