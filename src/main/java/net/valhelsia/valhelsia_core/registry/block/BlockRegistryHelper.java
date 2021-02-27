@@ -14,6 +14,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.valhelsia.valhelsia_core.registry.AbstractRegistryHelper;
 import net.valhelsia.valhelsia_core.registry.ItemRegistryHelper;
+import net.valhelsia.valhelsia_core.util.ValhelsiaRenderType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Block Registry Helper
@@ -24,6 +30,8 @@ import net.valhelsia.valhelsia_core.registry.ItemRegistryHelper;
  * @since 2020-11-18
  */
 public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
+
+    public final Map<ValhelsiaRenderType, List<Block>> renderTypes = new HashMap<>();
 
     private ItemGroup defaultGroup = null;
     private final FlammableHelper flammableHelper = new FlammableHelper();
@@ -58,6 +66,10 @@ public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
         return register(name, block, true, getDefaultGroup());
     }
 
+    public <T extends Block> RegistryObject<T> register(String name, T block, ValhelsiaRenderType renderType) {
+        return register(name, block, true, getDefaultGroup(), renderType);
+    }
+
     public <T extends Block> RegistryObject<T> register(String name, T block, ItemGroup itemGroup) {
         return register(name, block, true, itemGroup);
     }
@@ -66,20 +78,40 @@ public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
         return register(name, block, false);
     }
 
+    public <T extends Block> RegistryObject<T> registerNoItem(String name, T block, ValhelsiaRenderType valhelsiaRenderType) {
+        return register(name, block, false, getDefaultGroup(), valhelsiaRenderType);
+    }
+
     public <T extends Block> RegistryObject<T> register(String name, T block, boolean item) {
         return register(name, block, item, getDefaultGroup());
     }
 
     public <T extends Block> RegistryObject<T> register(String name, T block, boolean item, ItemGroup itemGroup) {
+        return register(name, block, item, itemGroup, ValhelsiaRenderType.SOLID);
+    }
+
+    public <T extends Block> RegistryObject<T> register(String name, T block, boolean item, ItemGroup itemGroup, ValhelsiaRenderType renderType) {
         if (item) {
-            return register(name, block, new BlockItem(block, new Item.Properties().group(itemGroup)));
+            return register(name, block, new BlockItem(block, new Item.Properties().group(itemGroup)), renderType);
         }
-        return this.deferredRegister.register(name, () -> block);
+        return registerBlock(name, block, renderType);
     }
 
     public <T extends Block> RegistryObject<T> register(String name, T block, BlockItem item) {
+        return register(name, block, item, ValhelsiaRenderType.SOLID);
+    }
+
+    public <T extends Block> RegistryObject<T> register(String name, T block, BlockItem item, ValhelsiaRenderType renderType) {
         this.getItemRegistryHelper().register(name, () -> item);
 
+        return registerBlock(name, block, renderType);
+    }
+
+    private <T extends Block> RegistryObject<T> registerBlock(String name, T block, ValhelsiaRenderType renderType) {
+        if (renderType != ValhelsiaRenderType.SOLID) {
+            this.renderTypes.computeIfAbsent(renderType, k -> new ArrayList<>());
+            this.renderTypes.get(renderType).add(block);
+        }
         return this.deferredRegister.register(name, () -> block);
     }
 

@@ -16,7 +16,7 @@ import java.util.Map;
  * Valhelsia Core - net.valhelsia.valhelsia_core.registry.RegistryHelper
  *
  * @author Valhelsia Team
- * @version 16.0.2
+ * @version 16.0.4
  * @since 2020-11-18
  */
 public class RegistryManager {
@@ -35,12 +35,16 @@ public class RegistryManager {
 
     private AbstractConfigValidator configValidator = null;
 
+    public boolean hasHelper(IForgeRegistry<?> forgeRegistry) {
+        return helpers.containsKey(forgeRegistry);
+    }
+
     private void addHelper(AbstractRegistryHelper<?> registryHelper) {
         helpers.put(registryHelper.getRegistry(), registryHelper);
     }
 
     public AbstractRegistryHelper<?> getHelper(IForgeRegistry<?> forgeRegistry) {
-        if (!helpers.containsKey(forgeRegistry)) {
+        if (!hasHelper(forgeRegistry)) {
             throw new NullPointerException("Registry Manager for '" + getModId() + "' has no Helper for registry: " + forgeRegistry);
         }
 
@@ -53,6 +57,10 @@ public class RegistryManager {
 
     public BlockRegistryHelper getBlockHelper() {
         return (BlockRegistryHelper) getHelper(ForgeRegistries.BLOCKS);
+    }
+
+    public EntityRegistryHelper getEntityHelper() {
+        return (EntityRegistryHelper) getHelper(ForgeRegistries.ENTITIES);
     }
 
     public void register(IEventBus eventBus) {
