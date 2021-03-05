@@ -2,6 +2,8 @@ package net.valhelsia.valhelsia_core.util;
 
 import net.minecraft.util.text.IFormattableTextComponent;
 
+import javax.annotation.Nullable;
+
 /**
  * Config Error
  * Valhelsia Core - net.valhelsia.valhelsia_core.util.ConfigError
@@ -18,7 +20,7 @@ public class ConfigError {
 
     private String modID = null;
 
-    public ConfigError(IFormattableTextComponent errorMessage, String path, IFormattableTextComponent solutionMessage) {
+    public ConfigError(IFormattableTextComponent errorMessage, String path, @Nullable IFormattableTextComponent solutionMessage) {
         this.errorMessage = errorMessage;
         this.path = path;
         this.solutionMessage = solutionMessage;
@@ -32,6 +34,7 @@ public class ConfigError {
         return path;
     }
 
+    @Nullable
     public IFormattableTextComponent getSolutionMessage() {
         return solutionMessage;
     }

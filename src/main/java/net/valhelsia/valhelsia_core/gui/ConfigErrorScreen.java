@@ -17,7 +17,7 @@ import java.util.List;
  * Valhelsia Core - net.valhelsia.valhelsia_core.gui.ConfigErrorScreen
  *
  * @author Valhelsia Team
- * @version 16.0.3
+ * @version 16.0.5
  * @since 2021-02-09
  */
 public class ConfigErrorScreen extends Screen {
@@ -66,7 +66,9 @@ public class ConfigErrorScreen extends Screen {
         drawCenteredString(stack, this.font, new TranslationTextComponent("gui.valhelsia_core.config.error").appendString(": " + this.configError.getPath()), this.width / 2, this.height / 6 + 40, 16777215);
         drawCenteredString(stack, this.font, this.configError.getErrorMessage(), this.width / 2, this.height / 6 + 70, 16777215);
 
-        drawCenteredString(stack, this.font, this.configError.getSolutionMessage(), this.width / 2, this.height / 6 + 90, 16777215);
+        if (this.configError.getSolutionMessage() != null) {
+            drawCenteredString(stack, this.font, this.configError.getSolutionMessage(), this.width / 2, this.height / 6 + 90, 16777215);
+        }
 
         super.render(stack, mouseX, mouseY, partialTicks);
     }

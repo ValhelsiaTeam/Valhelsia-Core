@@ -35,12 +35,14 @@ public class GuiListener {
                 if (registryManager.getConfigValidator() != null) {
                     AbstractConfigValidator configValidator = registryManager.getConfigValidator();
 
-                    configValidator.validate();
-                    configValidator.getErrors().forEach(configError -> {
-                        configError.setModID(registryManager.getModId());
-                    });
+                    if (configValidator.getType() == AbstractConfigValidator.Type.LOAD_FINISH) {
+                        configValidator.validate();
+                        configValidator.getErrors().forEach(configError -> {
+                            configError.setModID(registryManager.getModId());
+                        });
 
-                    errors.addAll(configValidator.getErrors());
+                        errors.addAll(configValidator.getErrors());
+                    }
                 }
             }
 
@@ -53,5 +55,5 @@ public class GuiListener {
             }
             ValhelsiaCore.allConfigsValidated = true;
         }
-}
+    }
 }
