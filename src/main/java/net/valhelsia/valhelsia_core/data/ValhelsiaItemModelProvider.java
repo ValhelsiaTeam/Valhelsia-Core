@@ -1,19 +1,18 @@
 package net.valhelsia.valhelsia_core.data;
 
-import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.registry.RegistryManager;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Valhelsia Item Model Provider
@@ -25,27 +24,22 @@ import java.util.stream.Collectors;
  */
 public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
 
-    private final RegistryManager registryManager;
+    private final Set<RegistryObject<Item>> remainingItems;
 
     public ValhelsiaItemModelProvider(DataGenerator generator, RegistryManager registryManager, ExistingFileHelper existingFileHelper) {
         super(generator, registryManager.getModId(), existingFileHelper);
-        this.registryManager = registryManager;
+        this.remainingItems = new HashSet<>(registryManager.getItemHelper().getDeferredRegister().getEntries());
     }
 
-    protected abstract void register(Set<RegistryObject<Item>> items, Set<RegistryObject<Item>> blockItems);
-
-    @Override
-    protected void registerModels() {
-        Collection<RegistryObject<Item>> entries = registryManager.getItemHelper().getDeferredRegister().getEntries();
-
-        register(entries.stream().filter(itemRegistryObject -> !(itemRegistryObject.get() instanceof BlockItem)).collect(Collectors.toSet()), entries.stream().filter(itemRegistryObject -> itemRegistryObject.get() instanceof BlockItem).collect(Collectors.toSet()));
+    public Set<RegistryObject<Item>> getRemainingItems() {
+        return remainingItems;
     }
 
-    public <T extends Item> void forEach(Set<RegistryObject<T>> items, Predicate<T> predicate, Consumer<T> consumer) {
-        Iterator<RegistryObject<T>> iterator = items.iterator();
+    public void forEach(Predicate<Item> predicate, Consumer<Item> consumer) {
+        Iterator<RegistryObject<Item>> iterator = getRemainingItems().iterator();
 
         while(iterator.hasNext()) {
-            T item = iterator.next().get();
+            Item item = iterator.next().get();
             if (predicate.test(item)) {
                 consumer.accept(item);
                 iterator.remove();
@@ -53,8 +47,8 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
         }
     }
 
-    public <T extends Item> void forEach(Set<RegistryObject<T>> items, Consumer<T> consumer) {
-        Iterator<RegistryObject<T>> iterator = items.iterator();
+    public void forEach(Consumer<Item> consumer) {
+        Iterator<RegistryObject<Item>> iterator = getRemainingItems().iterator();
 
         while(iterator.hasNext()) {
             consumer.accept(iterator.next().get());
@@ -63,18 +57,10 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
     }
 
     @SafeVarargs
-    public final <T extends Item> void take(Set<RegistryObject<T>> set, Consumer<Item> consumer, RegistryObject<? extends Item>... items) {
+    public final <T extends Item> void take(Consumer<T> consumer, RegistryObject<? extends Item>... items) {
         for (RegistryObject<? extends Item> item : items) {
-            consumer.accept(item.get());
-            set.remove(item);
-        }
-    }
-
-    @SafeVarargs
-    public final <T extends Item> void takeBlockItem(Set<RegistryObject<T>> set, Consumer<Item> consumer, RegistryObject<? extends Block>... blocks) {
-        for (RegistryObject<? extends Block> block : blocks) {
-            consumer.accept(block.get().asItem());
-            set.remove(RegistryObject.of(block.get().getRegistryName(), ForgeRegistries.ITEMS));
+            consumer.accept((T) item.get());
+            getRemainingItems().remove(item);
         }
     }
 

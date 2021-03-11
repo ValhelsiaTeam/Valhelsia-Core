@@ -3,6 +3,7 @@ package net.valhelsia.valhelsia_core.data;
 import net.minecraft.block.AbstractButtonBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FenceBlock;
+import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -32,25 +33,22 @@ import java.util.function.Predicate;
  */
 public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
 
-    private final RegistryManager registryManager;
+    private final Set<RegistryObject<Block>> remainingBlocks;
 
     public ValhelsiaBlockStateProvider(DataGenerator gen, RegistryManager registryManager, ExistingFileHelper exFileHelper) {
         super(gen, registryManager.getModId(), exFileHelper);
-        this.registryManager = registryManager;
+        this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getDeferredRegister().getEntries());
     }
 
-    protected abstract void register(Set<RegistryObject<Block>> blocks);
-
-    @Override
-    protected void registerStatesAndModels() {
-        register(new HashSet<>(registryManager.getBlockHelper().getDeferredRegister().getEntries()));
+    public Set<RegistryObject<Block>> getRemainingBlocks() {
+        return remainingBlocks;
     }
 
-    public <T extends Block> void forEach(Set<RegistryObject<T>> blocks, Predicate<T> predicate, Consumer<T> consumer) {
-        Iterator<RegistryObject<T>> iterator = blocks.iterator();
+    public void forEach(Predicate<Block> predicate, Consumer<Block> consumer) {
+        Iterator<RegistryObject<Block>> iterator = getRemainingBlocks().iterator();
 
         while(iterator.hasNext()) {
-            T block = iterator.next().get();
+            Block block = iterator.next().get();
             if (predicate.test(block)) {
                 consumer.accept(block);
                 iterator.remove();
@@ -58,8 +56,8 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
         }
     }
 
-    public <T extends Block> void forEach(Set<RegistryObject<T>> blocks, Consumer<T> consumer) {
-        Iterator<RegistryObject<T>> iterator = blocks.iterator();
+    public void forEach(Consumer<Block> consumer) {
+        Iterator<RegistryObject<Block>> iterator = getRemainingBlocks().iterator();
 
         while(iterator.hasNext()) {
             consumer.accept(iterator.next().get());
@@ -68,10 +66,10 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
     }
 
     @SafeVarargs
-    public final <T extends Block> void take(Set<RegistryObject<T>> set, Consumer<T> consumer, RegistryObject<? extends Block>... blocks) {
+    public final <T extends Block> void take(Consumer<T> consumer, RegistryObject<? extends Block>... blocks) {
         for (RegistryObject<? extends Block> block : blocks) {
             consumer.accept((T) block.get());
-            set.remove(block);
+            getRemainingBlocks().remove(block);
         }
     }
 
@@ -87,6 +85,18 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
         String name = Objects.requireNonNull(block.getRegistryName()).getPath();
 
         simpleBlock(block, getExistingModel(mcLoc ? mcLoc("block/" + name) : modLoc("block/" + name)));
+    }
+
+    public void pressurePlateBlock(Block block, ResourceLocation texture) {
+        String name = Objects.requireNonNull(block.getRegistryName()).getPath();
+        ModelFile model = models().withExistingParent(name, mcLoc("block/pressure_plate_up")).texture("texture", texture);
+        ModelFile modelDown = models().withExistingParent(name + "_down", mcLoc("block/pressure_plate_down")).texture("texture", texture);
+
+        getVariantBuilder(block)
+                .partialState().with(PressurePlateBlock.POWERED, false)
+                .modelForState().modelFile(model).addModel()
+                .partialState().with(PressurePlateBlock.POWERED, true)
+                .modelForState().modelFile(modelDown).addModel();
     }
 
     public void buttonBlock(AbstractButtonBlock block, ResourceLocation texture) {
@@ -119,6 +129,4 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
         String name = Objects.requireNonNull(block.getRegistryName()).getPath();
         models().fenceInventory(name + "_inventory", texture);
     }
-
-
 }
