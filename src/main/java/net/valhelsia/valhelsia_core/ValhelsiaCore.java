@@ -11,6 +11,8 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.valhelsia.valhelsia_core.registry.EntityRegistryHelper;
+import net.valhelsia.valhelsia_core.registry.LootModifierRegistryHelper;
 import net.valhelsia.valhelsia_core.registry.RegistryManager;
 import net.valhelsia.valhelsia_core.util.ValhelsiaRenderType;
 import org.apache.logging.log4j.LogManager;
@@ -27,9 +29,10 @@ public class ValhelsiaCore {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final List<RegistryManager> REGISTRY_MANAGERS = new ArrayList<>();
-
     public static boolean allConfigsValidated = false;
+
+    public static final List<RegistryManager> REGISTRY_MANAGERS = new ArrayList<>();
+    public static final RegistryManager REGISTRY_MANAGER = new RegistryManager.Builder(MOD_ID).addHelpers(new LootModifierRegistryHelper()).build();
 
     public ValhelsiaCore() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -45,6 +48,8 @@ public class ValhelsiaCore {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        REGISTRY_MANAGER.register(eventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
