@@ -17,6 +17,7 @@ import net.minecraft.loot.conditions.MatchTool;
 import net.minecraft.loot.conditions.SurvivesExplosion;
 import net.minecraft.loot.functions.ExplosionDecay;
 import net.minecraft.loot.functions.SetCount;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.Property;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.state.properties.SlabType;
@@ -44,8 +45,8 @@ import java.util.function.Predicate;
  */
 public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
 
-    private static final ILootCondition.IBuilder SILK_TOUCH = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1))));
-    private static final ILootCondition.IBuilder SHEARS = MatchTool.builder(ItemPredicate.Builder.create().tag(Tags.Items.SHEARS));
+    public static final ILootCondition.IBuilder SILK_TOUCH = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1))));
+    public static final ILootCondition.IBuilder SHEARS = MatchTool.builder(ItemPredicate.Builder.create().tag(Tags.Items.SHEARS));
 
     private final List<Block> blocks = new ArrayList<>();
     private final Map<ResourceLocation, LootTable.Builder> lootTables = Maps.newHashMap();
@@ -160,6 +161,18 @@ public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<Re
         return droppingWhen(door, DoorBlock.HALF, DoubleBlockHalf.LOWER);
     }
 
+    protected static LootTable.Builder dropping(Block block, ILootCondition.IBuilder conditionBuilder, LootEntry.Builder<?> lootEntryBuilder) {
+        return LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(block).acceptCondition(conditionBuilder).alternatively(lootEntryBuilder)));
+    }
+
+    protected static LootTable.Builder droppingWithSilkTouch(Block block, LootEntry.Builder<?> builder) {
+        return dropping(block, SILK_TOUCH, builder);
+    }
+
+    protected static LootTable.Builder droppingWithSilkTouch(Block block, IItemProvider noSilkTouch) {
+        return droppingWithSilkTouch(block, withSurvivesExplosion(block, ItemLootEntry.builder(noSilkTouch)));
+    }
+
     protected Iterable<Block> getKnownBlocks() {
         return Registry.BLOCK;
     }
@@ -191,5 +204,12 @@ public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<Re
     protected void registerLootTable(Block block, LootTable.Builder table) {
         blocks.add(block);
         this.lootTables.put(block.getLootTable(), table);
+    }
+
+    public LootEntry.Builder<?> setCountFromIntegerProperty(Block block, StandaloneLootEntry.Builder<?> lootEntryBuilder, IntegerProperty intProperty) {
+        intProperty.getAllowedValues().forEach(integer -> {
+            lootEntryBuilder.acceptFunction(SetCount.builder(ConstantRange.of(integer)).acceptCondition(BlockStateProperty.builder(block).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(intProperty, integer))));
+        });
+        return lootEntryBuilder;
     }
 }

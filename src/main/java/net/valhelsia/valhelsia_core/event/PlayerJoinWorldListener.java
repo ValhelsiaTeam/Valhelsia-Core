@@ -27,7 +27,7 @@ import java.util.List;
 public class PlayerJoinWorldListener {
 
     @SubscribeEvent
-    public static void onPlayerJoinWorld(PlayerEvent.PlayerLoggedInEvent event){
+    public static void onPlayerJoinWorld(PlayerEvent.PlayerLoggedInEvent event) {
         PlayerEntity player = event.getPlayer();
         List<ConfigError> errors = new ArrayList<>();
 

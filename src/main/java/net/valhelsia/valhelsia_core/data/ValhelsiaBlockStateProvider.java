@@ -129,4 +129,18 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
         String name = Objects.requireNonNull(block.getRegistryName()).getPath();
         models().fenceInventory(name + "_inventory", texture);
     }
+
+    public void layerBlock(Block block) {
+        String name = Objects.requireNonNull(block.getRegistryName()).getPath();
+
+        getVariantBuilder(block).forAllStates(state -> {
+            int height = state.get(BlockStateProperties.LAYERS_1_8) * 2;
+
+            ModelFile model = height == 16 ? cubeAll(block) : models().withExistingParent(name + "_" + height, mcLoc("block/snow_height" + height)).texture("texture", modLoc("block/" + name));
+
+            return ConfiguredModel.builder()
+                    .modelFile(model)
+                    .build();
+        });
+    }
 }
