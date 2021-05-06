@@ -2,7 +2,11 @@ package net.valhelsia.valhelsia_core;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -11,7 +15,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.valhelsia.valhelsia_core.registry.EntityRegistryHelper;
+import net.valhelsia.valhelsia_core.init.ValhelsiaLootConditions;
 import net.valhelsia.valhelsia_core.registry.LootModifierRegistryHelper;
 import net.valhelsia.valhelsia_core.registry.RegistryManager;
 import net.valhelsia.valhelsia_core.util.ValhelsiaRenderType;
@@ -37,14 +41,12 @@ public class ValhelsiaCore {
     public ValhelsiaCore() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // Register the setup method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        // Register the enqueueIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        // Register the processIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        // Register the doClientStuff method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        eventBus.addListener(this::setup);
+        eventBus.addListener(this::enqueueIMC);
+        eventBus.addListener(this::processIMC);
+        eventBus.addListener(this::doClientStuff);
+
+        eventBus.addGenericListener(GlobalLootModifierSerializer.class, this::registerLootConditions);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -71,5 +73,9 @@ public class ValhelsiaCore {
     }
 
     private void processIMC(final InterModProcessEvent event) {
+    }
+
+    private void registerLootConditions(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
+        Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(ValhelsiaCore.MOD_ID, "match_block"), ValhelsiaLootConditions.MATCH_BLOCK);
     }
 }

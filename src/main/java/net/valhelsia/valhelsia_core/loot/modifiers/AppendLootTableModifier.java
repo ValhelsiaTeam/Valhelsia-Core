@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.util;
+package net.valhelsia.valhelsia_core.loot.modifiers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * Append Loot Table Modifier
- * Valhelsia Core - net.valhelsia.valhelsia_core.util.AppendLootTableModifier
+ * Valhelsia Core - net.valhelsia.valhelsia_core.loot.modifiers.AppendLootTableModifier
  *
  * @author Valhelsia Team
  * @version 16.0.7

@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.registry.LootModifierRegistryHelper;
-import net.valhelsia.valhelsia_core.util.AppendLootTableModifier;
+import net.valhelsia.valhelsia_core.loot.modifiers.AppendLootTableModifier;
 
 /**
  * Valhelsia Loot Modifiers
