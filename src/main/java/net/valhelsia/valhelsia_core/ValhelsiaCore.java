@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.valhelsia.valhelsia_core.client.renderer.ValhelsiaCapeLayer;
 import net.valhelsia.valhelsia_core.init.ValhelsiaLootConditions;
 import net.valhelsia.valhelsia_core.registry.LootModifierRegistryHelper;
 import net.valhelsia.valhelsia_core.registry.RegistryManager;
@@ -67,6 +69,8 @@ public class ValhelsiaCore {
                 }
             }
         });
+
+        Minecraft.getInstance().getRenderManager().getSkinMap().values().forEach(renderer -> renderer.addLayer(new ValhelsiaCapeLayer<>(renderer)));
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
