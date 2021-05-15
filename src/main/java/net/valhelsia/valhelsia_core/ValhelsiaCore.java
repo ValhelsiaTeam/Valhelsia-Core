@@ -1,32 +1,27 @@
 package net.valhelsia.valhelsia_core;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.valhelsia.valhelsia_core.client.renderer.ValhelsiaCapeLayer;
 import net.valhelsia.valhelsia_core.init.ValhelsiaLootConditions;
 import net.valhelsia.valhelsia_core.registry.LootModifierRegistryHelper;
 import net.valhelsia.valhelsia_core.registry.RegistryManager;
-import net.valhelsia.valhelsia_core.util.ValhelsiaRenderType;
+import net.valhelsia.valhelsia_core.setup.ClientSetup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Mod(ValhelsiaCore.MOD_ID)
 public class ValhelsiaCore {
@@ -43,10 +38,11 @@ public class ValhelsiaCore {
     public ValhelsiaCore() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientSetup::new);
+
         eventBus.addListener(this::setup);
         eventBus.addListener(this::enqueueIMC);
         eventBus.addListener(this::processIMC);
-        eventBus.addListener(this::doClientStuff);
 
         eventBus.addGenericListener(GlobalLootModifierSerializer.class, this::registerLootConditions);
 
@@ -57,20 +53,6 @@ public class ValhelsiaCore {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-    }
-
-    private void doClientStuff(final FMLClientSetupEvent event) {
-        REGISTRY_MANAGERS.forEach(registryManager -> {
-            if (registryManager.hasHelper(ForgeRegistries.BLOCKS)) {
-                for (Map.Entry<ValhelsiaRenderType, List<Block>> entry : registryManager.getBlockHelper().renderTypes.entrySet()) {
-                    for (Block block : entry.getValue()) {
-                        RenderTypeLookup.setRenderLayer(block, entry.getKey().getRenderType());
-                    }
-                }
-            }
-        });
-
-        Minecraft.getInstance().getRenderManager().getSkinMap().values().forEach(renderer -> renderer.addLayer(new ValhelsiaCapeLayer<>(renderer)));
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
