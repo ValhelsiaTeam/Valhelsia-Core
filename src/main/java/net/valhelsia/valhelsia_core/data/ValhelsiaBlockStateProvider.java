@@ -1,9 +1,6 @@
 package net.valhelsia.valhelsia_core.data;
 
-import net.minecraft.block.AbstractButtonBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.FenceBlock;
-import net.minecraft.block.PressurePlateBlock;
+import net.minecraft.block.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -28,7 +25,7 @@ import java.util.function.Predicate;
  * Valhelsia Core - net.valhelsia.valhelsia_core.data.ValhelsiaBlockStateProvider
  *
  * @author Valhelsia Team
- * @version 16.0.2
+ * @version 16.0.9
  * @since 2021-01-07
  */
 public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
@@ -73,6 +70,10 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
         }
     }
 
+    public String getName(Block block) {
+        return Objects.requireNonNull(block.getRegistryName()).getPath();
+    }
+
     public ModelFile.ExistingModelFile getExistingModel(ResourceLocation resourceLocation) {
         return models().getExistingFile(resourceLocation);
     }
@@ -82,15 +83,12 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
     }
 
     public void withExistingModel(Block block, boolean mcLoc) {
-        String name = Objects.requireNonNull(block.getRegistryName()).getPath();
-
-        simpleBlock(block, getExistingModel(mcLoc ? mcLoc("block/" + name) : modLoc("block/" + name)));
+        simpleBlock(block, getExistingModel(mcLoc ? mcLoc("block/" + getName(block)) : modLoc("block/" + getName(block))));
     }
 
     public void pressurePlateBlock(Block block, ResourceLocation texture) {
-        String name = Objects.requireNonNull(block.getRegistryName()).getPath();
-        ModelFile model = models().withExistingParent(name, mcLoc("block/pressure_plate_up")).texture("texture", texture);
-        ModelFile modelDown = models().withExistingParent(name + "_down", mcLoc("block/pressure_plate_down")).texture("texture", texture);
+        ModelFile model = models().withExistingParent(getName(block), mcLoc("block/pressure_plate_up")).texture("texture", texture);
+        ModelFile modelDown = models().withExistingParent(getName(block) + "_down", mcLoc("block/pressure_plate_down")).texture("texture", texture);
 
         getVariantBuilder(block)
                 .partialState().with(PressurePlateBlock.POWERED, false)
@@ -100,10 +98,9 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
     }
 
     public void buttonBlock(AbstractButtonBlock block, ResourceLocation texture) {
-        String name = Objects.requireNonNull(block.getRegistryName()).getPath();
-        ModelFile model = models().withExistingParent(name, mcLoc("block/button")).texture("texture", texture);
-        ModelFile modelPressed = models().withExistingParent(name + "_pressed", mcLoc("block/button_pressed")).texture("texture", texture);
-        models().withExistingParent(name + "_inventory", mcLoc("block/button_inventory")).texture("texture", texture);
+        ModelFile model = models().withExistingParent(getName(block), mcLoc("block/button")).texture("texture", texture);
+        ModelFile modelPressed = models().withExistingParent(getName(block) + "_pressed", mcLoc("block/button_pressed")).texture("texture", texture);
+        models().withExistingParent(getName(block) + "_inventory", mcLoc("block/button_inventory")).texture("texture", texture);
 
         getVariantBuilder(block)
                 .forAllStates(state -> {
@@ -125,18 +122,20 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
     @Override
     public void fenceBlock(FenceBlock block, ResourceLocation texture) {
         super.fenceBlock(block, texture);
+        models().fenceInventory(getName(block) + "_inventory", texture);
+    }
 
-        String name = Objects.requireNonNull(block.getRegistryName()).getPath();
-        models().fenceInventory(name + "_inventory", texture);
+    @Override
+    public void wallBlock(WallBlock block, ResourceLocation texture) {
+        super.wallBlock(block, texture);
+        this.models().wallInventory(getName(block) + "_inventory", texture);
     }
 
     public void layerBlock(Block block) {
-        String name = Objects.requireNonNull(block.getRegistryName()).getPath();
-
         getVariantBuilder(block).forAllStates(state -> {
             int height = state.get(BlockStateProperties.LAYERS_1_8) * 2;
 
-            ModelFile model = height == 16 ? cubeAll(block) : models().withExistingParent(name + "_" + height, mcLoc("block/snow_height" + height)).texture("texture", modLoc("block/" + name));
+            ModelFile model = height == 16 ? cubeAll(block) : models().withExistingParent(getName(block) + "_" + height, mcLoc("block/snow_height" + height)).texture("texture", modLoc("block/" + getName(block)));
 
             return ConfiguredModel.builder()
                     .modelFile(model)
