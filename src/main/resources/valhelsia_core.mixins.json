@@ -5,12 +5,12 @@
   "package": "net.valhelsia.valhelsia_core.mixin",
   "refmap": "valhelsia_core.refmap.json",
   "mixins": [
-    "client.CapeLayerMixin",
     "FlintAndSteelItemMixin",
     "PotionEntityMixin"
   ],
   "client": [
-    "client.ClientPlayNetHandlerMixin"
+    "client.ClientPlayNetHandlerMixin",
+    "client.CapeLayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
