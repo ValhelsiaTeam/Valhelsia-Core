@@ -4,6 +4,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -13,7 +14,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.valhelsia.valhelsia_core.capability.counter.CounterImpl;
+import net.valhelsia.valhelsia_core.capability.counter.CounterStorage;
+import net.valhelsia.valhelsia_core.capability.counter.ICounterCapability;
 import net.valhelsia.valhelsia_core.init.ValhelsiaLootConditions;
+import net.valhelsia.valhelsia_core.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.registry.LootModifierRegistryHelper;
 import net.valhelsia.valhelsia_core.registry.RegistryManager;
 import net.valhelsia.valhelsia_core.setup.ClientSetup;
@@ -53,6 +58,8 @@ public class ValhelsiaCore {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
+        NetworkHandler.init();
+        CapabilityManager.INSTANCE.register(ICounterCapability.class, new CounterStorage(), CounterImpl::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
