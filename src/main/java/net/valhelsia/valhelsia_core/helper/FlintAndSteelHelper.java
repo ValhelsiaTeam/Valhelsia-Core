@@ -1,10 +1,10 @@
 package net.valhelsia.valhelsia_core.helper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.IdMap;
+import net.minecraft.world.entity.ai.behavior.DismountOrSkipMounting;
+import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.levelgen.feature.SimpleBlockFeature;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -23,11 +23,11 @@ public class FlintAndSteelHelper {
 
     private static final List<FlintAndSteelUse> USES = new ArrayList<>();
 
-    public static void addUse(Predicate<BlockState> unlitState, Function<BlockState, BlockState> litState, IActionResultType resultType) {
+    public static void addUse(Predicate<SimpleBlockFeature> unlitState, Function<SimpleBlockFeature, SimpleBlockFeature> litState, IActionResultType resultType) {
         addUse(unlitState, litState, null, resultType);
     }
 
-    public static void addUse(Predicate<BlockState> unlitState, Function<BlockState, BlockState>  litState, @Nullable IUseEffect useEffect, IActionResultType resultType) {
+    public static void addUse(Predicate<SimpleBlockFeature> unlitState, Function<SimpleBlockFeature, SimpleBlockFeature>  litState, @Nullable IUseEffect useEffect, IActionResultType resultType) {
         USES.add(new FlintAndSteelUse(unlitState, litState, useEffect, resultType));
     }
 
@@ -37,23 +37,23 @@ public class FlintAndSteelHelper {
 
     public static class FlintAndSteelUse {
 
-        private final Predicate<BlockState> unlitState;
-        private final Function<BlockState, BlockState>  litState;
+        private final Predicate<SimpleBlockFeature> unlitState;
+        private final Function<SimpleBlockFeature, SimpleBlockFeature>  litState;
         private final @Nullable IUseEffect useEffect;
         private final IActionResultType resultType;
 
-        private FlintAndSteelUse(Predicate<BlockState> unlitState, Function<BlockState, BlockState>  litState, @Nullable IUseEffect useEffect, IActionResultType resultType) {
+        private FlintAndSteelUse(Predicate<SimpleBlockFeature> unlitState, Function<SimpleBlockFeature, SimpleBlockFeature>  litState, @Nullable IUseEffect useEffect, IActionResultType resultType) {
             this.unlitState = unlitState;
             this.litState = litState;
             this.useEffect = useEffect;
             this.resultType = resultType;
         }
 
-        public Predicate<BlockState> getUnlitState() {
+        public Predicate<SimpleBlockFeature> getUnlitState() {
             return unlitState;
         }
 
-        public Function<BlockState, BlockState>  getLitState() {
+        public Function<SimpleBlockFeature, SimpleBlockFeature>  getLitState() {
             return litState;
         }
 
@@ -62,16 +62,16 @@ public class FlintAndSteelHelper {
             return useEffect;
         }
 
-        public ActionResultType getResultType(World world) {
-            return resultType.getResult(world);
+        public DismountOrSkipMounting getResultType(FenceBlock level) {
+            return resultType.getResult(level);
         }
     }
 
     public interface IUseEffect {
-        void playEffect(PlayerEntity player, World world, BlockPos pos);
+        void playEffect(BannerItem player, FenceBlock level, IdMap pos);
     }
 
     public interface IActionResultType {
-        ActionResultType getResult(World world);
+        DismountOrSkipMounting getResult(FenceBlock level);
     }
 }

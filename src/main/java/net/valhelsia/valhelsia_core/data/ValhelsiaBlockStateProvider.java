@@ -1,16 +1,16 @@
 package net.valhelsia.valhelsia_core.data;
 
-import net.minecraft.block.*;
+import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.state.properties.AttachFace;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.valhelsia.valhelsia_core.registry.RegistryManager;
 
 import java.util.HashSet;
@@ -63,7 +63,7 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
     }
 
     @SafeVarargs
-    public final <T extends Block> void take(Consumer<T> consumer, RegistryObject<? extends Block>... blocks) {
+    public final <T extends ScaffoldingBlock> void take(Consumer<T> consumer, RegistryObject<? extends Block>... blocks) {
         for (RegistryObject<? extends Block> block : blocks) {
             consumer.accept((T) block.get());
             getRemainingBlocks().remove(block);
@@ -97,21 +97,21 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
                 .modelForState().modelFile(modelDown).addModel();
     }
 
-    public void buttonBlock(AbstractButtonBlock block, ResourceLocation texture) {
+    public void buttonBlock(FaceAttachedHorizontalDirectionalBlock block, ResourceLocation texture) {
         ModelFile model = models().withExistingParent(getName(block), mcLoc("block/button")).texture("texture", texture);
         ModelFile modelPressed = models().withExistingParent(getName(block) + "_pressed", mcLoc("block/button_pressed")).texture("texture", texture);
         models().withExistingParent(getName(block) + "_inventory", mcLoc("block/button_inventory")).texture("texture", texture);
 
         getVariantBuilder(block)
                 .forAllStates(state -> {
-                    Direction facing = state.get(BlockStateProperties.HORIZONTAL_FACING);
-                    AttachFace face = state.get(BlockStateProperties.FACE);
+                    Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+                    AttachFace face = state.getValue(BlockStateProperties.ATTACH_FACE);
 
                     int rotationX = face == AttachFace.CEILING ? 180 : face == AttachFace.WALL ? 90 : 0;
-                    int rotationY = (int) facing.rotateY().getHorizontalAngle() + 90;
+                    int rotationY = (int) facing.getClockWise().toYRot() + 90;
 
                     return ConfiguredModel.builder()
-                            .modelFile(!state.get(BlockStateProperties.POWERED) ? model : modelPressed)
+                            .modelFile(!state.getValue(BlockStateProperties.POWERED) ? model : modelPressed)
                             .rotationX(rotationX)
                             .rotationY(face == AttachFace.CEILING ? rotationY - 180 : rotationY)
                             .uvLock(face == AttachFace.WALL)
@@ -133,7 +133,7 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
 
     public void layerBlock(Block block) {
         getVariantBuilder(block).forAllStates(state -> {
-            int height = state.get(BlockStateProperties.LAYERS_1_8) * 2;
+            int height = state.getValue(BlockStateProperties.LAYERS) * 2;
 
             ModelFile model = height == 16 ? cubeAll(block) : models().withExistingParent(getName(block) + "_" + height, mcLoc("block/snow_height" + height)).texture("texture", modLoc("block/" + getName(block)));
 

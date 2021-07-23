@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.gui.element;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.util.TextureInfo;
 
 public abstract class ButtonElement extends GuiElement {
@@ -43,8 +43,8 @@ public abstract class ButtonElement extends GuiElement {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        bindTexture(resourceLocation);
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        setTexture(resourceLocation);
         blit(matrixStack, blitOffset, startX, startY, getSizeX(), getSizeY(), this.textureSizeX, this.textureSizeY);
     }
 

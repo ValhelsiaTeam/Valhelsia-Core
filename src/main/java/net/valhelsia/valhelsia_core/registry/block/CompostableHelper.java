@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.registry.block;
 
-import net.minecraft.block.ComposterBlock;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.ComposterBlock;
 
 /**
  * Compostable Helper
@@ -13,27 +13,27 @@ import net.minecraft.util.IItemProvider;
  */
 public class CompostableHelper {
 
-    public void register(IItemProvider item, float chance) {
-        ComposterBlock.CHANCES.put(item.asItem(), chance);
+    public void register(ItemLike item, float chance) {
+        ComposterBlock.COMPOSTABLES.put(item.asItem(), chance);
     }
 
-    public void register03(IItemProvider item) {
+    public void register03(ItemLike item) {
         register(item, 0.3F);
     }
 
-    public void register05(IItemProvider item) {
+    public void register05(ItemLike item) {
         register(item, 0.5F);
     }
 
-    public void register065(IItemProvider item) {
+    public void register065(ItemLike item) {
         register(item, 0.65F);
     }
 
-    public void register085(IItemProvider item) {
+    public void register085(ItemLike item) {
         register(item, 0.85F);
     }
 
-    public void register1(IItemProvider item) {
+    public void register1(ItemLike item) {
         register(item, 1.0F);
     }
 }

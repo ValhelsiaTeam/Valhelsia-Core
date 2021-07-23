@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.client;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 
 import java.util.Set;

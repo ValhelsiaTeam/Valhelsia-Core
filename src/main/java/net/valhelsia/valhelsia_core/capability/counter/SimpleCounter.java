@@ -1,7 +1,9 @@
 package net.valhelsia.valhelsia_core.capability.counter;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.CipherEncoder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.EnchantCommand;
 
 /**
  * Simple Counter
@@ -65,7 +67,7 @@ public class SimpleCounter {
         this.active = active;
     }
 
-    public void load(CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         this.value = compound.getInt("value");
         if (compound.contains("active")) {
             this.active = compound.getBoolean("active");
@@ -74,7 +76,7 @@ public class SimpleCounter {
         }
     }
 
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         compound.putInt("value", this.value);
         if (!this.isActive()) {
             compound.putBoolean("active", this.active);

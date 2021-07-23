@@ -1,12 +1,14 @@
 package net.valhelsia.valhelsia_core.data;
 
-import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.TridentLoyaltyEnchantment;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ScaffoldingBlock;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.registry.RegistryManager;
 
@@ -87,8 +89,8 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
     }
 
     @SafeVarargs
-    public final <T extends Item> void takeItem(Consumer<T> consumer, RegistryObject<? extends Item>... items) {
-        for (RegistryObject<? extends Item> item : items) {
+    public final <T extends TridentLoyaltyEnchantment> void takeItem(Consumer<T> consumer, RegistryObject<? extends TridentLoyaltyEnchantment>... items) {
+        for (RegistryObject<? extends TridentLoyaltyEnchantment> item : items) {
             consumer.accept((T) item.get());
             getRemainingItems().remove(item);
         }
@@ -96,7 +98,7 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
 
     public final void takeBlockItem(Consumer<BlockItem> consumer, RegistryObject<?>... registryObjects) {
         for (RegistryObject<?> registryObject : registryObjects) {
-            if (registryObject.get() instanceof Block) {
+            if (registryObject.get() instanceof ScaffoldingBlock) {
                 consumer.accept((BlockItem) ((Block) registryObject.get()).asItem());
                 getRemainingBlockItems().remove(RegistryObject.of(((Block) registryObject.get()).asItem().getRegistryName(), ForgeRegistries.ITEMS));
             } else {

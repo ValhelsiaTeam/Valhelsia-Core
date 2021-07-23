@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.world;
 
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer1;
 
 /**
  * Valhelsia Structure Interface
@@ -16,6 +16,6 @@ public interface IValhelsiaStructure {
     default boolean transformsSurroundingLand() {
         return false;
     }
-    Structure<?> getStructure();
-    StructureSeparationSettings getSeparationSettings();
+    StructureFeature<?> getStructure();
+    AreaTransformer1 getFeatureConfiguration();
 }

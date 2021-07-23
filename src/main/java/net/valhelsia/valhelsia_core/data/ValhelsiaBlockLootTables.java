@@ -2,31 +2,34 @@ package net.valhelsia.valhelsia_core.data;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.minecraft.advancements.criterion.EnchantmentPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
-import net.minecraft.block.*;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.loot.*;
-import net.minecraft.loot.conditions.BlockStateProperty;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.loot.conditions.MatchTool;
-import net.minecraft.loot.conditions.SurvivesExplosion;
-import net.minecraft.loot.functions.ExplosionDecay;
-import net.minecraft.loot.functions.SetCount;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.Property;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.state.properties.SlabType;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.advancements.critereon.EnchantmentPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay;
+import net.minecraft.world.level.storage.loot.functions.FunctionUserBuilder;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.*;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.valhelsia.valhelsia_core.registry.RegistryManager;
 
 import java.util.*;
@@ -45,8 +48,8 @@ import java.util.function.Predicate;
  */
 public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
 
-    public static final ILootCondition.IBuilder SILK_TOUCH = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1))));
-    public static final ILootCondition.IBuilder SHEARS = MatchTool.builder(ItemPredicate.Builder.create().tag(Tags.Items.SHEARS));
+    public static final LootItemCondition.Builder SILK_TOUCH = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))));
+    public static final LootItemCondition.Builder SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.Items.SHEARS));
 
     private final List<Block> blocks = new ArrayList<>();
     private final Map<ResourceLocation, LootTable.Builder> lootTables = Maps.newHashMap();
@@ -71,7 +74,7 @@ public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<Re
 
         for(Block block : blocks) {
             ResourceLocation resourcelocation = block.getLootTable();
-            if (resourcelocation != LootTables.EMPTY && set.add(resourcelocation)) {
+            if (resourcelocation != BuiltInLootTables.EMPTY && set.add(resourcelocation)) {
                 LootTable.Builder loottable$builder = this.lootTables.get(resourcelocation);
                 if (loottable$builder != null) {
                     consumer.accept(resourcelocation, loottable$builder);
@@ -113,64 +116,64 @@ public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<Re
         }
     }
 
-    protected static <T> T withExplosionDecay(IItemProvider item, ILootFunctionConsumer<T> function) {
-        return !immuneToExplosion().contains(item.asItem()) ? function.acceptFunction(ExplosionDecay.builder()) : function.cast();
+    protected static <T> T withExplosionDecay(ItemLike item, FunctionUserBuilder<T> function) {
+        return !immuneToExplosion().contains(item.asItem()) ? function.apply(ApplyExplosionDecay.explosionDecay()) : function.unwrap();
     }
 
-    protected static <T> T withSurvivesExplosion(IItemProvider item, ILootConditionConsumer<T> condition) {
-        return !immuneToExplosion().contains(item.asItem()) ? condition.acceptCondition(SurvivesExplosion.builder()) : condition.cast();
+    protected static <T> T withSurvivesExplosion(ItemLike item, ConditionUserBuilder<T> condition) {
+        return !immuneToExplosion().contains(item.asItem()) ? condition.when(ExplosionCondition.survivesExplosion()) : condition.unwrap();
     }
 
-    protected static LootTable.Builder dropping(IItemProvider item) {
-        return LootTable.builder().addLootPool(withSurvivesExplosion(item, LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(item))));
+    protected static LootTable.Builder dropping(ItemLike item) {
+        return LootTable.lootTable().withPool(withSurvivesExplosion(item, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(item))));
     }
 
-    protected static <T extends Comparable<T> & IStringSerializable> LootTable.Builder droppingWhen(Block block, Property<T> property, T value) {
-        return LootTable.builder().addLootPool(withSurvivesExplosion(block, LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(block).acceptCondition(BlockStateProperty.builder(block).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withProp(property, value))))));
+    protected static <T extends Comparable<T> & StringRepresentable> LootTable.Builder droppingWhen(Block block, Property<T> property, T value) {
+        return LootTable.lootTable().withPool(withSurvivesExplosion(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(property, value))))));
     }
 
-    protected static LootTable.Builder onlyWithSilkTouch(IItemProvider item) {
-        return LootTable.builder().addLootPool(LootPool.builder().acceptCondition(SILK_TOUCH).rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(item)));
+    protected static LootTable.Builder onlyWithSilkTouch(ItemLike item) {
+        return LootTable.lootTable().withPool(LootPool.lootPool().when(SILK_TOUCH).setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(item)));
     }
 
-    protected static LootTable.Builder droppingAndFlowerPot(IItemProvider flower) {
-        return LootTable.builder().addLootPool(withSurvivesExplosion(Blocks.FLOWER_POT, LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Blocks.FLOWER_POT)))).addLootPool(withSurvivesExplosion(flower, LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(flower))));
+    protected static LootTable.Builder droppingAndFlowerPot(ItemLike flower) {
+        return LootTable.lootTable().withPool(withSurvivesExplosion(Blocks.FLOWER_POT, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(Blocks.FLOWER_POT)))).withPool(withSurvivesExplosion(flower, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(flower))));
     }
 
-    protected static LootTable.Builder droppingWithFunction(Block block, Function<ItemLootEntry.Builder<?>, ItemLootEntry.Builder<?>> mapping) {
-        return LootTable.builder().addLootPool(withSurvivesExplosion(block, LootPool.builder().rolls(ConstantRange.of(1)).addEntry(mapping.apply(ItemLootEntry.builder(block)))));
+    protected static LootTable.Builder droppingWithFunction(Block block, Function<LootItem.Builder<?>, LootItem.Builder<?>> mapping) {
+        return LootTable.lootTable().withPool(withSurvivesExplosion(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(mapping.apply(LootItem.lootTableItem(block)))));
     }
 
     protected static LootTable.Builder droppingSlab(Block slab) {
-        return LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(withExplosionDecay(slab, ItemLootEntry.builder(slab).acceptFunction(SetCount.builder(ConstantRange.of(2)).acceptCondition(BlockStateProperty.builder(slab).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withProp(SlabBlock.TYPE, SlabType.DOUBLE)))))));
+        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(withExplosionDecay(slab, LootItem.lootTableItem(slab).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2)).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(slab).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.DOUBLE)))))));
     }
 
-    protected static LootTable.Builder onlyWithShears(IItemProvider item) {
-        return LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).acceptCondition(SHEARS).addEntry(ItemLootEntry.builder(item)));
+    protected static LootTable.Builder onlyWithShears(ItemLike item) {
+        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(SHEARS).add(LootItem.lootTableItem(item)));
     }
 
     protected static LootTable.Builder droppingSheared(Block sheared) {
-        return LootTable.builder().addLootPool(LootPool.builder().acceptCondition(SHEARS).addEntry(ItemLootEntry.builder(sheared)));
+        return LootTable.lootTable().withPool(LootPool.lootPool().when(SHEARS).add(LootItem.lootTableItem(sheared)));
     }
 
     protected static LootTable.Builder droppingSheared(Block sheared, int count) {
-        return LootTable.builder().addLootPool(LootPool.builder().acceptCondition(SHEARS).addEntry(ItemLootEntry.builder(sheared).acceptFunction(SetCount.builder(ConstantRange.of(count)))));
+        return LootTable.lootTable().withPool(LootPool.lootPool().when(SHEARS).add(LootItem.lootTableItem(sheared).apply(SetItemCountFunction.setCount(ConstantValue.exactly(count)))));
     }
 
     protected static LootTable.Builder registerDoor(Block door) {
         return droppingWhen(door, DoorBlock.HALF, DoubleBlockHalf.LOWER);
     }
 
-    protected static LootTable.Builder dropping(Block block, ILootCondition.IBuilder conditionBuilder, LootEntry.Builder<?> lootEntryBuilder) {
-        return LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(block).acceptCondition(conditionBuilder).alternatively(lootEntryBuilder)));
+    protected static LootTable.Builder dropping(Block block, LootItemCondition.Builder conditionBuilder, LootPoolEntryContainer.Builder<?> lootEntryBuilder) {
+        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(conditionBuilder).otherwise(lootEntryBuilder)));
     }
 
-    protected static LootTable.Builder droppingWithSilkTouch(Block block, LootEntry.Builder<?> builder) {
+    protected static LootTable.Builder droppingWithSilkTouch(Block block, LootPoolEntryContainer.Builder<?> builder) {
         return dropping(block, SILK_TOUCH, builder);
     }
 
-    protected static LootTable.Builder droppingWithSilkTouch(Block block, IItemProvider noSilkTouch) {
-        return droppingWithSilkTouch(block, withSurvivesExplosion(block, ItemLootEntry.builder(noSilkTouch)));
+    protected static LootTable.Builder droppingWithSilkTouch(Block block, ItemLike noSilkTouch) {
+        return droppingWithSilkTouch(block, withSurvivesExplosion(block, LootItem.lootTableItem(noSilkTouch)));
     }
 
     protected Iterable<Block> getKnownBlocks() {
@@ -178,14 +181,14 @@ public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<Re
     }
 
     protected void registerFlowerPot(Block flowerPot) {
-        this.registerLootTable(flowerPot, (pot) -> droppingAndFlowerPot(((FlowerPotBlock)pot).getFlower()));
+        this.registerLootTable(flowerPot, (pot) -> droppingAndFlowerPot(((FlowerPotBlock) pot).getContent()));
     }
 
     protected void registerSilkTouch(Block blockIn, Block silkTouchDrop) {
         this.registerLootTable(blockIn, onlyWithSilkTouch(silkTouchDrop));
     }
 
-    protected void registerDropping(Block blockIn, IItemProvider drop) {
+    protected void registerDropping(Block blockIn, ItemLike drop) {
         this.registerLootTable(blockIn, dropping(drop));
     }
 
@@ -206,9 +209,9 @@ public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<Re
         this.lootTables.put(block.getLootTable(), table);
     }
 
-    public LootEntry.Builder<?> setCountFromIntegerProperty(Block block, StandaloneLootEntry.Builder<?> lootEntryBuilder, IntegerProperty intProperty) {
-        intProperty.getAllowedValues().forEach(integer -> {
-            lootEntryBuilder.acceptFunction(SetCount.builder(ConstantRange.of(integer)).acceptCondition(BlockStateProperty.builder(block).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(intProperty, integer))));
+    public LootPoolEntryContainer.Builder<?> setCountFromIntegerProperty(Block block, LootPoolSingletonContainer.Builder<?> lootEntryBuilder, IntegerProperty intProperty) {
+        intProperty.getPossibleValues().forEach(integer -> {
+            lootEntryBuilder.apply(SetItemCountFunction.setCount(ConstantValue.exactly(integer)).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(intProperty, integer))));
         });
         return lootEntryBuilder;
     }

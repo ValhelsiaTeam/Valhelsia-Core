@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.util;
 
-import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -20,11 +21,11 @@ public abstract class AbstractConfigValidator {
 
     public abstract void validate();
 
-    public void addError(IFormattableTextComponent errorMessage, String path) {
+    public void addError(TranslatableComponent errorMessage, String path) {
         this.errors.add(new ConfigError(errorMessage, path, null));
     }
 
-    public void addError(IFormattableTextComponent errorMessage, String path, @Nullable IFormattableTextComponent solutionMessage) {
+    public void addError(TranslatableComponent errorMessage, String path, @Nullable TranslatableComponent solutionMessage) {
         this.errors.add(new ConfigError(errorMessage, path, solutionMessage));
     }
 

@@ -17,10 +17,11 @@ public enum ValhelsiaRenderType {
     TRANSLUCENT;
 
     public RenderType getRenderType() {
-        switch (this) {
-            case CUTOUT_MIPPED: return RenderType.getCutoutMipped();
-            case CUTOUT: return RenderType.getCutout();
-            case TRANSLUCENT: return RenderType.getTranslucent();
-            default: return RenderType.getSolid();
-        }
-    }}
+        return switch (this) {
+            case CUTOUT_MIPPED -> RenderType.cutoutMipped();
+            case CUTOUT -> RenderType.cutout();
+            case TRANSLUCENT -> RenderType.translucent();
+            default -> RenderType.solid();
+        };
+    }
+}

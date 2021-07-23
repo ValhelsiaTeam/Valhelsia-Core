@@ -1,9 +1,9 @@
 package net.valhelsia.valhelsia_core.event;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,7 +28,7 @@ public class PlayerJoinWorldListener {
 
     @SubscribeEvent
     public static void onPlayerJoinWorld(PlayerEvent.PlayerLoggedInEvent event) {
-        PlayerEntity player = event.getPlayer();
+        Player player = event.getPlayer();
         List<ConfigError> errors = new ArrayList<>();
 
         for (RegistryManager registryManager : ValhelsiaCore.REGISTRY_MANAGERS) {
@@ -47,9 +47,9 @@ public class PlayerJoinWorldListener {
         }
         if (!errors.isEmpty()) {
             errors.forEach(configError -> {
-                player.sendMessage(new StringTextComponent(configError.getModID()).mergeStyle(TextFormatting.UNDERLINE), player.getUniqueID());
-                player.sendMessage(new TranslationTextComponent("gui.valhelsia_core.config.error").appendString(": " + configError.getPath()), player.getUniqueID());
-                player.sendMessage(configError.getErrorMessage(), player.getUniqueID());
+                player.sendMessage(new TextComponent(configError.getModID()).withStyle(ChatFormatting.UNDERLINE), player.getUUID());
+                player.sendMessage(new TranslatableComponent("gui.valhelsia_core.config.error").append(": " + configError.getPath()), player.getUUID());
+                player.sendMessage(configError.getErrorMessage(), player.getUUID());
             });
         }
     }

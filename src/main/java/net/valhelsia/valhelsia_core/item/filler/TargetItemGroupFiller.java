@@ -1,9 +1,9 @@
 package net.valhelsia.valhelsia_core.item.filler;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
@@ -30,8 +30,9 @@ public class TargetItemGroupFiller implements IItemGroupFiller {
     }
 
     @Override
-    public void fill(ItemStack stack, ItemGroup group, NonNullList<ItemStack> items) {
-        if (stack.getItem().isInGroup(group)) {
+    public void fill(ItemStack stack, CreativeModeTab tab, NonNullList<ItemStack> items) {
+        //TODO
+        //if (stack.getItem().allowedIn(tab)) {
             int index = -1;
 
             for (int i = 0; i < items.size(); i++) {
@@ -45,6 +46,6 @@ public class TargetItemGroupFiller implements IItemGroupFiller {
             } else {
                 items.add(stack);
             }
-        }
+      //  }
     }
 }

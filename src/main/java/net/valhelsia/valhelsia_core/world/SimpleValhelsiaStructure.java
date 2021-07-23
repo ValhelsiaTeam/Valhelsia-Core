@@ -1,9 +1,9 @@
 package net.valhelsia.valhelsia_core.world;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer1;
 
 /**
  * Valhelsia Structure
@@ -13,7 +13,7 @@ import net.minecraft.world.gen.settings.StructureSeparationSettings;
  * @version 16.0.9
  * @since 2021-05-27
  */
-public abstract class SimpleValhelsiaStructure<C extends IFeatureConfig> extends Structure<C> implements IValhelsiaStructure {
+public abstract class SimpleValhelsiaStructure<C extends FeatureConfiguration> extends StructureFeature<C> implements IValhelsiaStructure {
 
     private final String name;
 
@@ -27,10 +27,10 @@ public abstract class SimpleValhelsiaStructure<C extends IFeatureConfig> extends
         return name;
     }
 
-    public Structure<?> getStructure() {
+    public StructureFeature<?> getStructure() {
         return this;
     }
 
     @Override
-    public abstract StructureSeparationSettings getSeparationSettings();
+    public abstract AreaTransformer1 getFeatureConfiguration();
 }

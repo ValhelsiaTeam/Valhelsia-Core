@@ -1,10 +1,10 @@
 package net.valhelsia.valhelsia_core.world;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.world.gen.feature.structure.JigsawStructure;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.VillageConfig;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.world.level.levelgen.feature.JigsawFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
+import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer1;
 
 /**
  * Valhelsia Jigsaw Structure
@@ -14,11 +14,11 @@ import net.minecraft.world.gen.settings.StructureSeparationSettings;
  * @version 16.0.9
  * @since 2021-05-28
  */
-public abstract class ValhelsiaJigsawStructure extends JigsawStructure implements IValhelsiaStructure {
+public abstract class ValhelsiaJigsawStructure extends JigsawFeature implements IValhelsiaStructure {
 
     private final String name;
 
-    public ValhelsiaJigsawStructure(Codec<VillageConfig> codec, String name) {
+    public ValhelsiaJigsawStructure(Codec<JigsawConfiguration> codec, String name) {
         super(codec, 0, true, true);
         this.name = name;
     }
@@ -29,10 +29,10 @@ public abstract class ValhelsiaJigsawStructure extends JigsawStructure implement
     }
 
     @Override
-    public Structure<?> getStructure() {
+    public StructureFeature<?> getStructure() {
         return this;
     }
 
     @Override
-    public abstract StructureSeparationSettings getSeparationSettings();
+    public abstract AreaTransformer1 getFeatureConfiguration();
 }

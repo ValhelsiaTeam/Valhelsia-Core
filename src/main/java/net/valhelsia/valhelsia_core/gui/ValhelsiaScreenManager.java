@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.valhelsia.valhelsia_core.gui.element.GuiElement;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class ValhelsiaScreenManager {
         getElements().get(getElements().indexOf(element)).init();
     }
 
-    protected void renderAllElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    protected void renderAllElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         elements.forEach(element -> element.render(stack, mouseX, mouseY, partialTicks));
         elements.forEach(element -> {
             if (element.isMouseOver(mouseX, mouseY)) {

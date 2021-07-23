@@ -5,15 +5,18 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.loot.*;
-import net.minecraft.loot.conditions.ILootCondition;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.init.ValhelsiaLootConditions;
 
@@ -32,56 +35,52 @@ import java.util.Set;
  * @version 16.0.7
  * @since 2021-05-03
  */
-public class MatchBlockCondition implements ILootCondition {
+public class MatchBlockCondition implements LootItemCondition {
 
     @Nullable
     private final List<Block> blocks;
     @Nullable
-    private final ITag.INamedTag<Block> tag;
+    private final Tag.Named<Block> tag;
     @Nullable
     private final StatePropertiesPredicate properties;
 
-    public MatchBlockCondition(@Nullable List<Block> blocks, @Nullable ITag.INamedTag<Block> tag, @Nullable StatePropertiesPredicate properties) {
+    public MatchBlockCondition(@Nullable List<Block> blocks, @Nullable Tag.Named<Block> tag, @Nullable StatePropertiesPredicate properties) {
         this.blocks = blocks;
         this.tag = tag;
         this.properties = properties;
     }
 
-    public static ILootCondition.IBuilder builder(List<Block> blocks) {
+    public static LootItemCondition.Builder builder(List<Block> blocks) {
         return () -> new MatchBlockCondition(blocks, null, null);
     }
 
-    public static ILootCondition.IBuilder builder(ITag.INamedTag<Block> tag) {
+    public static LootItemCondition.Builder builder(Tag.Named<Block> tag) {
         return () -> new MatchBlockCondition(null, tag, null);
     }
 
-    public static ILootCondition.IBuilder builder(List<Block> blocks, ITag.INamedTag<Block> tag) {
+    public static LootItemCondition.Builder builder(List<Block> blocks, Tag.Named<Block> tag) {
         return () -> new MatchBlockCondition(blocks, tag, null);
     }
 
-    public static ILootCondition.IBuilder builder(List<Block> blocks, ITag.INamedTag<Block> tag, StatePropertiesPredicate properties) {
+    public static LootItemCondition.Builder builder(List<Block> blocks, Tag.Named<Block> tag, StatePropertiesPredicate properties) {
         return () -> new MatchBlockCondition(blocks, tag, properties);
     }
 
     @Override
     @Nonnull
-    public LootConditionType func_230419_b_() {
+    public LootItemConditionType getType() {
         return ValhelsiaLootConditions.MATCH_BLOCK;
     }
 
     @Override
     @Nonnull
-    public Set<LootParameter<?>> getRequiredParameters() {
-        return ImmutableSet.of(LootParameters.BLOCK_STATE);
+    public Set<LootContextParam<?>> getReferencedContextParams() {
+        return ImmutableSet.of(LootContextParams.BLOCK_STATE);
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        BlockState state = lootContext.get(LootParameters.BLOCK_STATE);
-
-        if (state == null) {
-            return false;
-        }
+        BlockState state = lootContext.getParam(LootContextParams.BLOCK_STATE);
 
         boolean flag = false;
 
@@ -93,20 +92,20 @@ public class MatchBlockCondition implements ILootCondition {
         }
 
         if (this.properties != null) {
-            flag = this.properties.matches(state);
+            flag = this.properties.equals(state);
         }
 
         return flag;
     }
 
-    public static class Serializer implements ILootSerializer<MatchBlockCondition> {
+    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<MatchBlockCondition> {
         @Override
         public void serialize(@Nonnull JsonObject jsonObject, MatchBlockCondition instance, @Nonnull JsonSerializationContext context) {
             if (instance.tag != null) {
                 jsonObject.addProperty("tag", instance.tag.getName().toString());
             }
             if (instance.properties != null) {
-                jsonObject.add("properties", instance.properties.toJsonElement());
+                jsonObject.add("properties", instance.properties.serializeToJson());
             }
         }
 
@@ -114,20 +113,20 @@ public class MatchBlockCondition implements ILootCondition {
         @Nonnull
         public MatchBlockCondition deserialize(JsonObject jsonObject, @Nonnull JsonDeserializationContext context) {
             if (jsonObject.has("tag")) {
-                ResourceLocation tag = new ResourceLocation(JSONUtils.getString(jsonObject, "tag"));
+                ResourceLocation tag = new ResourceLocation(GsonHelper.getAsString(jsonObject, "tag"));
 
                 return new MatchBlockCondition(null, BlockTags.createOptional(tag), deserializeProperties(jsonObject));
             } else if (jsonObject.has("blocks")) {
                 List<Block> blocks = new ArrayList<>();
 
-                for (JsonElement e : JSONUtils.getJsonArray(jsonObject, "blocks")) {
+                for (JsonElement e : GsonHelper.getAsJsonArray(jsonObject, "blocks")) {
                     ResourceLocation blockName = new ResourceLocation(e.getAsString());
                     blocks.add(ForgeRegistries.BLOCKS.getValue(blockName));
                 }
 
                 return new MatchBlockCondition(blocks, null, deserializeProperties(jsonObject));
             } else if (jsonObject.has("block")) {
-                ResourceLocation block = new ResourceLocation(JSONUtils.getString(jsonObject, "block"));
+                ResourceLocation block = new ResourceLocation(GsonHelper.getAsString(jsonObject, "block"));
 
                 return new MatchBlockCondition(Collections.singletonList(ForgeRegistries.BLOCKS.getValue(block)), null, deserializeProperties(jsonObject));
             }
@@ -136,7 +135,7 @@ public class MatchBlockCondition implements ILootCondition {
 
         private StatePropertiesPredicate deserializeProperties(JsonObject jsonObject) {
             if (jsonObject.has("properties")) {
-                return StatePropertiesPredicate.deserializeProperties(jsonObject.get("properties"));
+                return StatePropertiesPredicate.fromJson(jsonObject.get("properties"));
             }
             return null;
         }

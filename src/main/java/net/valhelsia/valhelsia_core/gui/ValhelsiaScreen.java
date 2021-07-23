@@ -1,8 +1,8 @@
 package net.valhelsia.valhelsia_core.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.valhelsia.valhelsia_core.gui.element.GuiElement;
 
 import java.util.List;
@@ -17,8 +17,8 @@ public class ValhelsiaScreen extends Screen {
     private int guiLeft;
     private int guiTop;
 
-    protected ValhelsiaScreen(ITextComponent titleIn, int sizeX, int sizeY) {
-        super(titleIn);
+    protected ValhelsiaScreen(TranslatableComponent title, int sizeX, int sizeY) {
+        super(title);
         this.manager = new ValhelsiaScreenManager();
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -33,7 +33,7 @@ public class ValhelsiaScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         manager.renderAllElements(stack, mouseX, mouseY, partialTicks);
     }

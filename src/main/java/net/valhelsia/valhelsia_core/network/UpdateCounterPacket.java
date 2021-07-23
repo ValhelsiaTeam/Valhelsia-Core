@@ -1,12 +1,12 @@
 package net.valhelsia.valhelsia_core.network;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import net.valhelsia.valhelsia_core.capability.counter.CounterProvider;
 import net.valhelsia.valhelsia_core.capability.counter.SimpleCounter;
 
@@ -21,23 +21,17 @@ import java.util.function.Supplier;
  * @version 16.0.9
  * @since 2021-05-31
  */
-public class UpdateCounterPacket {
+public record UpdateCounterPacket(SimpleCounter timer) {
 
-    private final SimpleCounter timer;
-
-    public UpdateCounterPacket(SimpleCounter timer) {
-        this.timer = timer;
-    }
-
-    public static void encode(UpdateCounterPacket packet, PacketBuffer buffer) {
-        CompoundNBT compound = packet.timer.save(new CompoundNBT());
+    public static void encode(UpdateCounterPacket packet, FriendlyByteBuf buffer) {
+        CompoundTag compound = packet.timer.save(new CompoundTag());
         compound.putString("name", packet.timer.getName().toString());
 
-        buffer.writeCompoundTag(compound);
+        buffer.writeNbt(compound);
     }
 
-    public static UpdateCounterPacket decode(PacketBuffer buffer) {
-        CompoundNBT compound = buffer.readCompoundTag();
+    public static UpdateCounterPacket decode(FriendlyByteBuf buffer) {
+        CompoundTag compound = buffer.readNbt();
         SimpleCounter timer = new SimpleCounter(new ResourceLocation(Objects.requireNonNull(compound).getString("name")));
         timer.load(compound);
 
@@ -48,11 +42,11 @@ public class UpdateCounterPacket {
         ctx.get().enqueueWork(() -> {
             assert ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT;
 
-            ClientPlayerEntity player = Minecraft.getInstance().player;
+            LocalPlayer player = Minecraft.getInstance().player;
 
             if (player != null) {
                 player.getCapability(CounterProvider.CAPABILITY).ifPresent((counterCapability) -> {
-                    counterCapability.getCounter(packet.timer.getName()).load(packet.timer.save(new CompoundNBT()));
+                    counterCapability.getCounter(packet.timer.getName()).load(packet.timer.save(new CompoundTag()));
                 });
             }
         });

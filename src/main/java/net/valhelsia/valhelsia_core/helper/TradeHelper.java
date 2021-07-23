@@ -1,7 +1,6 @@
 package net.valhelsia.valhelsia_core.helper;
 
-import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraftforge.common.BasicTrade;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraftforge.event.village.WandererTradesEvent;
 
 /**
@@ -14,14 +13,14 @@ import net.minecraftforge.event.village.WandererTradesEvent;
  */
 public class TradeHelper {
 
-    public static void addWanderingTraderTrades(WandererTradesEvent event, VillagerTrades.ITrade... trades) {
-        for (VillagerTrades.ITrade trade : trades) {
+    public static void addWanderingTraderTrades(WandererTradesEvent event, VillagerTrades.ItemListing... trades) {
+        for (VillagerTrades.ItemListing trade : trades) {
             event.getGenericTrades().add(trade);
         }
     }
 
-    public static void addRareWanderingTraderTrades(WandererTradesEvent event, VillagerTrades.ITrade... trades) {
-        for (VillagerTrades.ITrade trade : trades) {
+    public static void addRareWanderingTraderTrades(WandererTradesEvent event, VillagerTrades.ItemListing... trades) {
+        for (VillagerTrades.ItemListing trade : trades) {
             event.getRareTrades().add(trade);
         }
     }

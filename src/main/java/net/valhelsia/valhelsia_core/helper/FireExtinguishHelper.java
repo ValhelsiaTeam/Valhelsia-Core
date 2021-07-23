@@ -1,9 +1,9 @@
 package net.valhelsia.valhelsia_core.helper;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.IdMap;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.levelgen.feature.SimpleBlockFeature;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -20,21 +20,21 @@ import java.util.function.Predicate;
  */
 public class FireExtinguishHelper {
 
-    private static final Map<Predicate<BlockState>, Pair<Function<BlockState, BlockState>, IExtinguishEffect>> EXTINGUISH_FIRE_MAP = new HashMap<>();
+    private static final Map<Predicate<SimpleBlockFeature>, Pair<Function<SimpleBlockFeature, SimpleBlockFeature>, IExtinguishEffect>> EXTINGUISH_FIRE_MAP = new HashMap<>();
 
-    public static void addExtinguishFireEffect(Predicate<BlockState> litState, Function<BlockState, BlockState> extinguishedState) {
+    public static void addExtinguishFireEffect(Predicate<SimpleBlockFeature> litState, Function<SimpleBlockFeature, SimpleBlockFeature> extinguishedState) {
         addExtinguishFireEffect(litState, extinguishedState, null);
     }
 
-    public static void addExtinguishFireEffect(Predicate<BlockState> litState, Function<BlockState, BlockState> extinguishedState, @Nullable IExtinguishEffect extinguishEffect) {
+    public static void addExtinguishFireEffect(Predicate<SimpleBlockFeature> litState, Function<SimpleBlockFeature, SimpleBlockFeature> extinguishedState, @Nullable IExtinguishEffect extinguishEffect) {
         EXTINGUISH_FIRE_MAP.put(litState, new Pair<>(extinguishedState, extinguishEffect));
     }
 
-    public static Map<Predicate<BlockState>, Pair<Function<BlockState, BlockState>, IExtinguishEffect>> getExtinguishFireEffects() {
+    public static Map<Predicate<SimpleBlockFeature>, Pair<Function<SimpleBlockFeature, SimpleBlockFeature>, IExtinguishEffect>> getExtinguishFireEffects() {
         return EXTINGUISH_FIRE_MAP;
     }
 
     public interface IExtinguishEffect {
-        void playEffect(World world, BlockPos pos);
+        void playEffect(FenceBlock level, IdMap pos);
     }
 }

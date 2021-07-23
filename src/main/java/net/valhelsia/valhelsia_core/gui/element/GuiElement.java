@@ -1,10 +1,11 @@
 package net.valhelsia.valhelsia_core.gui.element;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +31,11 @@ public abstract class GuiElement {
         childElements.forEach(GuiElement::init);
     }
 
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         childElements.forEach(element -> element.render(stack, mouseX, mouseY, partialTicks));
     }
 
-    public void renderHoverEffect(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void renderHoverEffect(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         childElements.forEach(element -> {
             if (element.isMouseOver(mouseX, mouseY)) {
                 element.renderHoverEffect(stack, mouseX, mouseY, partialTicks);
@@ -77,19 +78,19 @@ public abstract class GuiElement {
     }
 
     public Screen getCurrentScreen() {
-        return getMinecraft().currentScreen;
+        return getMinecraft().screen;
     }
 
-    public void bindTexture(ResourceLocation texture) {
-        getMinecraft().getTextureManager().bindTexture(texture);
+    public void setTexture(ResourceLocation texture) {
+        RenderSystem.setShaderTexture(0, texture);
     }
 
-    public void blit(MatrixStack matrixStack, int blitOffset, int startX, int startY, int sizeX, int sizeY, int textureSizeX, int textureSizeY) {
-        blit(matrixStack, getPosX(), getPosY(), blitOffset, startX, startY, sizeX, sizeY, textureSizeX, textureSizeY);
+    public void blit(PoseStack stack, int blitOffset, int startX, int startY, int sizeX, int sizeY, int textureSizeX, int textureSizeY) {
+        blit(stack, getPosX(), getPosY(), blitOffset, startX, startY, sizeX, sizeY, textureSizeX, textureSizeY);
     }
 
-    public void blit(MatrixStack matrixStack, int posX, int posY, int blitOffset, int startX, int startY, int sizeX, int sizeY, int textureSizeX, int textureSizeY) {
-        AbstractGui.blit(matrixStack, posX, posY, blitOffset, startX, startY, sizeX, sizeY, textureSizeX, textureSizeY);
+    public void blit(PoseStack stack, int posX, int posY, int blitOffset, int startX, int startY, int sizeX, int sizeY, int textureSizeX, int textureSizeY) {
+        GuiComponent.blit(stack, posX, posY, blitOffset, startX, startY, sizeX, sizeY, textureSizeX, textureSizeY);
     }
 
     public boolean isMouseOver(double mouseX, double mouseY) {

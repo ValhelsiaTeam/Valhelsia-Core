@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.init;
 
-import net.minecraft.loot.LootConditionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.valhelsia.valhelsia_core.loot.conditions.MatchBlockCondition;
 
 /**
@@ -13,6 +13,6 @@ import net.valhelsia.valhelsia_core.loot.conditions.MatchBlockCondition;
  */
 public class ValhelsiaLootConditions {
 
-    public static final LootConditionType MATCH_BLOCK = new LootConditionType(new MatchBlockCondition.Serializer());
+    public static final LootItemConditionType MATCH_BLOCK = new LootItemConditionType(new MatchBlockCondition.Serializer());
 
 }

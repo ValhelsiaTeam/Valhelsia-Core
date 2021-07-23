@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.util;
 
-import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 
 import javax.annotation.Nullable;
 
@@ -14,19 +15,19 @@ import javax.annotation.Nullable;
  */
 public class ConfigError {
 
-    private final IFormattableTextComponent errorMessage;
+    private final TranslatableComponent errorMessage;
     private final String path;
-    private final IFormattableTextComponent solutionMessage;
+    private final TranslatableComponent solutionMessage;
 
     private String modID = null;
 
-    public ConfigError(IFormattableTextComponent errorMessage, String path, @Nullable IFormattableTextComponent solutionMessage) {
+    public ConfigError(TranslatableComponent errorMessage, String path, @Nullable TranslatableComponent solutionMessage) {
         this.errorMessage = errorMessage;
         this.path = path;
         this.solutionMessage = solutionMessage;
     }
 
-    public IFormattableTextComponent getErrorMessage() {
+    public TranslatableComponent getErrorMessage() {
         return errorMessage;
     }
 
@@ -35,7 +36,7 @@ public class ConfigError {
     }
 
     @Nullable
-    public IFormattableTextComponent getSolutionMessage() {
+    public TranslatableComponent getSolutionMessage() {
         return solutionMessage;
     }
 

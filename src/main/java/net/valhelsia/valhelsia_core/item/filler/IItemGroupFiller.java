@@ -1,9 +1,8 @@
 package net.valhelsia.valhelsia_core.item.filler;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Item Group Filler Interface
@@ -15,5 +14,5 @@ import net.minecraft.util.NonNullList;
  */
 @FunctionalInterface
 public interface IItemGroupFiller {
-    void fill(ItemStack stack, ItemGroup group, NonNullList<ItemStack> items);
+    void fill(ItemStack stack, CreativeModeTab tab, NonNullList<ItemStack> items);
 }

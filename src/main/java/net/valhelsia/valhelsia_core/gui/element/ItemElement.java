@@ -1,9 +1,9 @@
 package net.valhelsia.valhelsia_core.gui.element;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemElement extends GuiElement {
 
@@ -22,16 +22,16 @@ public class ItemElement extends GuiElement {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(getItemStack(), getPosX(), getPosY());
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+        getMinecraft().getItemRenderer().renderAndDecorateItem(getItemStack(), getPosX(), getPosY());
         if (renderOverlay) {
-            getMinecraft().getItemRenderer().renderItemOverlays(getMinecraft().fontRenderer, getItemStack(), getPosX(), getPosY());
+            //getMinecraft().getItemRenderer().renderItemOverlays(getMinecraft().font, getItemStack(), getPosX(), getPosY());
         }
     }
 
     @Override
-    public void renderHoverEffect(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        getCurrentScreen().renderTooltip(stack, Lists.transform(getCurrentScreen().getTooltipFromItem(getItemStack()), ITextComponent::func_241878_f), mouseX, mouseY);
+    public void renderHoverEffect(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+        getCurrentScreen().renderTooltip(stack, Lists.transform(getCurrentScreen().getTooltipFromItem(getItemStack()), Component::getVisualOrderText), mouseX, mouseY);
     }
 
     public ItemStack getItemStack() {

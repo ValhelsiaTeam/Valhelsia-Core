@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.event;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.MainMenuScreen;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -28,7 +28,7 @@ public class GuiListener {
 
     @SubscribeEvent
     public static void onGuiOpen(GuiOpenEvent event) {
-        if (event.getGui() instanceof MainMenuScreen && !ValhelsiaCore.allConfigsValidated) {
+        if (event.getGui() instanceof TitleScreen && !ValhelsiaCore.allConfigsValidated) {
             List<ConfigError> errors = new ArrayList<>();
 
             for (RegistryManager registryManager : ValhelsiaCore.REGISTRY_MANAGERS) {
@@ -51,7 +51,7 @@ public class GuiListener {
 
                 ConfigError error = errors.get(0);
                 errors.remove(error);
-                Minecraft.getInstance().displayGuiScreen(errors.isEmpty() ? new ConfigErrorScreen(error) : new ConfigErrorScreen(error, errors));
+                Minecraft.getInstance().setScreen(errors.isEmpty() ? new ConfigErrorScreen(error) : new ConfigErrorScreen(error, errors));
             }
             ValhelsiaCore.allConfigsValidated = true;
         }

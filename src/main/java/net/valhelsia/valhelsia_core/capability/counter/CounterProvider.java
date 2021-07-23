@@ -1,7 +1,8 @@
 package net.valhelsia.valhelsia_core.capability.counter;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -20,7 +21,7 @@ import java.util.List;
  * @version 16.2.0
  * @since 2021-02-03
  */
-public class CounterProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
+public class CounterProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
 
     @CapabilityInject(ICounterCapability.class)
     public static Capability<ICounterCapability> CAPABILITY = null;
@@ -40,12 +41,22 @@ public class CounterProvider implements ICapabilityProvider, ICapabilitySerializ
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        return (CompoundNBT) CAPABILITY.getStorage().writeNBT(CAPABILITY, instance, null);
+    public CompoundTag serializeNBT() {
+        CompoundTag compound = new CompoundTag();
+        for (SimpleCounter counter : instance.getCounters()) {
+            compound.put(counter.getName().toString(), counter.save(new CompoundTag()));
+        }
+        return compound;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
-        CAPABILITY.getStorage().readNBT(CAPABILITY, instance, null, nbt);
+    public void deserializeNBT(CompoundTag nbt) {
+        for (String name : nbt.getAllKeys()) {
+            instance.removeCounter(instance.getCounter(new ResourceLocation(name)));
+            SimpleCounter counter = new SimpleCounter(new ResourceLocation(name));
+            counter.load(nbt.getCompound(name));
+
+            instance.addCounter(counter);
+        }
     }
 }
