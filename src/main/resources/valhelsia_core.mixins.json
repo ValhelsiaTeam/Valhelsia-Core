@@ -9,8 +9,9 @@
     "PotionEntityMixin"
   ],
   "client": [
+    "client.CapeLayerMixin",
     "client.ClientPlayNetHandlerMixin",
-    "client.CapeLayerMixin"
+    "client.CustomizeSkinScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
