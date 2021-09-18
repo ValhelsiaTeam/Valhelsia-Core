@@ -9,11 +9,11 @@ import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 
 /**
- * Network Handler
+ * Network Handler <br>
  * Valhelsia Core - net.valhelsia.valhelsia_core.network.NetworkHandler
  *
  * @author Valhelsia Team
- * @version 16.0.9
+ * @version 16.0.11
  * @since 2021-05-31
  */
 public class NetworkHandler {
@@ -29,10 +29,15 @@ public class NetworkHandler {
         INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(ValhelsiaCore.MOD_ID, "channel"), () -> "1.0", s -> true, s -> true);
 
         INSTANCE.registerMessage(nextID(), UpdateCounterPacket.class, UpdateCounterPacket::encode, UpdateCounterPacket::decode, UpdateCounterPacket::consume);
+        INSTANCE.registerMessage(nextID(), UpdateCosmeticsPacket.class, UpdateCosmeticsPacket::encode, UpdateCosmeticsPacket::decode, UpdateCosmeticsPacket::consume);
     }
 
     public static <MSG> void sendTo(Player player, MSG msg) {
         NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), msg);
+    }
+
+    public static <MSG> void sendToAll(MSG msg) {
+        NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), msg);
     }
 
     public static <MSG> void sendToServer(MSG msg) {
