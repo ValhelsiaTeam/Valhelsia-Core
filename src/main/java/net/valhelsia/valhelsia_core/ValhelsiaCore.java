@@ -9,7 +9,9 @@ import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
@@ -17,6 +19,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.valhelsia.valhelsia_core.capability.counter.CounterImpl;
 import net.valhelsia.valhelsia_core.capability.counter.CounterStorage;
 import net.valhelsia.valhelsia_core.capability.counter.ICounterCapability;
+import net.valhelsia.valhelsia_core.client.CosmeticsManager;
+import net.valhelsia.valhelsia_core.config.Config;
 import net.valhelsia.valhelsia_core.init.ValhelsiaLootConditions;
 import net.valhelsia.valhelsia_core.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.registry.LootModifierRegistryHelper;
@@ -40,7 +44,11 @@ public class ValhelsiaCore {
     public static final List<RegistryManager> REGISTRY_MANAGERS = new ArrayList<>();
     public static final RegistryManager REGISTRY_MANAGER = new RegistryManager.Builder(MOD_ID).addHelpers(new LootModifierRegistryHelper()).build();
 
+    private static ValhelsiaCore instance;
+    private final CosmeticsManager cosmeticsManager;
+
     public ValhelsiaCore() {
+        instance = this;
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientSetup::new);
@@ -55,6 +63,10 @@ public class ValhelsiaCore {
         MinecraftForge.EVENT_BUS.register(this);
 
         REGISTRY_MANAGER.register(eventBus);
+
+        this.cosmeticsManager = new CosmeticsManager();
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -70,5 +82,13 @@ public class ValhelsiaCore {
 
     private void registerLootConditions(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
         Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(ValhelsiaCore.MOD_ID, "match_block"), ValhelsiaLootConditions.MATCH_BLOCK);
+    }
+
+    public static ValhelsiaCore getInstance() {
+        return instance;
+    }
+
+    public CosmeticsManager getCosmeticsManager() {
+        return cosmeticsManager;
     }
 }

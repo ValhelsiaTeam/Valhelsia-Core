@@ -11,13 +11,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Cape Layer Mixin
+ * Cape Layer Mixin <br>
  * Valhelsia Core - net.valhelsia.valhelsia_core.mixin.client.CapeLayerMixin
  *
  * Cancels the Cape Rendering when the PlayerEntity has a Valhelsia Cape.
  *
  * @author Valhelsia Team
- * @version 16.0.7
+ * @version 16.0.11
  * @since 2021-05-11
  */
 @Mixin(CapeLayer.class)

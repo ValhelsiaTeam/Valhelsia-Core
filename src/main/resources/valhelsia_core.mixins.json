@@ -11,7 +11,9 @@
   "client": [
     "client.CapeLayerMixin",
     "client.ClientPlayNetHandlerMixin",
-    "client.CustomizeSkinScreenMixin"
+    "client.CustomizeSkinScreenMixin",
+    "client.ElytraLayerMixin",
+    "client.SkinManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

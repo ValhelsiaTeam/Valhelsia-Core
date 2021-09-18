@@ -15,13 +15,16 @@ import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
-import net.valhelsia.valhelsia_core.client.ValhelsiaCapeManager;
+import net.valhelsia.valhelsia_core.ValhelsiaCore;
+import net.valhelsia.valhelsia_core.client.CosmeticsData;
+import net.valhelsia.valhelsia_core.client.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.model.ValhelsiaCapeModel;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 /**
- * Valhelsia Cape Layer
+ * Valhelsia Cape Layer <br>
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.renderer.ValhelsiaCapeLayer
  *
  * @author Valhelsia Team
@@ -37,14 +40,21 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayerEntity> extends La
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, @Nonnull IRenderTypeBuffer buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ItemStack stack = entity.getItemStackFromSlot(EquipmentSlotType.CHEST);
+    public void render(@Nonnull MatrixStack matrixStack, @Nonnull IRenderTypeBuffer buffer, int packedLight, T player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
-        if (stack.getItem() == Items.ELYTRA || !ValhelsiaCapeManager.hasPlayerCape(entity.getUniqueID().toString())) {
+        CosmeticsManager cosmeticsManager = ValhelsiaCore.getInstance().getCosmeticsManager();
+
+        UUID uuid = player.getUniqueID();
+        CosmeticsData cosmeticsData = cosmeticsManager.getCosmeticsForPlayer(uuid);
+
+        String activeCape = cosmeticsManager.getActiveCosmeticsForPlayer(uuid).getString("Cape");
+
+        if (stack.getItem() == Items.ELYTRA || cosmeticsData == null || activeCape.equals("") || !cosmeticsData.getCapes().contains(activeCape)) {
             return;
         }
 
-        ResourceLocation texture = ValhelsiaCapeManager.getCapeForPlayer(entity.getUniqueID().toString());
+        ResourceLocation texture = cosmeticsManager.getCosmeticTexture(activeCape);
 
         if (texture == null) {
             return;
@@ -54,10 +64,10 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayerEntity> extends La
 
         matrixStack.translate(0.0D, 0.0D, 0.2D);
 
-        double d0 = MathHelper.lerp(partialTicks, entity.prevChasingPosX, entity.chasingPosX) - MathHelper.lerp(partialTicks, entity.prevPosX, entity.getPosX());
-        double d1 = MathHelper.lerp(partialTicks, entity.prevChasingPosY, entity.chasingPosY) - MathHelper.lerp(partialTicks, entity.prevPosY, entity.getPosY());
-        double d2 = MathHelper.lerp(partialTicks, entity.prevChasingPosZ, entity.chasingPosZ) - MathHelper.lerp(partialTicks, entity.prevPosZ, entity.getPosZ());
-        float f = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset);
+        double d0 = MathHelper.lerp(partialTicks, player.prevChasingPosX, player.chasingPosX) - MathHelper.lerp(partialTicks, player.prevPosX, player.getPosX());
+        double d1 = MathHelper.lerp(partialTicks, player.prevChasingPosY, player.chasingPosY) - MathHelper.lerp(partialTicks, player.prevPosY, player.getPosY());
+        double d2 = MathHelper.lerp(partialTicks, player.prevChasingPosZ, player.chasingPosZ) - MathHelper.lerp(partialTicks, player.prevPosZ, player.getPosZ());
+        float f = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset);
         double d3 = MathHelper.sin(f * ((float) Math.PI / 180F));
         double d4 = -MathHelper.cos(f * ((float) Math.PI / 180F));
         float f1 = (float) d1 * 10.0F;
@@ -68,11 +78,11 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayerEntity> extends La
             f2 = 0.0F;
         }
 
-        float f4 = MathHelper.lerp(partialTicks, entity.prevCameraYaw, entity.cameraYaw);
-        f1 = f1 + MathHelper.sin(MathHelper.lerp(partialTicks, entity.prevDistanceWalkedModified, entity.distanceWalkedModified) * 6.0F) * 32.0F * f4;
+        float f4 = MathHelper.lerp(partialTicks, player.prevCameraYaw, player.cameraYaw);
+        f1 = f1 + MathHelper.sin(MathHelper.lerp(partialTicks, player.prevDistanceWalkedModified, player.distanceWalkedModified) * 6.0F) * 32.0F * f4;
 
-        if (entity.isCrouching()) {
-            f1 += entity.getItemStackFromSlot(EquipmentSlotType.CHEST).isEmpty() ? 25.0F : 35.0F;
+        if (player.isCrouching()) {
+            f1 += player.getItemStackFromSlot(EquipmentSlotType.CHEST).isEmpty() ? 25.0F : 35.0F;
             matrixStack.translate(0.0D, 0.2D, 0.0D);
         }
 

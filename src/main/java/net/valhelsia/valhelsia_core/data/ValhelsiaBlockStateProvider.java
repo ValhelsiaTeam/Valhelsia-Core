@@ -21,11 +21,11 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * Valhelsia Block State Provider
+ * Valhelsia Block State Provider <br>
  * Valhelsia Core - net.valhelsia.valhelsia_core.data.ValhelsiaBlockStateProvider
  *
  * @author Valhelsia Team
- * @version 16.0.9
+ * @version 16.0.10
  * @since 2021-01-07
  */
 public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
@@ -141,5 +141,12 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
                     .modelFile(model)
                     .build();
         });
+    }
+
+    public void simpleFlowerPotBlock(Block block, ResourceLocation texture) {
+        ModelFile model = models().withExistingParent(getName(block), mcLoc("block/flower_pot_cross"))
+                .texture("plant", texture);
+
+        simpleBlock(block, model);
     }
 }
