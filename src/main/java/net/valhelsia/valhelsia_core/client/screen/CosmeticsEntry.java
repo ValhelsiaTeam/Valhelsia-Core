@@ -58,17 +58,17 @@ public class CosmeticsEntry extends ContainerObjectSelectionList.Entry<Cosmetics
     }
 
     @Override
-    public void render(@Nonnull PoseStack matrixStack, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
-        int i = p_230432_4_ + 4;
+    public void render(@Nonnull PoseStack matrixStack, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
+        int i = left + 4;
         int k = i + 24 + 4;
-        int l = p_230432_3_ + (p_230432_6_ - 9) / 2;
+        int l = top + (height - 9) / 2;
 
-        GuiComponent.fill(matrixStack, p_230432_4_, p_230432_3_, p_230432_4_ + p_230432_5_, p_230432_3_ + p_230432_6_, BG_FILL);
+        GuiComponent.fill(matrixStack, left, top, left + width, top + height, BG_FILL);
 
         this.minecraft.font.drawShadow(matrixStack, this.getTranslatedName(), (float) k, (float) l, COSMETIC_NAME_COLOR);
 
-        this.checkbox.x = p_230432_4_ + (p_230432_5_ - this.checkbox.getWidth() - 11);
-        this.checkbox.y = p_230432_3_ + (p_230432_6_ - this.checkbox.getHeight()) / 2;
+        this.checkbox.x = left + (width - this.checkbox.getWidth() - 11);
+        this.checkbox.y = top + (height - this.checkbox.getHeight()) / 2;
         this.checkbox.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
@@ -89,10 +89,10 @@ public class CosmeticsEntry extends ContainerObjectSelectionList.Entry<Cosmetics
     }
 
     @Override
-    public boolean mouseClicked(double p_94695_, double p_94696_, int p_94697_) {
-        if (this.checkbox.mouseClicked(p_94695_, p_94696_, p_94697_)) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.checkbox.mouseClicked(mouseX, mouseY, button)) {
             this.setFocused(this.checkbox);
-            if (p_94697_ == 0) {
+            if (button == 0) {
                 this.setDragging(true);
             }
 

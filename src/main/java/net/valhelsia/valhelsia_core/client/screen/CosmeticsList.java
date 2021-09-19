@@ -29,8 +29,8 @@ public class CosmeticsList extends ContainerObjectSelectionList<CosmeticsEntry> 
     @Nullable
     private String filter;
 
-    public CosmeticsList(Minecraft minecraft, CosmeticsData cosmeticsData, int p_i51139_2_, int p_i51139_3_, int p_i51139_4_, int p_i51139_5_, int p_i51139_6_) {
-        super(minecraft, p_i51139_2_, p_i51139_3_, p_i51139_4_, p_i51139_5_, p_i51139_6_);
+    public CosmeticsList(Minecraft minecraft, CosmeticsData cosmeticsData, int width, int height, int y0, int y1, int itemHeight) {
+        super(minecraft, width, height, y0, y1, itemHeight);
         this.cosmeticsData = cosmeticsData;
         this.setRenderBackground(false);
         this.setRenderTopAndBottom(false);
