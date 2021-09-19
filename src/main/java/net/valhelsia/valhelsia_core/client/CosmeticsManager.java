@@ -9,6 +9,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -97,7 +99,6 @@ public class CosmeticsManager {
 
 
         if (callback != null) {
-            System.out.println("DATA LOADED");
             callback.onDataAvailable();
         }
     }
@@ -126,19 +127,16 @@ public class CosmeticsManager {
                     ResourceLocation resourceLocation = new ResourceLocation(ValhelsiaCore.MOD_ID, "cosmetics/" + s);
                     TextureManager textureManager = Minecraft.getInstance().getTextureManager();
 
-                    //TODO
-                    AbstractTexture texture = textureManager.getTexture(resourceLocation);
+                    AbstractTexture texture = textureManager.getTexture(resourceLocation, MissingTextureAtlasSprite.getTexture());
 
-                    if (texture == null) {
+                    if (texture == MissingTextureAtlasSprite.getTexture()) {
                         try {
                             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                             connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-                            InputStream stream = connection.getInputStream();
 
-                            NativeImage image = NativeImage.read(stream);
+                            NativeImage image = NativeImage.read(connection.getInputStream());
 
-                            //TODO
-                            //textureManager.loadTexture(resourceLocation, new DynamicTexture(image));
+                            textureManager.register(resourceLocation, new DynamicTexture(image));
 
                         } catch (IOException e) {
                             e.printStackTrace();

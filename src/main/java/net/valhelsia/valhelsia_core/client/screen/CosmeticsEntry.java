@@ -99,7 +99,6 @@ public class CosmeticsEntry extends ContainerObjectSelectionList.Entry<Cosmetics
             CosmeticsManager cosmeticsManager = ValhelsiaCore.getInstance().getCosmeticsManager();
             UUID uuid = Minecraft.getInstance().getUser().getGameProfile().getId();
             boolean selected = this.checkbox.selected();
-            System.out.println(selected);
 
             Config.CLIENT.activeValhelsiaCape.set(selected ? this.name : "");
 
