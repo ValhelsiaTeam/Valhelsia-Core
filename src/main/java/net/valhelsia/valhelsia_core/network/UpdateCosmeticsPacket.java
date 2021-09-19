@@ -1,10 +1,10 @@
 package net.valhelsia.valhelsia_core.network;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 
 import java.util.function.Supplier;
@@ -17,30 +17,24 @@ import java.util.function.Supplier;
  * @version 16.0.11
  * @since 2021-09-12
  */
-public class UpdateCosmeticsPacket {
+public record UpdateCosmeticsPacket(CompoundTag activeCosmetics) {
 
-    private final CompoundNBT activeCosmetics;
-
-    public UpdateCosmeticsPacket(CompoundNBT activeCosmetics) {
-        this.activeCosmetics = activeCosmetics;
+    public static void encode(UpdateCosmeticsPacket packet, FriendlyByteBuf buffer) {
+        buffer.writeNbt(packet.activeCosmetics);
     }
 
-    public static void encode(UpdateCosmeticsPacket packet, PacketBuffer buffer) {
-        buffer.writeCompoundTag(packet.activeCosmetics);
-    }
-
-    public static UpdateCosmeticsPacket decode(PacketBuffer buffer) {
-        return new UpdateCosmeticsPacket(buffer.readCompoundTag());
+    public static UpdateCosmeticsPacket decode(FriendlyByteBuf buffer) {
+        return new UpdateCosmeticsPacket(buffer.readNbt());
     }
 
     public static void consume(UpdateCosmeticsPacket packet, Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         if (context.getDirection().getReceptionSide() == LogicalSide.SERVER) {
             context.enqueueWork(() -> {
-                ServerPlayerEntity player = context.getSender();
+                ServerPlayer player = context.getSender();
 
                 if (player != null) {
-                    ValhelsiaCore.getInstance().getCosmeticsManager().setActiveCosmeticsForPlayer(player.getUniqueID(), packet.activeCosmetics);
+                    ValhelsiaCore.getInstance().getCosmeticsManager().setActiveCosmeticsForPlayer(player.getUUID(), packet.activeCosmetics);
                 }
             });
             ctx.get().setPacketHandled(true);

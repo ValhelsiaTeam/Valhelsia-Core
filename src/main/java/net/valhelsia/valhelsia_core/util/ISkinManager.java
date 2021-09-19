@@ -12,5 +12,5 @@ import java.io.File;
  */
 public interface ISkinManager {
 
-    File getSkinCacheDir();
+    File getSkinDirectory();
 }

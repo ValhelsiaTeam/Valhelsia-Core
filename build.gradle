@@ -1,24 +1,23 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        //maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        maven { url = 'https://repo.spongepowered.org/maven' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-       // classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
-//apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'org.spongepowered.mixin'
 
-//mixin {
-//    add sourceSets.main, "valhelsia_core.refmap.json"
-//}
+mixin {
+    add sourceSets.main, "valhelsia_core.refmap.json"
+}
 
 version = '16.0.11'
 group = 'net.valhelsia.valhelsia_core' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -50,7 +49,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-           // arg "-mixin.config=valhelsia_core.mixins.json"
+            arg "-mixin.config=valhelsia_core.mixins.json"
 
             mods {
                 valhelsia_core {
@@ -68,7 +67,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-          //  arg "-mixin.config=valhelsia_core.mixins.json"
+            arg "-mixin.config=valhelsia_core.mixins.json"
 
             mods {
                 valhelsia_core {
@@ -104,9 +103,10 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.1'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.67'
 
-    implementation('cpw.mods:securejarhandler') { version { strictly '0.9.45' } }
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
@@ -139,7 +139,7 @@ jar {
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"Valhelsia Team",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            //"MixinConfigs": "valhelsia_core.mixins.json"
+            "MixinConfigs": "valhelsia_core.mixins.json"
         ])
     }
 }
@@ -165,7 +165,7 @@ task devJar(type: Jar) {
                 "Implementation-Version": "${version}",
                 "Implementation-Vendor" :"Valhelsia Team",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                //"MixinConfigs": "valhelsia_core.mixins.json"
+                "MixinConfigs": "valhelsia_core.mixins.json"
         ])
     }
 }

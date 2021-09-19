@@ -19,10 +19,10 @@ import java.io.File;
 @Mixin(SkinManager.class)
 public class SkinManagerMixin implements ISkinManager {
 
-    @Shadow @Final private File skinCacheDir;
+    @Shadow @Final private File skinsDirectory;
 
     @Override
-    public File getSkinCacheDir() {
-        return this.skinCacheDir;
+    public File getSkinDirectory() {
+        return this.skinsDirectory;
     }
 }

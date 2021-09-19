@@ -4,16 +4,15 @@ import com.google.common.hash.Hashing;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.renderer.texture.Texture;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import org.apache.commons.io.FilenameUtils;
 
@@ -39,7 +38,7 @@ public class CosmeticsManager {
 
     private final List<UUID> loadedPlayers = new ArrayList<>();
     private final Map<UUID, CosmeticsData> cosmetics = new HashMap<>();
-    private final Map<UUID, CompoundNBT> activeCosmetics = new HashMap<>();
+    private final Map<UUID, CompoundTag> activeCosmetics = new HashMap<>();
 
     private final Map<String, ResourceLocation> loadedTextures = new HashMap<>();
 
@@ -66,13 +65,13 @@ public class CosmeticsManager {
                         connection.getErrorStream().close();
                     }
                 } else if (stream != null) {
-                    this.loadCosmeticsForPlayer(uuid, JSONUtils.fromJson(new InputStreamReader(stream)), callback);
+                    this.loadCosmeticsForPlayer(uuid, GsonHelper.parse(new InputStreamReader(stream)), callback);
                 }
 
             } catch (IOException e) {
                 // Either player is offline or hasn't bought any cosmetics.
             }
-        }, Util.getServerExecutor());
+        }, Util.backgroundExecutor());
 
         loadedPlayers.add(uuid);
     }
@@ -126,7 +125,9 @@ public class CosmeticsManager {
                     String s = Hashing.sha1().hashUnencodedChars(FilenameUtils.getBaseName(url.toString())).toString();
                     ResourceLocation resourceLocation = new ResourceLocation(ValhelsiaCore.MOD_ID, "cosmetics/" + s);
                     TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-                    Texture texture = textureManager.getTexture(resourceLocation);
+
+                    //TODO
+                    AbstractTexture texture = textureManager.getTexture(resourceLocation);
 
                     if (texture == null) {
                         try {
@@ -136,7 +137,8 @@ public class CosmeticsManager {
 
                             NativeImage image = NativeImage.read(stream);
 
-                            textureManager.loadTexture(resourceLocation, new DynamicTexture(image));
+                            //TODO
+                            //textureManager.loadTexture(resourceLocation, new DynamicTexture(image));
 
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -147,14 +149,14 @@ public class CosmeticsManager {
             });
         };
 
-        Util.getServerExecutor().execute(runnable);
+        Util.backgroundExecutor().execute(runnable);
     }
 
-    public CompoundNBT getActiveCosmeticsForPlayer(UUID uuid) {
-        return this.activeCosmetics.containsKey(uuid) ? activeCosmetics.get(uuid) : new CompoundNBT();
+    public CompoundTag getActiveCosmeticsForPlayer(UUID uuid) {
+        return this.activeCosmetics.containsKey(uuid) ? activeCosmetics.get(uuid) : new CompoundTag();
     }
 
-    public void setActiveCosmeticsForPlayer(UUID uuid, CompoundNBT activeCosmetics) {
+    public void setActiveCosmeticsForPlayer(UUID uuid, CompoundTag activeCosmetics) {
         this.activeCosmetics.put(uuid, activeCosmetics);
     }
 

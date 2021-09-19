@@ -1,8 +1,11 @@
 package net.valhelsia.valhelsia_core.helper;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.IdMap;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.SimpleBlockFeature;
 
 import javax.annotation.Nullable;
@@ -20,21 +23,21 @@ import java.util.function.Predicate;
  */
 public class FireExtinguishHelper {
 
-    private static final Map<Predicate<SimpleBlockFeature>, Pair<Function<SimpleBlockFeature, SimpleBlockFeature>, IExtinguishEffect>> EXTINGUISH_FIRE_MAP = new HashMap<>();
+    private static final Map<Predicate<BlockState>, Pair<Function<BlockState, BlockState>, PlayExtinguishEffectCallback>> EXTINGUISH_FIRE_MAP = new HashMap<>();
 
-    public static void addExtinguishFireEffect(Predicate<SimpleBlockFeature> litState, Function<SimpleBlockFeature, SimpleBlockFeature> extinguishedState) {
+    public static void addExtinguishFireEffect(Predicate<BlockState> litState, Function<BlockState, BlockState> extinguishedState) {
         addExtinguishFireEffect(litState, extinguishedState, null);
     }
 
-    public static void addExtinguishFireEffect(Predicate<SimpleBlockFeature> litState, Function<SimpleBlockFeature, SimpleBlockFeature> extinguishedState, @Nullable IExtinguishEffect extinguishEffect) {
+    public static void addExtinguishFireEffect(Predicate<BlockState> litState, Function<BlockState, BlockState> extinguishedState, @Nullable PlayExtinguishEffectCallback extinguishEffect) {
         EXTINGUISH_FIRE_MAP.put(litState, new Pair<>(extinguishedState, extinguishEffect));
     }
 
-    public static Map<Predicate<SimpleBlockFeature>, Pair<Function<SimpleBlockFeature, SimpleBlockFeature>, IExtinguishEffect>> getExtinguishFireEffects() {
+    public static Map<Predicate<BlockState>, Pair<Function<BlockState, BlockState>, PlayExtinguishEffectCallback>> getExtinguishFireEffects() {
         return EXTINGUISH_FIRE_MAP;
     }
 
-    public interface IExtinguishEffect {
-        void playEffect(FenceBlock level, IdMap pos);
+    public interface PlayExtinguishEffectCallback {
+        void playEffect(Level level, BlockPos pos);
     }
 }

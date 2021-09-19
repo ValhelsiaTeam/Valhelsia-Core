@@ -1,10 +1,10 @@
 package net.valhelsia.valhelsia_core.event;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -69,8 +69,8 @@ public class PlayerJoinWorldListener {
             return;
         }
 
-        UUID uuid = event.getPlayer().getUniqueID();
-        CompoundNBT compound = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
+        UUID uuid = event.getPlayer().getUUID();
+        CompoundTag compound = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
         String activeCape = Config.CLIENT.activeValhelsiaCape.get();
         compound.putString("Cape", activeCape);
 

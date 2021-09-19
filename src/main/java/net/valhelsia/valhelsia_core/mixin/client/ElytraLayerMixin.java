@@ -1,9 +1,9 @@
 package net.valhelsia.valhelsia_core.mixin.client;
 
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.client.CosmeticsData;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
@@ -29,7 +29,7 @@ public class ElytraLayerMixin<T extends LivingEntity> {
     private void valhelsia_getElytraTexture(ItemStack stack, T entity, CallbackInfoReturnable<ResourceLocation> cir) {
         CosmeticsManager cosmeticsManager = ValhelsiaCore.getInstance().getCosmeticsManager();
 
-        UUID uuid = entity.getUniqueID();
+        UUID uuid = entity.getUUID();
         CosmeticsData cosmeticsData = cosmeticsManager.getCosmeticsForPlayer(uuid);
         String activeCape = cosmeticsManager.getActiveCosmeticsForPlayer(uuid).getString("Cape");
 

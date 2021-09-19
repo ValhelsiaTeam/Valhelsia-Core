@@ -1,13 +1,13 @@
 package net.valhelsia.valhelsia_core.client.screen;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.widget.list.AbstractOptionList;
-import net.minecraft.util.ColorHelper;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.FastColor;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -20,10 +20,10 @@ import java.util.List;
  * @version 16.0.11
  * @since 2021-09-11
  */
-public class CosmeticsEntry extends AbstractOptionList.Entry<CosmeticsEntry> {
+public class CosmeticsEntry extends ContainerObjectSelectionList.Entry<CosmeticsEntry> {
 
-    public static final int BG_FILL = ColorHelper.PackedColor.packColor(255, 74, 74, 74);
-    public static final int COSMETIC_NAME_COLOR = ColorHelper.PackedColor.packColor(255, 255, 255, 255);
+    public static final int BG_FILL = FastColor.ARGB32.color(255, 74, 74, 74);
+    public static final int COSMETIC_NAME_COLOR = FastColor.ARGB32.color(255, 255, 255, 255);
 
     private final Minecraft minecraft;
     private final CosmeticsList cosmeticsList;
@@ -36,35 +36,46 @@ public class CosmeticsEntry extends AbstractOptionList.Entry<CosmeticsEntry> {
         this.cosmeticsList = cosmeticsList;
         this.name = name;
 
-        this.checkboxButton = new CosmeticCheckboxButton(cosmeticsList, this.name, 0, 0, 20, 20, new TranslationTextComponent(""));
+        this.checkboxButton = new CosmeticCheckboxButton(cosmeticsList, this.name, 0, 0, 20, 20, new TranslatableComponent(""));
     }
 
+    //TODO
     @Nonnull
-    @Override
-    public List<? extends IGuiEventListener> getEventListeners() {
+    //@Override
+    public List<? extends GuiEventListener> getEventListeners() {
         return ImmutableList.of(this.checkboxButton);
     }
 
-    public TranslationTextComponent getTranslatedName() {
-        return new TranslationTextComponent("cosmetic.valhelsia_core." + this.name);
+    public TranslatableComponent getTranslatedName() {
+        return new TranslatableComponent("cosmetic.valhelsia_core." + this.name);
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
         int i = p_230432_4_ + 4;
         int k = i + 24 + 4;
         int l = p_230432_3_ + (p_230432_6_ - 9) / 2;
 
-        AbstractGui.fill(matrixStack, p_230432_4_, p_230432_3_, p_230432_4_ + p_230432_5_, p_230432_3_ + p_230432_6_, BG_FILL);
+       // AbstractGui.fill(matrixStack, p_230432_4_, p_230432_3_, p_230432_4_ + p_230432_5_, p_230432_3_ + p_230432_6_, BG_FILL);
 
-        this.minecraft.fontRenderer.func_243246_a(matrixStack, this.getTranslatedName(), (float) k, (float) l, COSMETIC_NAME_COLOR);
+        this.minecraft.font.drawShadow(matrixStack, this.getTranslatedName(), (float) k, (float) l, COSMETIC_NAME_COLOR);
 
         this.checkboxButton.x = p_230432_4_ + (p_230432_5_ - this.checkboxButton.getWidth() - 11);
-        this.checkboxButton.y = p_230432_3_ + (p_230432_6_ - this.checkboxButton.getHeightRealms()) / 2;
+        this.checkboxButton.y = p_230432_3_ + (p_230432_6_ - this.checkboxButton.getHeight()) / 2;
         this.checkboxButton.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     public CosmeticCheckboxButton getCheckboxButton() {
         return checkboxButton;
+    }
+
+    @Override
+    public List<? extends NarratableEntry> narratables() {
+        return null;
+    }
+
+    @Override
+    public List<? extends GuiEventListener> children() {
+        return null;
     }
 }

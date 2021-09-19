@@ -1,14 +1,14 @@
 package net.valhelsia.valhelsia_core.client.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.*;
-import net.minecraft.util.text.event.ClickEvent;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.client.CosmeticsData;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
@@ -30,32 +30,34 @@ public class CosmeticsSettingsScreen extends Screen {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ValhelsiaCore.MOD_ID, "textures/gui/valhelsia_cosmetics_settings.png");
 
-    private static final ITextComponent SEARCH_HINT = (new TranslationTextComponent("gui.valhelsia_core.cosmeticsSettings.search_hint")).mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY);
-    private static final ITextComponent SEARCH_EMPTY = (new TranslationTextComponent("gui.valhelsia_core.cosmeticsSettings.search_empty")).mergeStyle(TextFormatting.GRAY);
+    private static final Component SEARCH_HINT = (new TranslatableComponent("gui.valhelsia_core.cosmeticsSettings.search_hint")).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
+    private static final Component SEARCH_EMPTY = (new TranslatableComponent("gui.valhelsia_core.cosmeticsSettings.search_empty")).withStyle(ChatFormatting.GRAY);
 
     private final Screen parentScreen;
-    private final ITextComponent supportUsComponent;
+    private final Component supportUsComponent;
 
     private CosmeticsList cosmeticsList;
-    private TextFieldWidget searchBox;
+    private EditBox searchBox;
     private String lastSearch = "";
 
     private boolean hasCosmetics = false;
 
     public CosmeticsSettingsScreen(Screen parentScreen) {
-        super(new TranslationTextComponent("gui.valhelsia_core.cosmeticsSettings"));
+        super(new TranslatableComponent("gui.valhelsia_core.cosmeticsSettings"));
         this.parentScreen = parentScreen;
-        ITextComponent storeLinkComponent = new StringTextComponent("https://store.valhelsia.net/").modifyStyle(style -> style.setFormatting(TextFormatting.GOLD).setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://store.valhelsia.net/")));
-        this.supportUsComponent = new TranslationTextComponent("gui.valhelsia_core.cosmeticsSettings.buyCosmetics", storeLinkComponent);
+        Component storeLinkComponent = new TextComponent("https://store.valhelsia.net/").withStyle(style -> style.applyFormat(ChatFormatting.GOLD).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://store.valhelsia.net/")));
+        this.supportUsComponent = new TranslatableComponent("gui.valhelsia_core.cosmeticsSettings.buyCosmetics", storeLinkComponent);
     }
 
     @Override
     protected void init() {
-        this.buttons.clear();
+        this.getMinecraft().keyboardHandler.setSendRepeatsToGui(true);
+
+        this.renderables.clear();
 
         CosmeticsManager cosmeticsManager = ValhelsiaCore.getInstance().getCosmeticsManager();
 
-        UUID uuid = this.getMinecraft().getSession().getProfile().getId();
+        UUID uuid = this.getMinecraft().getUser().getGameProfile().getId();
         cosmeticsManager.tryLoadCosmeticsForPlayer(uuid, this::init);
         CosmeticsData cosmeticsData = cosmeticsManager.getCosmeticsForPlayer(uuid);
 
@@ -63,27 +65,27 @@ public class CosmeticsSettingsScreen extends Screen {
             this.hasCosmetics = true;
 
             this.cosmeticsList = new CosmeticsList(this.minecraft, cosmeticsData, this.width, this.height, 88, this.getListEnd(), 36);
-            this.children.add(this.cosmeticsList);
+            this.addWidget(this.cosmeticsList);
 
             this.cosmeticsList.addCosmetics();
 
-            String s = this.searchBox != null ? this.searchBox.getText() : "";
-            this.searchBox = new TextFieldWidget(this.font, this.getMarginX() + 28, 78, 196, 16, SEARCH_HINT) {
+            String s = this.searchBox != null ? this.searchBox.getValue() : "";
+            this.searchBox = new EditBox(this.font, this.getMarginX() + 28, 78, 196, 16, SEARCH_HINT) {
                 @Nonnull
-                protected IFormattableTextComponent getNarrationMessage() {
-                    return !CosmeticsSettingsScreen.this.searchBox.getText().isEmpty() && CosmeticsSettingsScreen.this.cosmeticsList.isEmpty() ? super.getNarrationMessage().appendString(", ").append(CosmeticsSettingsScreen.SEARCH_EMPTY) : super.getNarrationMessage();
+                protected MutableComponent createNarrationMessage() {
+                    return !CosmeticsSettingsScreen.this.searchBox.getValue().isEmpty() && CosmeticsSettingsScreen.this.cosmeticsList.isEmpty() ? super.createNarrationMessage().append(", ").append(CosmeticsSettingsScreen.SEARCH_EMPTY) : super.createNarrationMessage();
                 }
             };
-            this.searchBox.setMaxStringLength(26);
-            this.searchBox.setEnableBackgroundDrawing(false);
+            this.searchBox.setMaxLength(26);
+            this.searchBox.setBordered(false);
             this.searchBox.setVisible(true);
             this.searchBox.setTextColor(16777215);
-            this.searchBox.setText(s);
+            this.searchBox.setValue(s);
             this.searchBox.setResponder(this::checkSearchStringUpdate);
-            this.children.add(this.searchBox);
+            this.addWidget(this.searchBox);
         }
 
-        this.addButton(new Button(this.width / 2 - 100, this.hasCosmetics ? this.height - 40 : this.height / 6 + 60, 200, 20, DialogTexts.GUI_DONE, (button) -> this.getMinecraft().displayGuiScreen(this.parentScreen)));
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.hasCosmetics ? this.height - 40 : this.height / 6 + 60, 200, 20, CommonComponents.GUI_DONE, (button) -> this.getMinecraft().setScreen(this.parentScreen)));
     }
 
     @Override
@@ -111,60 +113,67 @@ public class CosmeticsSettingsScreen extends Screen {
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
+    public void removed() {
+        this.getMinecraft().keyboardHandler.setSendRepeatsToGui(false);
+    }
 
-        drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 20, 16777215);
+    @Override
+    public void render(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(poseStack);
+
+        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 20, 16777215);
 
         if (!this.hasCosmetics) {
-            drawCenteredString(matrixStack, this.font, new TranslationTextComponent("gui.valhelsia_core.cosmeticsSettings.noCosmetics"), this.width / 2, 60, 16777215);
-            drawCenteredString(matrixStack, this.font, this.supportUsComponent, this.width / 2, 75, 16777215);
+            drawCenteredString(poseStack, this.font, new TranslatableComponent("gui.valhelsia_core.cosmeticsSettings.noCosmetics"), this.width / 2, 60, 16777215);
+            drawCenteredString(poseStack, this.font, this.supportUsComponent, this.width / 2, 75, 16777215);
         } else if (this.cosmeticsList != null && this.searchBox != null) {
             if (!this.cosmeticsList.isEmpty()) {
-                this.cosmeticsList.render(matrixStack, mouseX, mouseY, partialTicks);
-            } else if (!this.searchBox.getText().isEmpty()) {
-                drawCenteredString(matrixStack, this.getMinecraft().fontRenderer, SEARCH_EMPTY, this.width / 2, (78 + this.getListEnd()) / 2, -1);
+                this.cosmeticsList.render(poseStack, mouseX, mouseY, partialTicks);
+            } else if (!this.searchBox.getValue().isEmpty()) {
+                drawCenteredString(poseStack, this.getMinecraft().font, SEARCH_EMPTY, this.width / 2, (78 + this.getListEnd()) / 2, -1);
             }
 
-            if (!this.searchBox.isFocused() && this.searchBox.getText().isEmpty()) {
-                drawString(matrixStack, this.getMinecraft().fontRenderer, SEARCH_HINT, this.searchBox.x, this.searchBox.y, -1);
+            if (!this.searchBox.isFocused() && this.searchBox.getValue().isEmpty()) {
+                drawString(poseStack, this.getMinecraft().font, SEARCH_HINT, this.searchBox.x, this.searchBox.y, -1);
             } else {
-                this.searchBox.render(matrixStack, mouseX, mouseY, partialTicks);
+                this.searchBox.render(poseStack, mouseX, mouseY, partialTicks);
             }
 
             //InventoryScreen.drawEntityOnScreen(this.width / 2, this.height / 2, 30, this.width / 2.0F, this.height / 2.0F, this.getPlayer());
         }
 
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public void renderBackground(@Nonnull MatrixStack matrixStack) {
-        super.renderBackground(matrixStack);
+    public void renderBackground(@Nonnull PoseStack poseStack) {
+        super.renderBackground(poseStack);
 
         if (this.hasCosmetics) {
-            this.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+            RenderSystem.setShaderTexture(0, TEXTURE);
 
             int i = this.getMarginX() + 3;
-            this.blit(matrixStack, i, 64, 1, 1, 236, 8);
+            this.blit(poseStack, i, 64, 1, 1, 236, 8);
 
             int j = this.getBackgroundUnits();
 
             for(int k = 0; k < j; ++k) {
-                this.blit(matrixStack, i, 72 + 16 * k, 1, 10, 236, 16);
+                this.blit(poseStack, i, 72 + 16 * k, 1, 10, 236, 16);
             }
 
-            this.blit(matrixStack, i, 72 + 16 * j, 1, 27, 236, 8);
-            this.blit(matrixStack, i + 10, 76, 243, 1, 12, 12);
+            this.blit(poseStack, i, 72 + 16 * j, 1, 27, 236, 8);
+            this.blit(poseStack, i + 10, 76, 243, 1, 12, 12);
         }
     }
 
     private Style getClickedComponentStyleAt(int mouseX) {
-        int i = this.getMinecraft().fontRenderer.getStringPropertyWidth(this.supportUsComponent);
-        int j = this.width / 2 - i / 2;
-        int k = this.width / 2 + i / 2;
-
-        return mouseX >= j && mouseX <= k ? this.getMinecraft().fontRenderer.getCharacterManager().func_238357_a_(this.supportUsComponent, mouseX - j) : null;
+        //TODO
+        return null;
+//        int i = this.getMinecraft().font.getStringPropertyWidth(this.supportUsComponent);
+//        int j = this.width / 2 - i / 2;
+//        int k = this.width / 2 + i / 2;
+//
+//        return mouseX >= j && mouseX <= k ? this.getMinecraft().fontRenderer.getCharacterManager().func_238357_a_(this.supportUsComponent, mouseX - j) : null;
     }
 
     @Override
@@ -184,11 +193,11 @@ public class CosmeticsSettingsScreen extends Screen {
     }
 
     @Override
-    public void closeScreen() {
-        this.getMinecraft().displayGuiScreen(this.parentScreen);
+    public void onClose() {
+        this.getMinecraft().setScreen(this.parentScreen);
     }
 
-    private PlayerEntity getPlayer() {
+    private Player getPlayer() {
         return Objects.requireNonNull(this.getMinecraft().player);
     }
 
@@ -199,6 +208,5 @@ public class CosmeticsSettingsScreen extends Screen {
             this.lastSearch = search;
             this.cosmeticsList.updateCosmetics();
         }
-
     }
 }
