@@ -33,7 +33,7 @@ public class ElytraLayerMixin<T extends LivingEntity> {
         CosmeticsData cosmeticsData = cosmeticsManager.getCosmeticsForPlayer(uuid);
         String activeCape = cosmeticsManager.getActiveCosmeticsForPlayer(uuid).getString("Cape");
 
-        if (!activeCape.equals("") && cosmeticsData.getCapes().contains(activeCape)) {
+        if (!activeCape.equals("") && cosmeticsData != null && cosmeticsData.getCapes().contains(activeCape)) {
             ResourceLocation texture = cosmeticsManager.getCosmeticTexture(activeCape.substring(0, activeCape.length() - 4).concat("elytra"));
 
             if (texture != null) {
