@@ -10,6 +10,7 @@
   ],
   "client": [
     "client.CapeLayerMixin",
+    "client.CheckboxMixin",
     "client.CustomizeSkinScreenMixin",
     "client.ElytraLayerMixin",
     "client.SkinManagerMixin"

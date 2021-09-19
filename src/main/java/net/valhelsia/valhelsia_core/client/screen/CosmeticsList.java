@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.locale.Language;
 import net.valhelsia.valhelsia_core.client.CosmeticsData;
 
@@ -13,7 +12,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 /**
  * Cosmetics List <br>
@@ -81,42 +79,5 @@ public class CosmeticsList extends ContainerObjectSelectionList<CosmeticsEntry> 
 
     public void setFilter(@Nullable String filter) {
         this.filter = filter;
-    }
-
-    //TODO
-    @Nonnull
-    @Override
-    public Optional<GuiEventListener> getChildAt(double p_94730_, double p_94731_) {
-        return super.getChildAt(p_94730_, p_94731_);
-    }
-
-    @Override
-    public void mouseMoved(double p_94758_, double p_94759_) {
-        super.mouseMoved(p_94758_, p_94759_);
-    }
-
-    @Override
-    public boolean keyReleased(int p_94715_, int p_94716_, int p_94717_) {
-        return super.keyReleased(p_94715_, p_94716_, p_94717_);
-    }
-
-    @Override
-    public boolean charTyped(char p_94683_, int p_94684_) {
-        return super.charTyped(p_94683_, p_94684_);
-    }
-
-    @Override
-    public void setInitialFocus(@Nullable GuiEventListener p_94719_) {
-        super.setInitialFocus(p_94719_);
-    }
-
-    @Override
-    public void magicalSpecialHackyFocus(@Nullable GuiEventListener p_94726_) {
-        super.magicalSpecialHackyFocus(p_94726_);
-    }
-
-    @Override
-    public boolean isActive() {
-        return super.isActive();
     }
 }

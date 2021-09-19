@@ -91,7 +91,7 @@ public class CosmeticsSettingsScreen extends Screen {
     @Override
     public void tick() {
         super.tick();
-        if (this.hasCosmetics) {
+        if (this.hasCosmetics && this.searchBox != null) {
             this.searchBox.tick();
         }
     }

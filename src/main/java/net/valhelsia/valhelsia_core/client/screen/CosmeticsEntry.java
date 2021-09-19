@@ -3,14 +3,25 @@ package net.valhelsia.valhelsia_core.client.screen;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FastColor;
+import net.valhelsia.valhelsia_core.ValhelsiaCore;
+import net.valhelsia.valhelsia_core.client.CosmeticsManager;
+import net.valhelsia.valhelsia_core.config.Config;
+import net.valhelsia.valhelsia_core.network.NetworkHandler;
+import net.valhelsia.valhelsia_core.network.UpdateCosmeticsPacket;
+import net.valhelsia.valhelsia_core.util.SelectableCheckbox;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Cosmetics Entry <br>
@@ -29,21 +40,17 @@ public class CosmeticsEntry extends ContainerObjectSelectionList.Entry<Cosmetics
     private final CosmeticsList cosmeticsList;
     private final String name;
 
-    private final CosmeticCheckboxButton checkboxButton;
+    private final List<AbstractWidget> children;
+
+    private final Checkbox checkbox;
 
     public CosmeticsEntry(Minecraft minecraft, CosmeticsList cosmeticsList, String name) {
         this.minecraft = minecraft;
         this.cosmeticsList = cosmeticsList;
         this.name = name;
 
-        this.checkboxButton = new CosmeticCheckboxButton(cosmeticsList, this.name, 0, 0, 20, 20, new TranslatableComponent(""));
-    }
-
-    //TODO
-    @Nonnull
-    //@Override
-    public List<? extends GuiEventListener> getEventListeners() {
-        return ImmutableList.of(this.checkboxButton);
+        this.checkbox = new Checkbox(0, 0, 20, 20, new TranslatableComponent(""), Config.CLIENT.activeValhelsiaCape.get().equals(this.name), false);
+        this.children = ImmutableList.of(this.checkbox);
     }
 
     public TranslatableComponent getTranslatedName() {
@@ -56,26 +63,68 @@ public class CosmeticsEntry extends ContainerObjectSelectionList.Entry<Cosmetics
         int k = i + 24 + 4;
         int l = p_230432_3_ + (p_230432_6_ - 9) / 2;
 
-       // AbstractGui.fill(matrixStack, p_230432_4_, p_230432_3_, p_230432_4_ + p_230432_5_, p_230432_3_ + p_230432_6_, BG_FILL);
+        GuiComponent.fill(matrixStack, p_230432_4_, p_230432_3_, p_230432_4_ + p_230432_5_, p_230432_3_ + p_230432_6_, BG_FILL);
 
         this.minecraft.font.drawShadow(matrixStack, this.getTranslatedName(), (float) k, (float) l, COSMETIC_NAME_COLOR);
 
-        this.checkboxButton.x = p_230432_4_ + (p_230432_5_ - this.checkboxButton.getWidth() - 11);
-        this.checkboxButton.y = p_230432_3_ + (p_230432_6_ - this.checkboxButton.getHeight()) / 2;
-        this.checkboxButton.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.checkbox.x = p_230432_4_ + (p_230432_5_ - this.checkbox.getWidth() - 11);
+        this.checkbox.y = p_230432_3_ + (p_230432_6_ - this.checkbox.getHeight()) / 2;
+        this.checkbox.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
-    public CosmeticCheckboxButton getCheckboxButton() {
-        return checkboxButton;
+    public Checkbox getCheckbox() {
+        return checkbox;
     }
 
-    @Override
-    public List<? extends NarratableEntry> narratables() {
-        return null;
-    }
-
+    @Nonnull
     @Override
     public List<? extends GuiEventListener> children() {
-        return null;
+        return this.children;
+    }
+
+    @Nonnull
+    @Override
+    public List<? extends NarratableEntry> narratables() {
+        return this.children;
+    }
+
+    @Override
+    public boolean mouseClicked(double p_94695_, double p_94696_, int p_94697_) {
+        if (this.checkbox.mouseClicked(p_94695_, p_94696_, p_94697_)) {
+            this.setFocused(this.checkbox);
+            if (p_94697_ == 0) {
+                this.setDragging(true);
+            }
+
+            CosmeticsManager cosmeticsManager = ValhelsiaCore.getInstance().getCosmeticsManager();
+            UUID uuid = Minecraft.getInstance().getUser().getGameProfile().getId();
+            boolean selected = this.checkbox.selected();
+            System.out.println(selected);
+
+            Config.CLIENT.activeValhelsiaCape.set(selected ? this.name : "");
+
+            CompoundTag compound = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
+            compound.putString("Cape", selected ? this.name : "");
+
+            cosmeticsManager.setActiveCosmeticsForPlayer(uuid, compound);
+
+            if (Minecraft.getInstance().player != null) {
+                NetworkHandler.sendToServer(new UpdateCosmeticsPacket(compound));
+            }
+
+            if (selected) {
+                String activeCape = cosmeticsManager.getActiveCosmeticsForPlayer(uuid).getString("Cape");
+                cosmeticsManager.loadCosmeticTexture(activeCape);
+                cosmeticsManager.loadCosmeticTexture(activeCape.substring(0, activeCape.length() - 4).concat("elytra"));
+            }
+
+            this.cosmeticsList.getEntries().forEach(cosmeticsEntry -> {
+                if (cosmeticsEntry != this) {
+                    ((SelectableCheckbox) cosmeticsEntry.getCheckbox()).setSelected(false);
+                }
+            });
+            return true;
+        }
+        return false;
     }
 }
