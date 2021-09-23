@@ -12,7 +12,6 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FastColor;
-import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
 import net.valhelsia.valhelsia_core.config.Config;
 import net.valhelsia.valhelsia_core.network.NetworkHandler;
@@ -96,7 +95,7 @@ public class CosmeticsEntry extends ContainerObjectSelectionList.Entry<Cosmetics
                 this.setDragging(true);
             }
 
-            CosmeticsManager cosmeticsManager = ValhelsiaCore.getInstance().getCosmeticsManager();
+            CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
             UUID uuid = Minecraft.getInstance().getUser().getGameProfile().getId();
             boolean selected = this.checkbox.selected();
 

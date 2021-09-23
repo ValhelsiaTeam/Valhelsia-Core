@@ -44,6 +44,15 @@ public class CosmeticsManager {
 
     private final Map<String, ResourceLocation> loadedTextures = new HashMap<>();
 
+    private static CosmeticsManager instance;
+
+    public static CosmeticsManager getInstance() {
+        if (instance == null) {
+            instance = new CosmeticsManager();
+        }
+        return instance;
+    }
+
     public void tryLoadCosmeticsForPlayer(UUID uuid, @Nullable DataAvailableCallback callback) {
         if (loadedPlayers.contains(uuid)) {
             return;
