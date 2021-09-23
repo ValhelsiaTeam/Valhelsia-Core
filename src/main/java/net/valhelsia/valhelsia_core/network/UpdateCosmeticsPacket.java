@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
-import net.valhelsia.valhelsia_core.ValhelsiaCore;
+import net.valhelsia.valhelsia_core.client.CosmeticsManager;
 
 import java.util.function.Supplier;
 
@@ -40,7 +40,7 @@ public class UpdateCosmeticsPacket {
                 ServerPlayerEntity player = context.getSender();
 
                 if (player != null) {
-                    ValhelsiaCore.getInstance().getCosmeticsManager().setActiveCosmeticsForPlayer(player.getUniqueID(), packet.activeCosmetics);
+                    CosmeticsManager.getInstance().setActiveCosmeticsForPlayer(player.getUniqueID(), packet.activeCosmetics);
                 }
             });
             ctx.get().setPacketHandled(true);

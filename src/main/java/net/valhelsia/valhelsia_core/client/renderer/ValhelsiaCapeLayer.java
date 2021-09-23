@@ -15,7 +15,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
-import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.client.CosmeticsData;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.model.ValhelsiaCapeModel;
@@ -43,7 +42,7 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayerEntity> extends La
     public void render(@Nonnull MatrixStack matrixStack, @Nonnull IRenderTypeBuffer buffer, int packedLight, T player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
-        CosmeticsManager cosmeticsManager = ValhelsiaCore.getInstance().getCosmeticsManager();
+        CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
         UUID uuid = player.getUniqueID();
         CosmeticsData cosmeticsData = cosmeticsManager.getCosmeticsForPlayer(uuid);

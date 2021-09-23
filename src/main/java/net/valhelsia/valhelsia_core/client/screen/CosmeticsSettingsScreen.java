@@ -53,7 +53,7 @@ public class CosmeticsSettingsScreen extends Screen {
     protected void init() {
         this.buttons.clear();
 
-        CosmeticsManager cosmeticsManager = ValhelsiaCore.getInstance().getCosmeticsManager();
+        CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
         UUID uuid = this.getMinecraft().getSession().getProfile().getId();
         cosmeticsManager.tryLoadCosmeticsForPlayer(uuid, this::init);

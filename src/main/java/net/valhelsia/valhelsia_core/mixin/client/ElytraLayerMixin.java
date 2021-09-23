@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.client.CosmeticsData;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +26,7 @@ public class ElytraLayerMixin<T extends LivingEntity> {
 
     @Inject(at = @At(value = "HEAD"), method = "getElytraTexture", remap = false, cancellable = true)
     private void valhelsia_getElytraTexture(ItemStack stack, T entity, CallbackInfoReturnable<ResourceLocation> cir) {
-        CosmeticsManager cosmeticsManager = ValhelsiaCore.getInstance().getCosmeticsManager();
+        CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
         UUID uuid = entity.getUniqueID();
         CosmeticsData cosmeticsData = cosmeticsManager.getCosmeticsForPlayer(uuid);

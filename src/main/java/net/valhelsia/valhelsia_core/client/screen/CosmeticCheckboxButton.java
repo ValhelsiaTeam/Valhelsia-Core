@@ -8,7 +8,6 @@ import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
 import net.valhelsia.valhelsia_core.config.Config;
 import net.valhelsia.valhelsia_core.network.NetworkHandler;
@@ -47,7 +46,7 @@ public class CosmeticCheckboxButton extends AbstractButton {
 
         Config.CLIENT.activeValhelsiaCape.set(this.checked ? this.cosmeticName : "");
 
-        CosmeticsManager cosmeticsManager = ValhelsiaCore.getInstance().getCosmeticsManager();
+        CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
         UUID uuid = Minecraft.getInstance().getSession().getProfile().getId();
         CompoundNBT compound = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
