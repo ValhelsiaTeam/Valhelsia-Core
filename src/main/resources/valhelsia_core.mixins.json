@@ -2,17 +2,17 @@
   "required": true,
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_16",
-  "package": "net.valhelsia.valhelsia_core.mixin",
+  "package": "net.valhelsia.valhelsia_core.core.mixin",
   "refmap": "valhelsia_core.refmap.json",
   "mixins": [
     "FlintAndSteelItemMixin",
-    "PotionEntityMixin"
+    "ThrownPotionMixin"
   ],
   "client": [
     "client.CapeLayerMixin",
     "client.CheckboxMixin",
-    "client.CustomizeSkinScreenMixin",
     "client.ElytraLayerMixin",
+    "client.SkinCustomizationScreenMixin",
     "client.SkinManagerMixin"
   ],
   "injectors": {
