@@ -31,8 +31,7 @@ public class TargetItemGroupFiller implements IItemGroupFiller {
 
     @Override
     public void fill(ItemStack stack, CreativeModeTab tab, NonNullList<ItemStack> items) {
-        //TODO
-        //if (stack.getItem().allowedIn(tab)) {
+        if (stack.getItem().allowdedIn(tab)) {
             int index = -1;
 
             for (int i = 0; i < items.size(); i++) {
@@ -46,6 +45,6 @@ public class TargetItemGroupFiller implements IItemGroupFiller {
             } else {
                 items.add(stack);
             }
-      //  }
+        }
     }
 }

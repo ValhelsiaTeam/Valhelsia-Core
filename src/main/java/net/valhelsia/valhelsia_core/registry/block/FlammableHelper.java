@@ -1,5 +1,7 @@
 package net.valhelsia.valhelsia_core.registry.block;
 
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.ScaffoldingBlock;
 
 /**
@@ -13,8 +15,7 @@ import net.minecraft.world.level.block.ScaffoldingBlock;
 public class FlammableHelper {
 
     public void register(ScaffoldingBlock block, int encouragement, int flammability) {
-        // TODO
-        // ((FireBlock) Blocks.FIRE).setFireInfo(block, encouragement, flammability);
+         ((FireBlock) Blocks.FIRE).setFlammable(block, encouragement, flammability);
     }
 
     public void registerLog(ScaffoldingBlock block) {
