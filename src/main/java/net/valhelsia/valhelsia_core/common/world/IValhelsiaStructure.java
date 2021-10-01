@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.common.world;
 
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer1;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 
 /**
  * Valhelsia Structure Interface <br>
@@ -17,5 +17,5 @@ public interface IValhelsiaStructure {
         return false;
     }
     StructureFeature<?> getStructure();
-    AreaTransformer1 getFeatureConfiguration();
+    StructureFeatureConfiguration getFeatureConfiguration();
 }

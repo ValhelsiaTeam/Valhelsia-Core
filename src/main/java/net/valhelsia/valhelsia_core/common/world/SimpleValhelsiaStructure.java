@@ -3,7 +3,7 @@ package net.valhelsia.valhelsia_core.common.world;
 import com.mojang.serialization.Codec;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer1;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 
 /**
  * Simple Valhelsia Structure <br>
@@ -32,5 +32,5 @@ public abstract class SimpleValhelsiaStructure<C extends FeatureConfiguration> e
     }
 
     @Override
-    public abstract AreaTransformer1 getFeatureConfiguration();
+    public abstract StructureFeatureConfiguration getFeatureConfiguration();
 }

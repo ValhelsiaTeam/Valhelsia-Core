@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.world.level.levelgen.feature.JigsawFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
-import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer1;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 
 /**
  * Valhelsia Jigsaw Structure <br>
@@ -34,5 +34,5 @@ public abstract class ValhelsiaJigsawStructure extends JigsawFeature implements 
     }
 
     @Override
-    public abstract AreaTransformer1 getFeatureConfiguration();
+    public abstract StructureFeatureConfiguration getFeatureConfiguration();
 }
