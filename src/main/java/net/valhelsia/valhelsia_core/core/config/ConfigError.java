@@ -1,7 +1,6 @@
 package net.valhelsia.valhelsia_core.core.config;
 
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.network.chat.MutableComponent;
 
 import javax.annotation.Nullable;
 
@@ -15,19 +14,19 @@ import javax.annotation.Nullable;
  */
 public class ConfigError {
 
-    private final TranslatableComponent errorMessage;
+    private final MutableComponent errorMessage;
     private final String path;
-    private final TranslatableComponent solutionMessage;
+    private final MutableComponent solutionMessage;
 
     private String modID = null;
 
-    public ConfigError(TranslatableComponent errorMessage, String path, @Nullable TranslatableComponent solutionMessage) {
+    public ConfigError(MutableComponent errorMessage, String path, @Nullable MutableComponent solutionMessage) {
         this.errorMessage = errorMessage;
         this.path = path;
         this.solutionMessage = solutionMessage;
     }
 
-    public TranslatableComponent getErrorMessage() {
+    public MutableComponent getErrorMessage() {
         return errorMessage;
     }
 
@@ -36,7 +35,7 @@ public class ConfigError {
     }
 
     @Nullable
-    public TranslatableComponent getSolutionMessage() {
+    public MutableComponent getSolutionMessage() {
         return solutionMessage;
     }
 

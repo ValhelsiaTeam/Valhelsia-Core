@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.core.config;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -20,11 +20,11 @@ public abstract class AbstractConfigValidator {
 
     public abstract void validate();
 
-    public void addError(TranslatableComponent errorMessage, String path) {
+    public void addError(MutableComponent errorMessage, String path) {
         this.errors.add(new ConfigError(errorMessage, path, null));
     }
 
-    public void addError(TranslatableComponent errorMessage, String path, @Nullable TranslatableComponent solutionMessage) {
+    public void addError(MutableComponent errorMessage, String path, @Nullable MutableComponent solutionMessage) {
         this.errors.add(new ConfigError(errorMessage, path, solutionMessage));
     }
 
