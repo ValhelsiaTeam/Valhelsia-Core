@@ -63,7 +63,7 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
     }
 
     @SafeVarargs
-    public final <T extends ScaffoldingBlock> void take(Consumer<T> consumer, RegistryObject<? extends Block>... blocks) {
+    public final <T extends Block> void take(Consumer<T> consumer, RegistryObject<? extends Block>... blocks) {
         for (RegistryObject<? extends Block> block : blocks) {
             consumer.accept((T) block.get());
             getRemainingBlocks().remove(block);

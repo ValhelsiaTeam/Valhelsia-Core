@@ -89,8 +89,8 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
     }
 
     @SafeVarargs
-    public final <T extends TridentLoyaltyEnchantment> void takeItem(Consumer<T> consumer, RegistryObject<? extends TridentLoyaltyEnchantment>... items) {
-        for (RegistryObject<? extends TridentLoyaltyEnchantment> item : items) {
+    public final <T extends Item> void takeItem(Consumer<T> consumer, RegistryObject<? extends Item>... items) {
+        for (RegistryObject<? extends Item> item : items) {
             consumer.accept((T) item.get());
             getRemainingItems().remove(item);
         }
