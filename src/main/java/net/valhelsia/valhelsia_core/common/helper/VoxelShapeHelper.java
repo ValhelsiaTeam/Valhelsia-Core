@@ -1,5 +1,6 @@
 package net.valhelsia.valhelsia_core.common.helper;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -7,6 +8,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Voxel Shape Helper <br>
@@ -34,56 +37,42 @@ public class VoxelShapeHelper {
     }
 
     public static Map<Direction, VoxelShape> getRotatedShapes(VoxelShape shape) {
-        Map<Direction, VoxelShape> map = new HashMap<>();
+        return Arrays.stream(Direction.values()).collect(Collectors.toMap(Function.identity(), direction -> VoxelShapeHelper.rotateShape(shape, direction)));
+    }
 
-        for (Direction direction : Direction.values()) {
-            RotationAmount rotationAmount = RotationAmount.getRotationAmountFromDirection(direction);
+    public static VoxelShape rotateShape(VoxelShape shape, Direction direction) {
+        double[] adjustedValues = VoxelShapeHelper.adjustValues(direction, shape.min(Direction.Axis.X), shape.min(Direction.Axis.Z), shape.max(Direction.Axis.X), shape.max(Direction.Axis.Z));
+        return Shapes.box(adjustedValues[0], shape.min(Direction.Axis.Y), adjustedValues[1], adjustedValues[2], shape.max(Direction.Axis.Y), adjustedValues[3]);
+    }
 
-            if (rotationAmount != null) {
-                map.put(direction, rotateShape(shape, rotationAmount));
+    private static double[] adjustValues(Direction direction, double minX, double minZ, double maxX, double maxZ) {
+        switch (direction) {
+            case WEST -> {
+                double temp_minX = minX;
+                minX = 1.0F - maxX;
+                double temp_minZ = minZ;
+                minZ = 1.0F - maxZ;
+                maxX = 1.0F - temp_minX;
+                maxZ = 1.0F - temp_minZ;
+            }
+            case NORTH -> {
+                double temp_minX = minX;
+                minX = minZ;
+                minZ = 1.0F - maxX;
+                maxX = maxZ;
+                maxZ = 1.0F - temp_minX;
+            }
+            case SOUTH -> {
+                double temp_minX = minX;
+                minX = 1.0F - maxZ;
+                double temp_minZ = minZ;
+                minZ = temp_minX;
+                double temp_maxX = maxX;
+                maxX = 1.0F - temp_minZ;
+                maxZ = temp_maxX;
             }
         }
-
-        return map;
-    }
-
-    public static VoxelShape rotateShape(VoxelShape shape, RotationAmount rotationAmount) {
-        if (shape.isEmpty() || rotationAmount == RotationAmount.ZERO) {
-            return shape;
-        }
-        Set<VoxelShape> rotatedShapes = new HashSet<>();
-
-        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
-            x1 = (x1 * 16) - 8; x2 = (x2 * 16) - 8;
-            z1 = (z1 * 16) - 8; z2 = (z2 * 16) - 8;
-
-            if (rotationAmount == RotationAmount.NINETY) {
-                rotatedShapes.add(Block.box(8 - z1, y1 * 16, 8 + x1, 8 - z2, y2 * 16, 8 + x2));
-            } else if (rotationAmount == RotationAmount.HUNDRED_EIGHTY) {
-                rotatedShapes.add(Block.box(8 - x1, y1 * 16, 8 - z1, 8 - x2, y2 * 16, 8 - z2));
-            } else if (rotationAmount == RotationAmount.TWO_HUNDRED_SEVENTY) {
-                rotatedShapes.add(Block.box(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
-            }
-        });
-        return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
-    }
-
-    public static VoxelShape rotateShapeDirection(VoxelShape shape, Direction direction) {
-        return rotateShape(shape, RotationAmount.getRotationAmountFromDirection(direction));
-    }
-
-    public static VoxelShape rotateShapeAxis(VoxelShape shape, Direction.Axis axis) {
-        Set<VoxelShape> rotatedShapes = new HashSet<>();
-        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
-            if (axis == Direction.Axis.X) {
-                rotatedShapes.add(Block.box(y1 * 16, x1 * 16, z1 * 16, y2 * 16, x2 * 16, z2 * 16));
-            } else if (axis == Direction.Axis.Z) {
-                rotatedShapes.add(rotateShape(Block.box(x1 * 16, z1 * 16, y1 * 16, x2 * 16, z2 * 16, y2 * 16), RotationAmount.HUNDRED_EIGHTY));
-            } else {
-                rotatedShapes.add(Block.box(x1 * 16, y1 * 16, z1 * 16, x2 * 16, y2 * 16, z2 * 16));
-            }
-        });
-        return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
+        return new double[]{minX, minZ, maxX, maxZ};
     }
 
     public static VoxelShape add(double x1, double y1, double z1, double x2, double y2, double z2, VoxelShape... shapes) {
