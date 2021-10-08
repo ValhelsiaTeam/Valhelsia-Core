@@ -3,9 +3,7 @@ package net.valhelsia.valhelsia_core.core.data;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.enchantment.TridentLoyaltyEnchantment;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ScaffoldingBlock;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.fmllegacy.RegistryObject;
@@ -98,7 +96,7 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
 
     public final void takeBlockItem(Consumer<BlockItem> consumer, RegistryObject<?>... registryObjects) {
         for (RegistryObject<?> registryObject : registryObjects) {
-            if (registryObject.get() instanceof ScaffoldingBlock) {
+            if (registryObject.get() instanceof Block) {
                 consumer.accept((BlockItem) ((Block) registryObject.get()).asItem());
                 getRemainingBlockItems().remove(RegistryObject.of(((Block) registryObject.get()).asItem().getRegistryName(), ForgeRegistries.ITEMS));
             } else {
