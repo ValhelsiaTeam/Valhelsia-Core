@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Block Registry Helper <br>
@@ -92,17 +93,17 @@ public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
 
     public <T extends Block> RegistryObject<T> register(String name, T block, boolean item, CreativeModeTab creativeModeTab, ValhelsiaRenderType renderType) {
         if (item) {
-            return register(name, block, new BlockItem(block, new Item.Properties().tab(creativeModeTab)), renderType);
+            return register(name, block, (block1) -> new BlockItem(block1, new Item.Properties().tab(creativeModeTab)), renderType);
         }
         return registerBlock(name, block, renderType);
     }
 
-    public <T extends Block> RegistryObject<T> register(String name, T block, BlockItem item) {
-        return register(name, block, item, ValhelsiaRenderType.SOLID);
+    public <T extends Block> RegistryObject<T> register(String name, T block,  Function<T, BlockItem> blockItemFunction) {
+        return register(name, block, blockItemFunction, ValhelsiaRenderType.SOLID);
     }
 
-    public <T extends Block> RegistryObject<T> register(String name, T block, BlockItem item, ValhelsiaRenderType renderType) {
-        this.getItemRegistryHelper().register(name, () -> item);
+    public <T extends Block> RegistryObject<T> register(String name, T block, Function<T, BlockItem> blockItemFunction, ValhelsiaRenderType renderType) {
+        this.getItemRegistryHelper().register(name, () -> blockItemFunction.apply(block));
 
         return registerBlock(name, block, renderType);
     }
