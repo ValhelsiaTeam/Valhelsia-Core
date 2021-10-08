@@ -69,8 +69,11 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
 
     @Override
     public boolean test(LootContext lootContext) {
-        BlockState state = lootContext.getParam(LootContextParams.BLOCK_STATE);
+        if (!lootContext.hasParam(LootContextParams.BLOCK_STATE)) {
+            return false;
+        }
 
+        BlockState state = lootContext.getParam(LootContextParams.BLOCK_STATE);
         boolean flag = false;
 
         if (this.tag != null) {
