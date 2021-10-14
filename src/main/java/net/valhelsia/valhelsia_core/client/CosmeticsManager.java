@@ -1,22 +1,13 @@
 package net.valhelsia.valhelsia_core.client;
 
-import com.google.common.hash.Hashing;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
-import org.apache.commons.io.FilenameUtils;
+import net.valhelsia.valhelsia_core.client.util.TextureDownloader;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -120,7 +111,7 @@ public class CosmeticsManager {
         synchronized (this) {
             if (!this.loadedTextures.containsKey(cosmeticName)) {
                 try {
-                    this.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png"), cosmeticName);
+                    TextureDownloader.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png"), "cosmetics/", texture -> this.loadedTextures.put(cosmeticName, texture));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -128,36 +119,6 @@ public class CosmeticsManager {
         }
     }
 
-    private void downloadTexture(URL url, String cosmeticName) {
-        Runnable runnable = () -> {
-            Minecraft.getInstance().execute(() -> {
-                RenderSystem.recordRenderCall(() -> {
-                    String s = Hashing.sha1().hashUnencodedChars(FilenameUtils.getBaseName(url.toString())).toString();
-                    ResourceLocation resourceLocation = new ResourceLocation(ValhelsiaCore.MOD_ID, "cosmetics/" + s);
-                    TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-
-                    AbstractTexture texture = textureManager.getTexture(resourceLocation, MissingTextureAtlasSprite.getTexture());
-
-                    if (texture == MissingTextureAtlasSprite.getTexture()) {
-                        try {
-                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                            connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-
-                            NativeImage image = NativeImage.read(connection.getInputStream());
-
-                            textureManager.register(resourceLocation, new DynamicTexture(image));
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    this.loadedTextures.put(cosmeticName, resourceLocation);
-                });
-            });
-        };
-
-        Util.backgroundExecutor().execute(runnable);
-    }
 
     public CompoundTag getActiveCosmeticsForPlayer(UUID uuid) {
         return this.activeCosmetics.containsKey(uuid) ? activeCosmetics.get(uuid) : new CompoundTag();
