@@ -1,21 +1,13 @@
 package net.valhelsia.valhelsia_core.client;
 
-import com.google.common.hash.Hashing;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.renderer.texture.Texture;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
-import net.valhelsia.valhelsia_core.ValhelsiaCore;
-import org.apache.commons.io.FilenameUtils;
+import net.valhelsia.valhelsia_core.util.TextureDownloader;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -53,7 +45,7 @@ public class CosmeticsManager {
     }
 
     public void tryLoadCosmeticsForPlayer(UUID uuid, @Nullable DataAvailableCallback callback) {
-        if (loadedPlayers.contains(uuid)) {
+        if (this.loadedPlayers.contains(uuid)) {
             return;
         }
 
@@ -83,7 +75,7 @@ public class CosmeticsManager {
             }
         }, Util.getServerExecutor());
 
-        loadedPlayers.add(uuid);
+        this.loadedPlayers.add(uuid);
     }
 
     private void loadCosmeticsForPlayer(UUID uuid, JsonObject jsonObject, @Nullable DataAvailableCallback callback) {
@@ -107,7 +99,6 @@ public class CosmeticsManager {
 
 
         if (callback != null) {
-            System.out.println("DATA LOADED");
             callback.onDataAvailable();
         }
     }
@@ -120,7 +111,7 @@ public class CosmeticsManager {
         synchronized (this) {
             if (!this.loadedTextures.containsKey(cosmeticName)) {
                 try {
-                    this.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png"), cosmeticName);
+                    TextureDownloader.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png"), "cosmetics/", texture -> this.loadedTextures.put(cosmeticName, texture));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -128,39 +119,8 @@ public class CosmeticsManager {
         }
     }
 
-    private void downloadTexture(URL url, String cosmeticName) {
-        Runnable runnable = () -> {
-            Minecraft.getInstance().execute(() -> {
-                RenderSystem.recordRenderCall(() -> {
-                    String s = Hashing.sha1().hashUnencodedChars(FilenameUtils.getBaseName(url.toString())).toString();
-                    ResourceLocation resourceLocation = new ResourceLocation(ValhelsiaCore.MOD_ID, "cosmetics/" + s);
-                    TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-                    Texture texture = textureManager.getTexture(resourceLocation);
-
-                    if (texture == null) {
-                        try {
-                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                            connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-                            InputStream stream = connection.getInputStream();
-
-                            NativeImage image = NativeImage.read(stream);
-
-                            textureManager.loadTexture(resourceLocation, new DynamicTexture(image));
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    this.loadedTextures.put(cosmeticName, resourceLocation);
-                });
-            });
-        };
-
-        Util.getServerExecutor().execute(runnable);
-    }
-
     public CompoundNBT getActiveCosmeticsForPlayer(UUID uuid) {
-        return this.activeCosmetics.containsKey(uuid) ? activeCosmetics.get(uuid) : new CompoundNBT();
+        return this.activeCosmetics.containsKey(uuid) ? this.activeCosmetics.get(uuid) : new CompoundNBT();
     }
 
     public void setActiveCosmeticsForPlayer(UUID uuid, CompoundNBT activeCosmetics) {
