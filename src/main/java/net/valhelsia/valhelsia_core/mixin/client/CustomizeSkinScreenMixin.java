@@ -29,7 +29,7 @@ public class CustomizeSkinScreenMixin extends SettingsScreen {
         super(previousScreen, gameSettingsObj, textComponent);
     }
 
-    @ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/CustomizeSkinScreen;addButton(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 1, shift = At.Shift.AFTER), method = "init")
+    @ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/CustomizeSkinScreen;addButton(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 1, shift = At.Shift.AFTER), method = "init", ordinal = 0)
     public int init(int i) {
         Minecraft minecraft = this.getMinecraft();
         ++i;
