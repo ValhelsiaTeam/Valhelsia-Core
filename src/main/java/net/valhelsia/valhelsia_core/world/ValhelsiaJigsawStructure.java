@@ -19,7 +19,7 @@ public abstract class ValhelsiaJigsawStructure extends JigsawStructure implement
     private final String name;
 
     public ValhelsiaJigsawStructure(Codec<VillageConfig> codec, String name) {
-        super(codec, 0, true, true);
+        super(codec, 0, false, false);
         this.name = name;
     }
 
