@@ -1,7 +1,12 @@
 package net.valhelsia.valhelsia_core.common.helper;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.valhelsia.valhelsia_core.common.capability.counter.CounterProvider;
+import net.valhelsia.valhelsia_core.common.capability.counter.ICounterCapability;
 import net.valhelsia.valhelsia_core.common.capability.counter.SimpleCounter;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,5 +38,13 @@ public class CounterHelper {
 
     public static List<SimpleCounter> getCounters() {
         return COUNTERS;
+    }
+
+    @Nullable
+    public static SimpleCounter getCounter(Player player, ResourceLocation resourceLocation) {
+        if (player.getCapability(CounterProvider.CAPABILITY).resolve().isPresent()) {
+            return player.getCapability(CounterProvider.CAPABILITY).resolve().get().getCounter(resourceLocation);
+        }
+        return null;
     }
 }
