@@ -1,6 +1,5 @@
 package net.valhelsia.valhelsia_core.client.cosmetics;
 
-import net.minecraft.world.entity.player.Player;
 import net.valhelsia.valhelsia_core.client.event.EntityRendererEvents;
 import net.valhelsia.valhelsia_core.client.model.*;
 

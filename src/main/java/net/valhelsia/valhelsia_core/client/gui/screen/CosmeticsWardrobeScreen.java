@@ -42,8 +42,6 @@ public class CosmeticsWardrobeScreen extends Screen {
 
     private CosmeticsList cosmeticsList;
 
-    private boolean initialized;
-
     public CosmeticsWardrobeScreen(Screen parentScreen) {
         super(new TranslatableComponent("gui.valhelsia_core.cosmeticsWardrobe"));
         this.parentScreen = parentScreen;
@@ -53,26 +51,7 @@ public class CosmeticsWardrobeScreen extends Screen {
     protected void init() {
         this.getMinecraft().keyboardHandler.setSendRepeatsToGui(true);
 
-//        if (this.font == null) {
-//            this.font = this.getMinecraft().font;
-//            System.out.println(            this.font = this.getMinecraft().font
-//);
-//        }
-
-//        if (this.initialized) {
-//            this.cosmeticsList.updateSize((int) (this.width / 3.9F), 75, 150, 215);
-//            this.setActiveCategory(this.activeCategory);
-//        } else {
         this.cosmeticsList = new CosmeticsList(this.getMinecraft(), this.width, this.height,75, this.height);
-
-        //this.cosmeticsList = new CosmeticsList(this.getMinecraft(), (int) (this.width / 6.0F), 75, (int) (this.width / 3.2F), this.height - 75, 88, 100 + 10);
-       // }
-
-        //this.cosmeticsList = new CosmeticsList(this.getMinecraft(), 164, 75, 150, 215);
-
-       // this.oldScale = this.getMinecraft().getWindow().getGuiScale();
-        //int scale = this.getMinecraft().getWindow().calculateScale(3, this.getMinecraft().isEnforceUnicode());
-        //this.getMinecraft().getWindow().setGuiScale(scale);
 
         int y = 75;
 
@@ -121,8 +100,6 @@ public class CosmeticsWardrobeScreen extends Screen {
         }));
 
         this.addWidget(this.cosmeticsList);
-
-        this.initialized = true;
     }
 
     private void setActiveCategory(CosmeticsCategory category) {
@@ -139,9 +116,7 @@ public class CosmeticsWardrobeScreen extends Screen {
         int y = 51;
 
         // Lines
-      //  GuiComponent.fill(poseStack, (int) (this.width / 9.5F), y, (int) (this.width / 9.5F) + 1, this.height - y, LINE_COLOR);
         GuiComponent.fill(poseStack, (int) (this.width / 6.42F), y, (int) (this.width / 6.42F) + 1, this.height - y, LINE_COLOR);
-       // GuiComponent.fill(poseStack, 0, 0, this.width, this.height, BG_COLOR);
 
         //poseStack.scale(2 - this.scaleX, 2 - this.scaleY, 1.0F);
         GuiComponent.drawCenteredString(poseStack, this.font, this.getTitle(), (int) (this.width / 3.55F), 20, 16777215);
@@ -152,22 +127,9 @@ public class CosmeticsWardrobeScreen extends Screen {
         this.font.draw(poseStack, new TranslatableComponent("gui.valhelsia_core.categories"), (int) (this.width / 32.0F), y, 16777215);
         this.font.draw(poseStack, this.activeCategory.getComponent(), (int) (this.width / 5.94F), y, 16777215);
 
-        x = 83;
-        y = 75;
-
-//        for (CosmeticsCategory category : CosmeticsCategory.values()) {
-//            this.font.draw(poseStack, category.getComponent(), x, y, LINE_COLOR);
-//            y += 15;
-//        }
-
         RenderSystem.setShaderTexture(0, BG_IMAGE);
 
-        poseStack.pushPose();
-
-       // poseStack.scale(0.5F, 0.5F, 1.0F);
         GuiComponent.blit(poseStack, (int) (this.width / 1.78F), 0, this.width - (int) (this.width / 1.78F), this.height, 0, 0, 520, 670, 520, 670);
-
-        poseStack.popPose();
 
         this.cosmeticsList.render(poseStack, mouseX, mouseY, partialTicks);
 
@@ -191,8 +153,6 @@ public class CosmeticsWardrobeScreen extends Screen {
 
     @Override
     public void onClose() {
-      //  this.getMinecraft().getWindow().setGuiScale(oldScale);
-      //  this.getMinecraft().resizeDisplay();
         this.getMinecraft().setScreen(this.parentScreen);
     }
 }

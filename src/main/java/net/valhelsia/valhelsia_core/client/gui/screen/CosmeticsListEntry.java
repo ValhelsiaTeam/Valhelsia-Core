@@ -32,19 +32,10 @@ public class CosmeticsListEntry extends ContainerObjectSelectionList.Entry<Cosme
         this.children = rightEntry != null ? ImmutableList.of(leftEntry, rightEntry) : ImmutableList.of(leftEntry);
     }
 
-//    public CosmeticsEntry(CosmeticsCategory category, String cosmeticName, int x, int y, OnPress onPress) {
-//        super(x, y, 60, 70, new TranslatableComponent("cosmetic.valhelsia_core." + cosmeticName), onPress);
-//        this.category = category;
-//        this.cosmeticName = cosmeticName;
-//    }
-
     @Override
     public void render(@Nonnull PoseStack poseStack, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
-//        GuiComponent.fill(poseStack, left, top, left + width, top + height, FastColor.ARGB32.color(255, 115, 17, 99));
-
         this.children.forEach(cosmeticsEntry -> {
             cosmeticsEntry.y = top;
-            //cosmeticsEntry.x = left;
             cosmeticsEntry.render(poseStack, mouseX, mouseY, partialTicks);
         });
     }

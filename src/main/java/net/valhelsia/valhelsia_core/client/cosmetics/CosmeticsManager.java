@@ -52,9 +52,9 @@ public class CosmeticsManager {
 
         CompletableFuture.runAsync(() -> {
             try {
-                //URL url = new URL("https://valhelsia.net/api/webhook/mod/valhelsia_core/purchases?uuid=" + uuid.toString().replace("-", ""));
+                URL url = new URL("https://valhelsia.net/api/webhook/mod/valhelsia_core/purchases?uuid=" + uuid.toString().replace("-", ""));
 
-                URL url = new URL("https://valhelsia.net/api/webhook/mod/valhelsia_core/purchases?uuid=435be545e56241878cd5e148908c139b");
+                //URL url = new URL("https://valhelsia.net/api/webhook/mod/valhelsia_core/purchases?uuid=435be545e56241878cd5e148908c139b");
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
@@ -80,8 +80,6 @@ public class CosmeticsManager {
     }
 
     private void loadCosmeticsForPlayer(UUID uuid, JsonObject jsonObject, @Nullable DataAvailableCallback callback) {
-        List<String> capes = new ArrayList<>();
-
         if (!jsonObject.has("data")) {
             return;
         }
@@ -90,10 +88,6 @@ public class CosmeticsManager {
 
         for (JsonElement purchase : purchases) {
             String name = purchase.getAsJsonObject().get("name").getAsString().toLowerCase(Locale.ROOT).replace(" ", "_").replace("'", "");
-
-            if (name.contains("cape")) {
-                capes.add(name);
-            }
 
             this.cosmetics.computeIfAbsent(uuid, k -> new ArrayList<>());
             this.cosmetics.get(uuid).add(new Cosmetic(name, CosmeticsCategory.getForCosmetic(name)));
@@ -140,8 +134,6 @@ public class CosmeticsManager {
 
 
     public CompoundTag getActiveCosmeticsForPlayer(UUID uuid) {
-        //System.out.println(this.activeCosmetics.entrySet());
-       // System.out.println(this.activeCosmetics.containsKey(uuid));
         return this.activeCosmetics.containsKey(uuid) ? this.activeCosmetics.get(uuid) : new CompoundTag();
     }
 

@@ -16,6 +16,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import java.util.UUID;
+
 /**
  * Skin Customization Screen Mixin <br>
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.mixin.client.SkinCustomizationScreenMixin
@@ -36,10 +38,13 @@ public class SkinCustomizationScreenMixin extends OptionsSubScreen {
         Minecraft minecraft = this.getMinecraft();
         i++;
 
+        CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
+        UUID uuid = this.getMinecraft().getUser().getGameProfile().getId();
+
         this.addRenderableWidget(new Button(this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), 150, 20,
                 new TranslatableComponent("gui." + ValhelsiaCore.MOD_ID + ".cosmeticsSettings").append("..."),
                 (button) -> {
-                    if (!CosmeticsManager.getInstance().getLoadedPlayers().contains(this.getMinecraft().getUser().getGameProfile().getId())) {
+                    if (!cosmeticsManager.getLoadedPlayers().contains(uuid) || cosmeticsManager.getCosmeticsForPlayer(uuid).isEmpty()) {
                         minecraft.setScreen(new NoCosmeticsScreen(this));
                     } else {
                         minecraft.setScreen(new CosmeticsWardrobeScreen(this));

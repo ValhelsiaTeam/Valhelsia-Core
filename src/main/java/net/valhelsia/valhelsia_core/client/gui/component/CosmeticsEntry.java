@@ -52,12 +52,6 @@ public class CosmeticsEntry extends Button implements SelectableComponent {
         }
     }
 
-//    public CosmeticsEntry(CosmeticsCategory category, String cosmeticName, int x, int y, OnPress onPress) {
-//        super(x, y, 60, 70, new TranslatableComponent("cosmetic.valhelsia_core." + cosmeticName), onPress);
-//        this.category = category;
-//        this.cosmeticName = cosmeticName;
-//    }
-
     @Override
     public boolean isSelected() {
         return this.selected;
@@ -82,15 +76,8 @@ public class CosmeticsEntry extends Button implements SelectableComponent {
             DynamicTexture texture = (DynamicTexture) Minecraft.getInstance().getTextureManager().getTexture(this.previewTexture, MissingTextureAtlasSprite.getTexture());
 
             RenderSystem.setShaderTexture(0, this.previewTexture);
-          //  GuiComponent.fill(poseStack, this.x, this.y, this.x + this.width, this.y + this.height, FastColor.ARGB32.color(255, 251, 170, 62));
-
-           // System.out.println("X: " + this.x + " Y:" + this.y + " COSMETIC:" + this.cosmeticName + " TEXTURE:" + this.previewTexture);
-            //System.out.println("WIDTH: " + texture.getPixels().getWidth() + " HEIGHT:" + texture.getPixels().getHeight());
 
             poseStack.pushPose();
-          //  poseStack.translate(1.0D, 0.0D, 0.0D);
-
-         //   poseStack.scale(0.3F, 0.3F, 1.0F);
             GuiComponent.blit(poseStack, this.x, this.y, this.width, this.height, 0, 0, texture.getPixels().getWidth(), texture.getPixels().getHeight(), texture.getPixels().getWidth(), texture.getPixels().getHeight());
             poseStack.popPose();
         }

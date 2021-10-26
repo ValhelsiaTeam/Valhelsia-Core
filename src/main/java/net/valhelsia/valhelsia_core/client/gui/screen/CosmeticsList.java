@@ -62,8 +62,6 @@ public class CosmeticsList extends ContainerObjectSelectionList<CosmeticsListEnt
     public CosmeticsList(Minecraft minecraft, int width, int height, int y0, int y1) {
         super(minecraft, width, height, y0, y1, 110);
         this.minecraft = minecraft;
-       // this.x0 = (int) (width / 6.0F);;
-       // this.x1 = x + width;
         this.rowCount = this.getRowWidth() / (ENTRY_WIDTH + ENTRY_SPACING);
 
         this.setRenderBackground(false);
@@ -96,30 +94,11 @@ public class CosmeticsList extends ContainerObjectSelectionList<CosmeticsListEnt
 
             this.addEntry(new CosmeticsListEntry(this, leftEntry, rightEntry));
         }
-
-//        for (int i = 0; i < cosmeticsData.getForCategory(category).size(); i++) {
-//
-//            CosmeticsEntry leftEntry = new CosmeticsEntry(category, cosmeticsData.getForCategory(category).get(i), this.x0, 0, onPress);
-//
-//            this.entries.add(leftEntry);
-//
-//            CosmeticsEntry rightEntry = null;
-//
-//            if (i++ != cosmeticsData.getForCategory(category).size()) {
-//                rightEntry = new CosmeticsEntry(category, cosmeticsData.getForCategory(category).get(i), 230, 0, onPress);
-//
-//                this.entries.add(rightEntry);
-//            }
-//
-//            this.addEntry(new CosmeticsListEntry(this, leftEntry, rightEntry));
-//        }
     }
 
     @Override
     public int getRowWidth() {
-        //return (int) (this.width - this.getRowLeft() - this.width / 1.82F);
         return this.getRowRight() - this.getRowLeft();
-      //  return this.width;
     }
 
     @Override
@@ -145,27 +124,9 @@ public class CosmeticsList extends ContainerObjectSelectionList<CosmeticsListEnt
     @Override
     public void render(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         double scale = this.getMinecraft().getWindow().getGuiScale();
-       // System.out.println((int) (this.y0 * scale) + " | " + this.height + " | " + this.height + scale);
-       // RenderSystem.enableScissor((int) (this.x0 * scale), (int) (this.y0 * scale), (int) (this.x1 * scale), (int) (this.height));
+
         RenderSystem.enableScissor((int)((double)this.getRowLeft() * scale), (int)((double)(this.height - this.y1) * scale), (int)((double)(this.getScrollbarPosition() + 6) * scale), (int)((double)(this.height - (this.height - this.y1) - this.y0) * scale));
-
-      //  GuiComponent.fill(poseStack, this.x0, this.y0, this.x1, this.y1, FastColor.ARGB32.color(255, 251, 170, 62));
-
         super.render(poseStack, mouseX, mouseY, partialTicks);
-//        int y = this.y0;
-//
-//        for (int i = 0; i < this.children().size(); i++) {
-//            this.children().get(i).render(poseStack, i, this.y0 + this.y0 * i, this.x0, this.width, 80, mouseX, mouseY, Objects.equals(this.getHovered(), this.children().get(i)), partialTicks);
-//
-//            y += this.y0;
-//
-//            // if (i % 2 == 0) {
-//            // x = 230;
-//            // } else {
-//            // x = this.x0;
-//            //    y += this.y0;
-//            //}
-//        }
         RenderSystem.disableScissor();
     }
 
