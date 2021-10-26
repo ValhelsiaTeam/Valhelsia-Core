@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.core.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -15,11 +16,11 @@ public class ModConfig {
 
     public static final class Client {
 
-        public final ForgeConfigSpec.ConfigValue<String> activeValhelsiaCape;
-
         public Client(ForgeConfigSpec.Builder builder) {
             builder.push("cosmetics");
-            this.activeValhelsiaCape = builder.comment("The active Valhelsia Cape").define("valhelsia_cape", "");
+            for (CosmeticsCategory category : CosmeticsCategory.values()) {
+                category.activeCosmetic = builder.comment("The active cosmetic for the category: " + category.getName()).define("active_cosmetic_" + category.getName(), "");
+            }
 
             builder.pop();
         }

@@ -4,13 +4,15 @@ import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.valhelsia.valhelsia_core.client.CosmeticsData;
-import net.valhelsia.valhelsia_core.client.CosmeticsManager;
+import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -29,11 +31,11 @@ public class ElytraLayerMixin<T extends LivingEntity> {
         CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
         UUID uuid = entity.getUUID();
-        CosmeticsData cosmeticsData = cosmeticsManager.getCosmeticsForPlayer(uuid);
-        String activeCape = cosmeticsManager.getActiveCosmeticsForPlayer(uuid).getString("Cape");
+        List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.BACK);
+        Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.BACK);
 
-        if (!activeCape.equals("") && cosmeticsData != null && cosmeticsData.getCapes().contains(activeCape)) {
-            ResourceLocation texture = cosmeticsManager.getCosmeticTexture(activeCape.substring(0, activeCape.length() - 4).concat("elytra"));
+        if (activeCosmetic != null && activeCosmetic.getName().contains("cape") && cosmetics.contains(activeCosmetic)) {
+            ResourceLocation texture = cosmeticsManager.getCosmeticTexture(new Cosmetic(activeCosmetic.getName().substring(0, activeCosmetic.getName().length() - 4).concat("elytra"), CosmeticsCategory.BACK));
 
             if (texture != null) {
                 cir.setReturnValue(texture);

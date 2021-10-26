@@ -5,10 +5,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.valhelsia.valhelsia_core.client.CosmeticsManager;
-import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
-import net.valhelsia.valhelsia_core.common.network.UpdateCosmeticsPacket;
-import net.valhelsia.valhelsia_core.core.config.ModConfig;
+import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 
 import java.util.UUID;
 
@@ -32,19 +31,32 @@ public class ClientPlayerEvents {
         }
 
         UUID uuid = event.getPlayer().getUUID();
-        CompoundTag compound = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
-        String activeCape = ModConfig.CLIENT.activeValhelsiaCape.get();
-        compound.putString("Cape", activeCape);
 
         cosmeticsManager.tryLoadCosmeticsForPlayer(uuid, null);
+        CompoundTag compound = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
+        System.out.println(compound);
+        Cosmetic activeBackCosmetic = CosmeticsCategory.BACK.getActiveCosmetic();
+        Cosmetic activeHatCosmetic = CosmeticsCategory.HAT.getActiveCosmetic();
+        Cosmetic activeHandCosmetic = CosmeticsCategory.HAND.getActiveCosmetic();
 
-        cosmeticsManager.setActiveCosmeticsForPlayer(uuid, compound);
-
-        if (!activeCape.equals("")) {
-            cosmeticsManager.loadCosmeticTexture(activeCape);
-            cosmeticsManager.loadCosmeticTexture(activeCape.substring(0, activeCape.length() - 4).concat("elytra"));
+        if (activeBackCosmetic != null) {
+            activeBackCosmetic.save(compound);
+            cosmeticsManager.loadCosmeticTexture(activeBackCosmetic, CosmeticsCategory.BACK);
         }
 
-        NetworkHandler.sendToServer(new UpdateCosmeticsPacket(compound));
+        if (activeHatCosmetic != null) {
+            activeHatCosmetic.save(compound);
+            cosmeticsManager.loadCosmeticTexture(activeHatCosmetic, CosmeticsCategory.HAT);
+        }
+
+        if (activeHandCosmetic != null) {
+            activeHandCosmetic.save(compound);
+            cosmeticsManager.loadCosmeticTexture(activeHandCosmetic, CosmeticsCategory.HAND);
+        }
+
+        System.out.println(compound);
+        cosmeticsManager.setActiveCosmeticsForPlayer(uuid, compound);
+
+//        NetworkHandler.sendToServer(new UpdateCosmeticsPacket(compound));
     }
 }

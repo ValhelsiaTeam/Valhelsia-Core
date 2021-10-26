@@ -17,6 +17,9 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Texture Downloader <br>
@@ -28,37 +31,46 @@ import java.net.URL;
  */
 public class TextureDownloader {
 
+    private static final Map<String, ResourceLocation> LOADED_TEXTURES = new HashMap<>();
+
     public static void downloadTexture(URL url, String path, @Nullable TextureAvailableCallback textureAvailableCallback) {
-        Runnable runnable = () -> {
-            Minecraft.getInstance().execute(() -> {
-                RenderSystem.recordRenderCall(() -> {
-                    String s = Hashing.sha1().hashUnencodedChars(FilenameUtils.getBaseName(url.toString())).toString();
-                    ResourceLocation resourceLocation = new ResourceLocation(ValhelsiaCore.MOD_ID, path + s);
-                    TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+        TextureDownloader.downloadTexture(url, path, null, textureAvailableCallback);
+    }
 
-                    AbstractTexture texture = textureManager.getTexture(resourceLocation, MissingTextureAtlasSprite.getTexture());
+    public static void downloadTexture(URL url, String path, @Nullable String identifier, @Nullable TextureAvailableCallback textureAvailableCallback) {
+        CompletableFuture.runAsync(() -> {
+            RenderSystem.recordRenderCall(() -> {
+                String s = Hashing.sha1().hashUnencodedChars(FilenameUtils.getBaseName(url.toString())).toString();
+                ResourceLocation resourceLocation = new ResourceLocation(ValhelsiaCore.MOD_ID, path + s);
+                TextureManager textureManager = Minecraft.getInstance().getTextureManager();
 
-                    if (texture == MissingTextureAtlasSprite.getTexture()) {
-                        try {
-                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                            connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+                AbstractTexture texture = textureManager.getTexture(resourceLocation, MissingTextureAtlasSprite.getTexture());
 
-                            NativeImage image = NativeImage.read(connection.getInputStream());
+                if (texture == MissingTextureAtlasSprite.getTexture()) {
+                    try {
+                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                        connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
 
-                            textureManager.register(resourceLocation, new DynamicTexture(image));
+                        NativeImage image = NativeImage.read(connection.getInputStream());
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        textureManager.register(resourceLocation, new DynamicTexture(image));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    if (textureAvailableCallback != null) {
-                        textureAvailableCallback.onTextureAvailable(resourceLocation);
-                    }
-                });
+                }
+                if (identifier != null) {
+                    LOADED_TEXTURES.put(identifier, resourceLocation);
+                }
+                if (textureAvailableCallback != null) {
+                    textureAvailableCallback.onTextureAvailable(resourceLocation);
+                }
             });
-        };
+        }, Util.backgroundExecutor());
+    }
 
-        Util.backgroundExecutor().execute(runnable);
+    public static ResourceLocation getTexture(String identifier) {
+        return LOADED_TEXTURES.getOrDefault(identifier, null);
     }
 
     public interface TextureAvailableCallback {

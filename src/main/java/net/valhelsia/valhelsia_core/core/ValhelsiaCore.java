@@ -79,5 +79,7 @@ public class ValhelsiaCore {
 
     private void registerLootConditions(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
         Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(ValhelsiaCore.MOD_ID, "match_block"), ValhelsiaLootConditions.MATCH_BLOCK);
+        Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(ValhelsiaCore.MOD_ID, "date"), ValhelsiaLootConditions.DATE);
+        Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(ValhelsiaCore.MOD_ID, "entity_tag"), ValhelsiaLootConditions.ENTITY_TAG);
     }
 }

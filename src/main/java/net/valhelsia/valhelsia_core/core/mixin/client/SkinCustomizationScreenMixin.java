@@ -8,8 +8,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.SkinCustomizationScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
+import net.valhelsia.valhelsia_core.client.gui.screen.CosmeticsWardrobeScreen;
+import net.valhelsia.valhelsia_core.client.gui.screen.NoCosmeticsScreen;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
-import net.valhelsia.valhelsia_core.client.gui.screen.CosmeticsSettingsScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -36,7 +38,13 @@ public class SkinCustomizationScreenMixin extends OptionsSubScreen {
 
         this.addRenderableWidget(new Button(this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), 150, 20,
                 new TranslatableComponent("gui." + ValhelsiaCore.MOD_ID + ".cosmeticsSettings").append("..."),
-                (button) -> minecraft.setScreen(new CosmeticsSettingsScreen(this))));
+                (button) -> {
+                    if (!CosmeticsManager.getInstance().getLoadedPlayers().contains(this.getMinecraft().getUser().getGameProfile().getId())) {
+                        minecraft.setScreen(new NoCosmeticsScreen(this));
+                    } else {
+                        minecraft.setScreen(new CosmeticsWardrobeScreen(this));
+                    }
+                }));
 
         return i;
     }

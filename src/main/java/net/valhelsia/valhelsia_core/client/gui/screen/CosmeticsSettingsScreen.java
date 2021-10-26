@@ -10,8 +10,8 @@ import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
-import net.valhelsia.valhelsia_core.client.CosmeticsData;
-import net.valhelsia.valhelsia_core.client.CosmeticsManager;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsData;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
@@ -36,7 +36,7 @@ public class CosmeticsSettingsScreen extends Screen {
     private final Screen parentScreen;
     private final Component supportUsComponent;
 
-    private CosmeticsList cosmeticsList;
+    private CosmeticsListOld cosmeticsList;
     private EditBox searchBox;
     private String lastSearch = "";
 
@@ -59,31 +59,31 @@ public class CosmeticsSettingsScreen extends Screen {
 
         UUID uuid = this.getMinecraft().getUser().getGameProfile().getId();
         cosmeticsManager.tryLoadCosmeticsForPlayer(uuid, this::init);
-        CosmeticsData cosmeticsData = cosmeticsManager.getCosmeticsForPlayer(uuid);
+        //CosmeticsData cosmeticsData = cosmeticsManager.getCosmeticsForPlayer(uuid);
 
-        if (cosmeticsData != null) {
-            this.hasCosmetics = true;
-
-            this.cosmeticsList = new CosmeticsList(this.minecraft, cosmeticsData, this.width, this.height, 88, this.getListEnd(), 36);
-            this.addWidget(this.cosmeticsList);
-
-            this.cosmeticsList.addCosmetics();
-
-            String s = this.searchBox != null ? this.searchBox.getValue() : "";
-            this.searchBox = new EditBox(this.font, this.getMarginX() + 28, 78, 196, 16, SEARCH_HINT) {
-                @Nonnull
-                protected MutableComponent createNarrationMessage() {
-                    return !CosmeticsSettingsScreen.this.searchBox.getValue().isEmpty() && CosmeticsSettingsScreen.this.cosmeticsList.isEmpty() ? super.createNarrationMessage().append(", ").append(CosmeticsSettingsScreen.SEARCH_EMPTY) : super.createNarrationMessage();
-                }
-            };
-            this.searchBox.setMaxLength(26);
-            this.searchBox.setBordered(false);
-            this.searchBox.setVisible(true);
-            this.searchBox.setTextColor(16777215);
-            this.searchBox.setValue(s);
-            this.searchBox.setResponder(this::checkSearchStringUpdate);
-            this.addWidget(this.searchBox);
-        }
+//        if (cosmeticsData != null) {
+//            this.hasCosmetics = true;
+//
+//            this.cosmeticsList = new CosmeticsListOld(this.minecraft, cosmeticsData, this.width, this.height, 88, this.getListEnd(), 36);
+//            this.addWidget(this.cosmeticsList);
+//
+//            this.cosmeticsList.addCosmetics();
+//
+//            String s = this.searchBox != null ? this.searchBox.getValue() : "";
+//            this.searchBox = new EditBox(this.font, this.getMarginX() + 28, 78, 196, 16, SEARCH_HINT) {
+//                @Nonnull
+//                protected MutableComponent createNarrationMessage() {
+//                    return !CosmeticsSettingsScreen.this.searchBox.getValue().isEmpty() && CosmeticsSettingsScreen.this.cosmeticsList.isEmpty() ? super.createNarrationMessage().append(", ").append(CosmeticsSettingsScreen.SEARCH_EMPTY) : super.createNarrationMessage();
+//                }
+//            };
+//            this.searchBox.setMaxLength(26);
+//            this.searchBox.setBordered(false);
+//            this.searchBox.setVisible(true);
+//            this.searchBox.setTextColor(16777215);
+//            this.searchBox.setValue(s);
+//            this.searchBox.setResponder(this::checkSearchStringUpdate);
+//            this.addWidget(this.searchBox);
+//        }
 
         this.addRenderableWidget(new Button(this.width / 2 - 100, this.hasCosmetics ? this.height - 40 : this.height / 6 + 60, 200, 20, CommonComponents.GUI_DONE, (button) -> this.getMinecraft().setScreen(this.parentScreen)));
     }

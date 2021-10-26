@@ -64,5 +64,7 @@ public class PlayerEvents {
                 player.sendMessage(configError.getErrorMessage(), player.getUUID());
             });
         }
+
+       // NetworkHandler.sendTo(player, new CompareCosmeticsPacket(CosmeticsManager.getInstance().getLoadedPlayers()));
     }
 }

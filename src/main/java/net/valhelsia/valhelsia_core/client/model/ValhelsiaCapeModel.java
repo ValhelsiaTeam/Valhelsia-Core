@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @version 0.1.0
  * @since 2021-04-25
  */
-public class ValhelsiaCapeModel<T extends Player> extends ListModel<T> {
+public class ValhelsiaCapeModel<T extends Player> extends ListModel<T> implements CosmeticsModel<T> {
 
     public static final ModelLayerLocation VALHELSIA_CAPE = new ModelLayerLocation(new ResourceLocation(ValhelsiaCore.MOD_ID, "valhelsia_cape"), "main");
 
@@ -82,6 +82,16 @@ public class ValhelsiaCapeModel<T extends Player> extends ListModel<T> {
 
     @Override
     public void setupAnim(@Nonnull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+
+    }
+
+    @Override
+    public ListModel<T> getModel() {
+        return this;
+    }
+
+    @Override
+    public void setPosition(PoseStack poseStack) {
 
     }
 }

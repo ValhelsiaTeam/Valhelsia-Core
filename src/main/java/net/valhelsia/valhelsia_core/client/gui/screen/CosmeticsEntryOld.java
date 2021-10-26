@@ -12,10 +12,9 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FastColor;
-import net.valhelsia.valhelsia_core.client.CosmeticsManager;
-import net.valhelsia.valhelsia_core.core.config.ModConfig;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
-import net.valhelsia.valhelsia_core.common.network.UpdateCosmeticsPacket;
 import net.valhelsia.valhelsia_core.client.util.SelectableCheckbox;
 
 import javax.annotation.Nonnull;
@@ -30,25 +29,25 @@ import java.util.UUID;
  * @version 0.1.1
  * @since 2021-09-11
  */
-public class CosmeticsEntry extends ContainerObjectSelectionList.Entry<CosmeticsEntry> {
+public class CosmeticsEntryOld extends ContainerObjectSelectionList.Entry<CosmeticsEntryOld> {
 
     public static final int BG_FILL = FastColor.ARGB32.color(255, 74, 74, 74);
     public static final int COSMETIC_NAME_COLOR = FastColor.ARGB32.color(255, 255, 255, 255);
 
     private final Minecraft minecraft;
-    private final CosmeticsList cosmeticsList;
+    private final CosmeticsListOld cosmeticsList;
     private final String name;
 
     private final List<AbstractWidget> children;
 
     private final Checkbox checkbox;
 
-    public CosmeticsEntry(Minecraft minecraft, CosmeticsList cosmeticsList, String name) {
+    public CosmeticsEntryOld(Minecraft minecraft, CosmeticsListOld cosmeticsList, String name) {
         this.minecraft = minecraft;
         this.cosmeticsList = cosmeticsList;
         this.name = name;
 
-        this.checkbox = new Checkbox(0, 0, 20, 20, new TranslatableComponent(""), ModConfig.CLIENT.activeValhelsiaCape.get().equals(this.name), false);
+        this.checkbox = new Checkbox(0, 0, 20, 20, new TranslatableComponent(""), CosmeticsCategory.BACK.getActiveCosmetic().equals(this.name), false);
         this.children = ImmutableList.of(this.checkbox);
     }
 
@@ -99,7 +98,7 @@ public class CosmeticsEntry extends ContainerObjectSelectionList.Entry<Cosmetics
             UUID uuid = Minecraft.getInstance().getUser().getGameProfile().getId();
             boolean selected = this.checkbox.selected();
 
-            ModConfig.CLIENT.activeValhelsiaCape.set(selected ? this.name : "");
+            CosmeticsCategory.BACK.activeCosmetic.set(selected ? this.name : "");
 
             CompoundTag compound = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
             compound.putString("Cape", selected ? this.name : "");
@@ -107,13 +106,13 @@ public class CosmeticsEntry extends ContainerObjectSelectionList.Entry<Cosmetics
             cosmeticsManager.setActiveCosmeticsForPlayer(uuid, compound);
 
             if (Minecraft.getInstance().player != null) {
-                NetworkHandler.sendToServer(new UpdateCosmeticsPacket(compound));
+              //  NetworkHandler.sendToServer(new UpdateCosmeticsPacket(compound));
             }
 
             if (selected) {
                 String activeCape = cosmeticsManager.getActiveCosmeticsForPlayer(uuid).getString("Cape");
-                cosmeticsManager.loadCosmeticTexture(activeCape);
-                cosmeticsManager.loadCosmeticTexture(activeCape.substring(0, activeCape.length() - 4).concat("elytra"));
+                //cosmeticsManager.loadCosmeticTexture(activeCape, CosmeticsCategory.BACK);
+               // cosmeticsManager.loadCosmeticTexture(activeCape.substring(0, activeCape.length() - 4).concat("elytra"));
             }
 
             this.cosmeticsList.getEntries().forEach(cosmeticsEntry -> {
