@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,7 +20,7 @@ import javax.annotation.Nonnull;
  * @since 2021-04-25
  */
 @OnlyIn(Dist.CLIENT)
-public class ValhelsiaCapeModel<T extends Entity> extends EntityModel<T> {
+public class ValhelsiaCapeModel<T extends PlayerEntity> extends EntityModel<T> implements CosmeticsModel<T> {
 
     public final ModelRenderer pin;
     public final ModelRenderer cape;
@@ -56,7 +57,7 @@ public class ValhelsiaCapeModel<T extends Entity> extends EntityModel<T> {
     }
 
     @Override
-    public void setRotationAngles(@Nonnull Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
+    public void setRotationAngles(@Nonnull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
     }
 
     @Override
@@ -72,5 +73,15 @@ public class ValhelsiaCapeModel<T extends Entity> extends EntityModel<T> {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
+    }
+
+    @Override
+    public EntityModel<T> getModel() {
+        return this;
+    }
+
+    @Override
+    public void setPosition(MatrixStack poseStack) {
+
     }
 }

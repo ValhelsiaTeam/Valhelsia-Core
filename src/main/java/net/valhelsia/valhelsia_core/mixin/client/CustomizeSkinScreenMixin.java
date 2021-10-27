@@ -9,10 +9,14 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
-import net.valhelsia.valhelsia_core.client.screen.CosmeticsSettingsScreen;
+import net.valhelsia.valhelsia_core.client.CosmeticsManager;
+import net.valhelsia.valhelsia_core.client.screen.CosmeticsWardrobeScreen;
+import net.valhelsia.valhelsia_core.client.screen.NoCosmeticsScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+
+import java.util.UUID;
 
 /**
  * Customize Skin Screen Mixin <br>
@@ -34,9 +38,18 @@ public class CustomizeSkinScreenMixin extends SettingsScreen {
         Minecraft minecraft = this.getMinecraft();
         ++i;
 
+        CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
+        UUID uuid = this.getMinecraft().getSession().getProfile().getId();
+
         this.addButton(new Button(this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), 150, 20,
                 new TranslationTextComponent("gui." + ValhelsiaCore.MOD_ID + ".cosmeticsSettings").appendString("..."),
-                (button) -> minecraft.displayGuiScreen(new CosmeticsSettingsScreen(this))));
+                (button) -> {
+                    if (!cosmeticsManager.getLoadedPlayers().contains(uuid) || cosmeticsManager.getCosmeticsForPlayer(uuid).isEmpty()) {
+                        minecraft.displayGuiScreen(new NoCosmeticsScreen(this));
+                    } else {
+                        minecraft.displayGuiScreen(new CosmeticsWardrobeScreen(this));
+                    }
+        }));
 
         return i;
     }

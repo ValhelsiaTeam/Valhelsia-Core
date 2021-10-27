@@ -15,11 +15,13 @@ import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
-import net.valhelsia.valhelsia_core.client.CosmeticsData;
+import net.valhelsia.valhelsia_core.client.Cosmetic;
+import net.valhelsia.valhelsia_core.client.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.model.ValhelsiaCapeModel;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -45,15 +47,14 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayerEntity> extends La
         CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
         UUID uuid = player.getUniqueID();
-        CosmeticsData cosmeticsData = cosmeticsManager.getCosmeticsForPlayer(uuid);
+        List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.BACK);
+        Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.BACK);
 
-        String activeCape = cosmeticsManager.getActiveCosmeticsForPlayer(uuid).getString("Cape");
-
-        if (stack.getItem() == Items.ELYTRA || cosmeticsData == null || activeCape.equals("") || !cosmeticsData.getCapes().contains(activeCape)) {
+        if (stack.getItem() == Items.ELYTRA || activeCosmetic == null || !activeCosmetic.getName().contains("cape") || !cosmetics.contains(activeCosmetic)) {
             return;
         }
 
-        ResourceLocation texture = cosmeticsManager.getCosmeticTexture(activeCape);
+        ResourceLocation texture = cosmeticsManager.getCosmeticTexture(activeCosmetic);
 
         if (texture == null) {
             return;

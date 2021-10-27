@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Cosmetics Manager <br>
@@ -30,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 public class CosmeticsManager {
 
     private final List<UUID> loadedPlayers = new ArrayList<>();
-    private final Map<UUID, CosmeticsData> cosmetics = new HashMap<>();
+    private final Map<UUID, List<Cosmetic>> cosmetics = new HashMap<>();
     private final Map<UUID, CompoundNBT> activeCosmetics = new HashMap<>();
 
     private final Map<String, ResourceLocation> loadedTextures = new HashMap<>();
@@ -79,8 +80,6 @@ public class CosmeticsManager {
     }
 
     private void loadCosmeticsForPlayer(UUID uuid, JsonObject jsonObject, @Nullable DataAvailableCallback callback) {
-        List<String> capes = new ArrayList<>();
-
         if (!jsonObject.has("data")) {
             return;
         }
@@ -88,34 +87,48 @@ public class CosmeticsManager {
         JsonArray purchases = jsonObject.getAsJsonObject("data").getAsJsonArray("purchases");
 
         for (JsonElement purchase : purchases) {
-            String name = purchase.getAsJsonObject().get("name").getAsString().toLowerCase(Locale.ROOT).replace(" ", "_");
+            String name = purchase.getAsJsonObject().get("name").getAsString().toLowerCase(Locale.ROOT).replace(" ", "_").replace("'", "");
 
-            if (name.contains("cape")) {
-                capes.add(name);
-            }
+            this.cosmetics.computeIfAbsent(uuid, k -> new ArrayList<>());
+            this.cosmetics.get(uuid).add(new Cosmetic(name, CosmeticsCategory.getForCosmetic(name)));
         }
-
-        this.cosmetics.put(uuid, new CosmeticsData(capes));
-
 
         if (callback != null) {
             callback.onDataAvailable();
         }
     }
 
-    public CosmeticsData getCosmeticsForPlayer(UUID uuid) {
-        return this.cosmetics.get(uuid);
+    public List<Cosmetic> getCosmeticsForPlayer(UUID uuid) {
+        return this.cosmetics.getOrDefault(uuid, new ArrayList<>());
     }
 
-    public void loadCosmeticTexture(String cosmeticName) {
-        synchronized (this) {
-            if (!this.loadedTextures.containsKey(cosmeticName)) {
+    public List<Cosmetic> getCosmeticsForPlayer(UUID uuid, CosmeticsCategory category) {
+        return this.cosmetics.getOrDefault(uuid, new ArrayList<>()).stream().filter(cosmetic -> cosmetic.getCategory() == category).collect(Collectors.toList());
+    }
+
+    public List<UUID> getLoadedPlayers() {
+        return this.loadedPlayers;
+    }
+
+    public void loadCosmeticTexture(Cosmetic cosmetic, @Nullable CosmeticsCategory category) {
+        //  synchronized (this) {
+        String cosmeticName = cosmetic.getName();
+        if (!this.loadedTextures.containsKey(cosmeticName)) {
+            try {
+                TextureDownloader.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png"), "cosmetics/", texture -> this.loadedTextures.put(cosmeticName, texture));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            if (category == CosmeticsCategory.BACK && cosmeticName.contains("cape")) {
+                String name = cosmeticName.substring(0, cosmeticName.length() - 4).concat("elytra");
                 try {
-                    TextureDownloader.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png"), "cosmetics/", texture -> this.loadedTextures.put(cosmeticName, texture));
+                    TextureDownloader.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/" + name + ".png"), "cosmetics/", texture -> this.loadedTextures.put(name, texture));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
             }
+            // }
         }
     }
 
@@ -123,15 +136,23 @@ public class CosmeticsManager {
         return this.activeCosmetics.containsKey(uuid) ? this.activeCosmetics.get(uuid) : new CompoundNBT();
     }
 
+    @Nullable
+    public Cosmetic getActiveCosmeticForPlayer(UUID uuid, CosmeticsCategory category) {
+        if (this.getActiveCosmeticsForPlayer(uuid) != null && this.getActiveCosmeticsForPlayer(uuid).contains(category.getName())) {
+            return Cosmetic.fromTag(this.getActiveCosmeticsForPlayer(uuid).getCompound(category.getName()), category);
+        }
+        return null;
+    }
+
     public void setActiveCosmeticsForPlayer(UUID uuid, CompoundNBT activeCosmetics) {
         this.activeCosmetics.put(uuid, activeCosmetics);
     }
 
-    public ResourceLocation getCosmeticTexture(String cosmeticName) {
-        if (!this.loadedTextures.containsKey(cosmeticName)) {
-            this.loadCosmeticTexture(cosmeticName);
+    public ResourceLocation getCosmeticTexture(Cosmetic cosmetic) {
+        if (!this.loadedTextures.containsKey(cosmetic.getName())) {
+            this.loadCosmeticTexture(cosmetic, null);
         }
-        return this.loadedTextures.get(cosmeticName);
+        return this.loadedTextures.get(cosmetic.getName());
     }
 
     public interface DataAvailableCallback {

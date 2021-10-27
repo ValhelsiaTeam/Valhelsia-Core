@@ -1,16 +1,20 @@
 package net.valhelsia.valhelsia_core.client.screen;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.widget.list.AbstractOptionList;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ColorHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.valhelsia.valhelsia_core.client.Cosmetic;
+import net.valhelsia.valhelsia_core.client.CosmeticsCategory;
+import net.valhelsia.valhelsia_core.util.TextureDownloader;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Cosmetics Entry <br>
@@ -20,51 +24,65 @@ import java.util.List;
  * @version 16.0.11
  * @since 2021-09-11
  */
-public class CosmeticsEntry extends AbstractOptionList.Entry<CosmeticsEntry> {
+public class CosmeticsEntry extends Button implements SelectableComponent {
 
-    public static final int BG_FILL = ColorHelper.PackedColor.packColor(255, 74, 74, 74);
-    public static final int COSMETIC_NAME_COLOR = ColorHelper.PackedColor.packColor(255, 255, 255, 255);
+    public static final int BG_COLOR = ColorHelper.PackedColor.packColor(255, 5, 17, 31);
 
-    private final Minecraft minecraft;
-    private final CosmeticsList cosmeticsList;
-    private final String name;
+    private final CosmeticsCategory category;
+    private final Cosmetic cosmetic;
 
-    private final CosmeticCheckboxButton checkboxButton;
+    private ResourceLocation previewTexture = null;
 
-    public CosmeticsEntry(Minecraft minecraft, CosmeticsList cosmeticsList, String name) {
-        this.minecraft = minecraft;
-        this.cosmeticsList = cosmeticsList;
-        this.name = name;
+    private boolean selected;
 
-        this.checkboxButton = new CosmeticCheckboxButton(cosmeticsList, this.name, 0, 0, 20, 20, new TranslationTextComponent(""));
-    }
+    public CosmeticsEntry(CosmeticsCategory category, Cosmetic cosmetic, int x, int y, int width, int height, IPressable onPress, boolean selected) {
+        super(x, y, width, height, new TranslationTextComponent("cosmetic.valhelsia_core." + cosmetic.getName()), onPress);
+        this.category = category;
+        this.cosmetic = cosmetic;
+        this.selected = selected;
 
-    @Nonnull
-    @Override
-    public List<? extends IGuiEventListener> getEventListeners() {
-        return ImmutableList.of(this.checkboxButton);
-    }
-
-    public TranslationTextComponent getTranslatedName() {
-        return new TranslationTextComponent("cosmetic.valhelsia_core." + this.name);
+        try {
+            TextureDownloader.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/preview/" + cosmetic.getName() + ".png"), "cosmetics/preview/", texture -> this.previewTexture = texture);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
-        int i = p_230432_4_ + 4;
-        int k = i + 24 + 4;
-        int l = p_230432_3_ + (p_230432_6_ - 9) / 2;
-
-        AbstractGui.fill(matrixStack, p_230432_4_, p_230432_3_, p_230432_4_ + p_230432_5_, p_230432_3_ + p_230432_6_, BG_FILL);
-
-        this.minecraft.fontRenderer.func_243246_a(matrixStack, this.getTranslatedName(), (float) k, (float) l, COSMETIC_NAME_COLOR);
-
-        this.checkboxButton.x = p_230432_4_ + (p_230432_5_ - this.checkboxButton.getWidth() - 11);
-        this.checkboxButton.y = p_230432_3_ + (p_230432_6_ - this.checkboxButton.getHeightRealms()) / 2;
-        this.checkboxButton.render(matrixStack, mouseX, mouseY, partialTicks);
+    public boolean isSelected() {
+        return this.selected;
     }
 
-    public CosmeticCheckboxButton getCheckboxButton() {
-        return checkboxButton;
+    @Override
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    @Override
+    public void renderButton(@Nonnull MatrixStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        AbstractGui.fill(poseStack, this.x, this.y, this.x + this.width, this.y + this.height, BG_COLOR);
+
+        if (this.isSelected()) {
+            Minecraft.getInstance().getTextureManager().bindTexture(CosmeticsWardrobeScreen.TEXTURE);
+            AbstractGui.blit(poseStack, this.x, this.y, 0, 92, this.width, this.height, 256, 256);
+        }
+
+        if (this.previewTexture != null) {
+            DynamicTexture texture = (DynamicTexture) Minecraft.getInstance().getTextureManager().getTexture(this.previewTexture);
+
+            Minecraft.getInstance().getTextureManager().bindTexture(this.previewTexture);
+
+            if (texture != null) {
+                AbstractGui.blit(poseStack, this.x, this.y, this.width, this.height, 0, 0, texture.getTextureData().getWidth(), texture.getTextureData().getHeight(), texture.getTextureData().getWidth(), texture.getTextureData().getHeight());
+            }
+        }
+    }
+
+    public CosmeticsCategory getCategory() {
+        return category;
+    }
+
+    public Cosmetic getCosmetic() {
+        return this.cosmetic;
     }
 }
