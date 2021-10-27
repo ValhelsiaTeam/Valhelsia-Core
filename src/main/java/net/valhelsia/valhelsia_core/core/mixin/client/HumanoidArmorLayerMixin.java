@@ -11,7 +11,6 @@ import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -29,8 +28,6 @@ import java.util.UUID;
  */
 @Mixin(HumanoidArmorLayer.class)
 public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, A extends HumanoidModel<T>> {
-
-    @Shadow protected abstract A getArmorModel(EquipmentSlot p_117079_);
 
     @Inject(at = @At(value = "HEAD"), method = "renderArmorPiece", cancellable = true)
     private void valhelsia_cancelCapeRendering(PoseStack poseStack, MultiBufferSource bufferSource, T entity, EquipmentSlot slot, int packedLight, A armorModel, CallbackInfo ci) {
