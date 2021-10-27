@@ -103,7 +103,7 @@ public class CosmeticsList extends ContainerObjectSelectionList<CosmeticsListEnt
 
     @Override
     public int getRowLeft() {
-        return (int) (this.width / 5.8F);
+        return (int) (this.width / 5.73F);
     }
 
     @Override

@@ -69,7 +69,7 @@ public class CosmeticsWardrobeScreen extends Screen {
             y += 15;
         }
 
-        int i = (int) (this.width / 1.78F) + (this.width - (int) (this.width / 1.78F)) / 2;
+        int i = (int) (this.width / 1.882F) + (this.width - (int) (this.width / 1.882F)) / 2;
 
         this.addRenderableWidget(new CloseCosmeticsWardrobeButton(i - 7 - 100, this.height - 50, 100, 35, 100, 0, TEXTURE, new TranslatableComponent("gui.valhelsia_core.cosmeticsWardrobe.save"), button -> {
             CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
@@ -116,7 +116,7 @@ public class CosmeticsWardrobeScreen extends Screen {
         int y = 51;
 
         // Lines
-        GuiComponent.fill(poseStack, (int) (this.width / 6.42F), y, (int) (this.width / 6.42F) + 1, this.height - y, LINE_COLOR);
+        GuiComponent.fill(poseStack, (int) (this.width / 6.3F), y, (int) (this.width / 6.3F) + 1, this.height - y, LINE_COLOR);
 
         //poseStack.scale(2 - this.scaleX, 2 - this.scaleY, 1.0F);
         GuiComponent.drawCenteredString(poseStack, this.font, this.getTitle(), (int) (this.width / 3.55F), 20, 16777215);
@@ -125,11 +125,11 @@ public class CosmeticsWardrobeScreen extends Screen {
         y = 58;
 
         this.font.draw(poseStack, new TranslatableComponent("gui.valhelsia_core.categories"), (int) (this.width / 32.0F), y, 16777215);
-        this.font.draw(poseStack, this.activeCategory.getComponent(), (int) (this.width / 5.94F), y, 16777215);
+        this.font.draw(poseStack, this.activeCategory.getComponent(), (int) (this.width / 5.73F), y, 16777215);
 
         RenderSystem.setShaderTexture(0, BG_IMAGE);
 
-        GuiComponent.blit(poseStack, (int) (this.width / 1.78F), 0, this.width - (int) (this.width / 1.78F), this.height, 0, 0, 520, 670, 520, 670);
+        GuiComponent.blit(poseStack, (int) (this.width / 1.882F), 0, this.width - (int) (this.width / 1.882F), this.height, 0, 0, 560, 670, 560, 670);
 
         this.cosmeticsList.render(poseStack, mouseX, mouseY, partialTicks);
 
