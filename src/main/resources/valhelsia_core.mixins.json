@@ -12,6 +12,7 @@
     "client.CapeLayerMixin",
     "client.CheckboxMixin",
     "client.ElytraLayerMixin",
+    "client.HumanoidArmorLayerMixin",
     "client.SkinCustomizationScreenMixin",
     "client.SkinManagerMixin"
   ],
