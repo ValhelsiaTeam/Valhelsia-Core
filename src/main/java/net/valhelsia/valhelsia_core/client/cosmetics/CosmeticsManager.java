@@ -92,14 +92,28 @@ public class CosmeticsManager {
             this.cosmetics.computeIfAbsent(uuid, k -> new ArrayList<>());
 
             if (name.contains("bundle")) {
-                CosmeticsBundle.getCosmeticsFromBundle(name).forEach(s -> this.cosmetics.get(uuid).add(new Cosmetic(s, CosmeticsCategory.getForCosmetic(s))));
+                CosmeticsBundle.getCosmeticsFromBundle(name).forEach(s -> this.addCosmeticToPlayer(uuid, new Cosmetic(s, CosmeticsCategory.getForCosmetic(s))));
             } else {
-                this.cosmetics.get(uuid).add(new Cosmetic(name, CosmeticsCategory.getForCosmetic(name)));
+                this.addCosmeticToPlayer(uuid, new Cosmetic(name, CosmeticsCategory.getForCosmetic(name)));
             }
         }
 
         if (callback != null) {
             callback.onDataAvailable();
+        }
+    }
+
+    private void addCosmeticToPlayer(UUID uuid, Cosmetic cosmetic) {
+        boolean flag = true;
+        for (Cosmetic cosmetic1 : this.cosmetics.get(uuid)) {
+            if (cosmetic1.equals(cosmetic)) {
+                flag = false;
+                break;
+            }
+        }
+
+        if (flag) {
+            this.cosmetics.get(uuid).add(cosmetic);
         }
     }
 
