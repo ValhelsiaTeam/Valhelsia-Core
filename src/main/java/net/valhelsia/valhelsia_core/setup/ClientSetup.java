@@ -9,10 +9,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
-import net.valhelsia.valhelsia_core.client.renderer.CosmeticsBackLayer;
-import net.valhelsia.valhelsia_core.client.renderer.CosmeticsHandLayer;
-import net.valhelsia.valhelsia_core.client.renderer.CosmeticsHatLayer;
-import net.valhelsia.valhelsia_core.client.renderer.ValhelsiaCapeLayer;
+import net.valhelsia.valhelsia_core.client.renderer.*;
 import net.valhelsia.valhelsia_core.util.ValhelsiaRenderType;
 
 import java.util.List;
@@ -51,6 +48,7 @@ public class ClientSetup {
             renderer.addLayer(new CosmeticsBackLayer<>(renderer));
             renderer.addLayer(new CosmeticsHatLayer<>(renderer));
             renderer.addLayer(new CosmeticsHandLayer<>(renderer));
+            renderer.addLayer(new CosmeticsSpecialLayer<>(renderer));
         });
     }
 }

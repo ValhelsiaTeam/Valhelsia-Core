@@ -69,7 +69,7 @@ public class CosmeticsHandLayer<T extends AbstractClientPlayerEntity> extends La
                 return;
             }
             this.getEntityModel().translateHand(player.getPrimaryHand().opposite(), poseStack);
-            ((PlayerRenderer) Minecraft.getInstance().getRenderManager().getRenderer(player)).getEntityModel().leftArmPose = BipedModel.ArmPose.ITEM;
+           // ((PlayerRenderer) Minecraft.getInstance().getRenderManager().getRenderer(player)).getEntityModel().leftArmPose = BipedModel.ArmPose.ITEM;
         }
 
         if (this.model != null) {

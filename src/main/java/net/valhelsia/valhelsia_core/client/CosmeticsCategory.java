@@ -16,7 +16,8 @@ import javax.annotation.Nullable;
 public enum CosmeticsCategory {
     HAT("hat"),
     BACK("back"),
-    HAND("hand");
+    HAND("hand"),
+    SPECIAL("special");
 
     private final String name;
     private final TranslationTextComponent component;
@@ -50,10 +51,12 @@ public enum CosmeticsCategory {
             return CosmeticsCategory.HAT;
         } else if (cosmeticName.contains("cape")) {
             return CosmeticsCategory.BACK;
-        } else if (cosmeticName.contains("witchs_wand") || cosmeticName.equals("witchs_broom")) {
+        } else if (cosmeticName.contains("witchs_wand")) {
             return CosmeticsCategory.HAND;
         } else if (cosmeticName.equals("cauldron_backpack")) {
             return CosmeticsCategory.BACK;
+        } else if (cosmeticName.equals("witchs_broom")) {
+            return CosmeticsCategory.SPECIAL;
         }
         return null;
     }

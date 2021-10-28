@@ -90,7 +90,12 @@ public class CosmeticsManager {
             String name = purchase.getAsJsonObject().get("name").getAsString().toLowerCase(Locale.ROOT).replace(" ", "_").replace("'", "");
 
             this.cosmetics.computeIfAbsent(uuid, k -> new ArrayList<>());
-            this.cosmetics.get(uuid).add(new Cosmetic(name, CosmeticsCategory.getForCosmetic(name)));
+
+            if (name.contains("bundle")) {
+                Bundles.getCosmeticsFromBundle(name).forEach(s -> this.cosmetics.get(uuid).add(new Cosmetic(s, CosmeticsCategory.getForCosmetic(s))));
+            } else {
+                this.cosmetics.get(uuid).add(new Cosmetic(name, CosmeticsCategory.getForCosmetic(name)));
+            }
         }
 
         if (callback != null) {

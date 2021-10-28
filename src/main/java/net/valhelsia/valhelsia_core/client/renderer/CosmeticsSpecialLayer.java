@@ -14,39 +14,39 @@ import net.valhelsia.valhelsia_core.client.Cosmetic;
 import net.valhelsia.valhelsia_core.client.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.CosmeticsModels;
-import net.valhelsia.valhelsia_core.client.model.CauldronBackpackModel;
 import net.valhelsia.valhelsia_core.client.model.CosmeticsModel;
+import net.valhelsia.valhelsia_core.client.model.WitchHatModel;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Cosmetics Back Layer <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.client.renderer.CosmeticsBackLayer
+ * Cosmetics Hand Layer <br>
+ * Valhelsia Core - net.valhelsia.valhelsia_core.client.renderer.CosmeticsHandLayer
  *
  * @author Valhelsia Team
  * @version 16.0.13
  * @since 2021-10-27
  */
-public class CosmeticsBackLayer<T extends AbstractClientPlayerEntity> extends LayerRenderer<T, PlayerModel<T>> {
+public class CosmeticsSpecialLayer<T extends AbstractClientPlayerEntity> extends LayerRenderer<T, PlayerModel<T>> {
 
     private final CosmeticsManager cosmeticsManager;
     private CosmeticsModel<T> model;
 
-    public CosmeticsBackLayer(LivingRenderer<T, PlayerModel<T>> entityRenderer) {
+    public CosmeticsSpecialLayer(LivingRenderer<T, PlayerModel<T>> entityRenderer) {
         super(entityRenderer);
-        this.model = new CauldronBackpackModel<>();
+        this.model = new WitchHatModel<>();
         this.cosmeticsManager = CosmeticsManager.getInstance();
     }
 
     @Override
     public void render(@Nonnull MatrixStack poseStack, @Nonnull IRenderTypeBuffer buffer, int packedLight, @Nonnull T player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         UUID uuid = player.getUniqueID();
-        List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.BACK);
-        Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.BACK);
+        List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.SPECIAL);
+        Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.SPECIAL);
 
-        if (activeCosmetic == null || !cosmetics.contains(activeCosmetic) || activeCosmetic.getName().contains("cape")) {
+        if (activeCosmetic == null || !cosmetics.contains(activeCosmetic)) {
             return;
         }
 
@@ -60,7 +60,9 @@ public class CosmeticsBackLayer<T extends AbstractClientPlayerEntity> extends La
 
         poseStack.push();
 
-        //this.getParentModel().get().translateAndRotate(poseStack);
+        if (this.model.translateToParent()) {
+            this.getEntityModel().translateHand(player.getPrimaryHand().opposite(), poseStack);
+        }
 
         if (this.model != null) {
             IVertexBuilder vertexConsumer = buffer.getBuffer(RenderType.getEntityCutout(texture));
@@ -68,20 +70,6 @@ public class CosmeticsBackLayer<T extends AbstractClientPlayerEntity> extends La
             this.model.setPosition(poseStack);
             this.model.getModel().render(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
         }
-
-//        Random random = player.getRNG();
-//        if (this.model == CosmeticsModels.CAULDRON_BACKPACK.getModel() && random.nextDouble() < 0.1D) {
-//            double dx = player.getPosX() - (player.getLookVec().x * 3);
-//            double dz = player.getPosZ() - (player.getLookVec().z * 3);
-//
-//            Particle particle = Minecraft.getInstance().particles.addParticle(ParticleTypes.EFFECT, dx, player.getPosY() + 1.5D, dz, 0.0D, random.nextDouble() / 5.0D, 0.0D);
-//
-//            int color = 3381504;
-//            float f2 = 0.75F + random.nextFloat() * 0.25F;
-//            particle.setColor((float)((color >> 16 & 255) / 255.0) * f2, (float)((color >> 8 & 255) / 255.0) *f2, (float)((color >> 0 & 255) / 255.0) * f2);
-//            //player.worldClient.ren(ParticleTypes.EFFECT, player.getPosX(), player.getPosY() + 1.5D, player.getPosZ() + 0.5D, 0.0D, player.getRNG().nextDouble() / 5.0D, 0.0D);
-//           // particle.mo
-//        }
 
         poseStack.pop();
     }
