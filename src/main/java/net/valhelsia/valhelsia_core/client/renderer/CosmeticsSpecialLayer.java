@@ -2,8 +2,6 @@ package net.valhelsia.valhelsia_core.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -11,7 +9,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
@@ -19,7 +16,7 @@ import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsModels;
 import net.valhelsia.valhelsia_core.client.model.CosmeticsModel;
-import net.valhelsia.valhelsia_core.client.model.WitchsWandModel;
+import net.valhelsia.valhelsia_core.client.model.WitchsBroomModel;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -33,22 +30,22 @@ import java.util.UUID;
  * @version 1.17.1 - 0.1.2
  * @since 2021-10-24
  */
-public class CosmeticsHandLayer<T extends AbstractClientPlayer, M extends PlayerModel<T>> extends RenderLayer<T, M> implements CosmeticsLayer<T> {
+public class CosmeticsSpecialLayer<T extends AbstractClientPlayer, M extends PlayerModel<T>> extends RenderLayer<T, M> implements CosmeticsLayer<T> {
 
     private final CosmeticsManager cosmeticsManager;
     private CosmeticsModel<T> model;
 
-    public CosmeticsHandLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
+    public CosmeticsSpecialLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
         super(renderLayerParent);
-        this.model = new WitchsWandModel<>(modelSet.bakeLayer(WitchsWandModel.LAYER_LOCATION));
+        this.model = new WitchsBroomModel<>(modelSet.bakeLayer(WitchsBroomModel.LAYER_LOCATION));
         this.cosmeticsManager = CosmeticsManager.getInstance();
     }
 
     @Override
     public void render(@Nonnull PoseStack poseStack, @Nonnull MultiBufferSource buffer, int packedLight, @Nonnull T player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         UUID uuid = player.getUUID();
-        List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.HAND);
-        Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.HAND);
+        List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.SPECIAL);
+        Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.SPECIAL);
 
         if (activeCosmetic == null || !cosmetics.contains(activeCosmetic)) {
             return;
@@ -65,10 +62,6 @@ public class CosmeticsHandLayer<T extends AbstractClientPlayer, M extends Player
         poseStack.pushPose();
 
         if (this.model.translateToParent()) {
-            if (!player.getOffhandItem().isEmpty()) {
-                poseStack.popPose();
-                return;
-            }
             this.getParentModel().translateToHand(player.getMainArm().getOpposite(), poseStack);
         }
 

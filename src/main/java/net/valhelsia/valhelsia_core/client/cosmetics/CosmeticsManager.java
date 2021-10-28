@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager
  *
  * @author Valhelsia Team
- * @version 16.0.11
+ * @version 1.17.1 - 0.2.0
  * @since 2021-08-26
  */
 public class CosmeticsManager {
@@ -90,7 +90,12 @@ public class CosmeticsManager {
             String name = purchase.getAsJsonObject().get("name").getAsString().toLowerCase(Locale.ROOT).replace(" ", "_").replace("'", "");
 
             this.cosmetics.computeIfAbsent(uuid, k -> new ArrayList<>());
-            this.cosmetics.get(uuid).add(new Cosmetic(name, CosmeticsCategory.getForCosmetic(name)));
+
+            if (name.contains("bundle")) {
+                CosmeticsBundle.getCosmeticsFromBundle(name).forEach(s -> this.cosmetics.get(uuid).add(new Cosmetic(s, CosmeticsCategory.getForCosmetic(s))));
+            } else {
+                this.cosmetics.get(uuid).add(new Cosmetic(name, CosmeticsCategory.getForCosmetic(name)));
+            }
         }
 
         if (callback != null) {

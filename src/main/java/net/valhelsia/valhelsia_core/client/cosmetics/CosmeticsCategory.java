@@ -16,7 +16,8 @@ import javax.annotation.Nullable;
 public enum CosmeticsCategory {
     HAT("hat"),
     BACK("back"),
-    HAND("hand");
+    HAND("hand"),
+    SPECIAL("special");
 
     private final String name;
     private final TranslatableComponent component;
@@ -52,7 +53,8 @@ public enum CosmeticsCategory {
             return CosmeticsCategory.BACK;
         }
         return switch (cosmeticName) {
-            case "green_witchs_wand", "purple_witchs_wand", "witchs_broom" -> CosmeticsCategory.HAND;
+            case "green_witchs_wand", "purple_witchs_wand" -> CosmeticsCategory.HAND;
+            case "witchs_broom" -> CosmeticsCategory.SPECIAL;
             case "cauldron_backpack" -> CosmeticsCategory.BACK;
             default -> null;
         };

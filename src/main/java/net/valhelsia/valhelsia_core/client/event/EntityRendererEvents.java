@@ -9,10 +9,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.valhelsia.valhelsia_core.client.model.*;
-import net.valhelsia.valhelsia_core.client.renderer.CosmeticsBackLayer;
-import net.valhelsia.valhelsia_core.client.renderer.CosmeticsHandLayer;
-import net.valhelsia.valhelsia_core.client.renderer.CosmeticsHatLayer;
-import net.valhelsia.valhelsia_core.client.renderer.ValhelsiaCapeLayer;
+import net.valhelsia.valhelsia_core.client.renderer.*;
 
 /**
  * Entity Renderer Events <br>
@@ -51,6 +48,7 @@ public class EntityRendererEvents {
             livingRenderer.addLayer(new CosmeticsHatLayer(livingRenderer, event.getEntityModels()));
             livingRenderer.addLayer(new CosmeticsHandLayer(livingRenderer, event.getEntityModels()));
             livingRenderer.addLayer(new CosmeticsBackLayer(livingRenderer, event.getEntityModels()));
+            livingRenderer.addLayer(new CosmeticsSpecialLayer(livingRenderer, event.getEntityModels()));
         }
     }
 }

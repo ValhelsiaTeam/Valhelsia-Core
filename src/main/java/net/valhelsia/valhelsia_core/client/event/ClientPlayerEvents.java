@@ -38,6 +38,7 @@ public class ClientPlayerEvents {
         Cosmetic activeBackCosmetic = CosmeticsCategory.BACK.getActiveCosmetic();
         Cosmetic activeHatCosmetic = CosmeticsCategory.HAT.getActiveCosmetic();
         Cosmetic activeHandCosmetic = CosmeticsCategory.HAND.getActiveCosmetic();
+        Cosmetic activeSpecialCosmetic = CosmeticsCategory.SPECIAL.getActiveCosmetic();
 
         if (activeBackCosmetic != null) {
             activeBackCosmetic.save(compound);
@@ -52,6 +53,11 @@ public class ClientPlayerEvents {
         if (activeHandCosmetic != null) {
             activeHandCosmetic.save(compound);
             cosmeticsManager.loadCosmeticTexture(activeHandCosmetic, CosmeticsCategory.HAND);
+        }
+
+        if (activeSpecialCosmetic != null) {
+            activeSpecialCosmetic.save(compound);
+            cosmeticsManager.loadCosmeticTexture(activeSpecialCosmetic, CosmeticsCategory.SPECIAL);
         }
 
         System.out.println(compound);
