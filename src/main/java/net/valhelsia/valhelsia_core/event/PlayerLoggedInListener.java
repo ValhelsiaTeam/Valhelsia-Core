@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.valhelsia.valhelsia_core.client.Cosmetic;
 import net.valhelsia.valhelsia_core.client.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
+import net.valhelsia.valhelsia_core.network.NetworkHandler;
+import net.valhelsia.valhelsia_core.network.UploadCosmeticsPacket;
 
 import java.util.UUID;
 
@@ -37,6 +39,7 @@ public class PlayerLoggedInListener {
         Cosmetic activeBackCosmetic = CosmeticsCategory.BACK.getActiveCosmetic();
         Cosmetic activeHatCosmetic = CosmeticsCategory.HAT.getActiveCosmetic();
         Cosmetic activeHandCosmetic = CosmeticsCategory.HAND.getActiveCosmetic();
+        Cosmetic activeSpecialCosmetic = CosmeticsCategory.SPECIAL.getActiveCosmetic();
 
         if (activeBackCosmetic != null) {
             activeBackCosmetic.save(compound);
@@ -53,7 +56,14 @@ public class PlayerLoggedInListener {
             cosmeticsManager.loadCosmeticTexture(activeHandCosmetic, CosmeticsCategory.HAND);
         }
 
+        if (activeSpecialCosmetic != null) {
+            activeSpecialCosmetic.save(compound);
+            cosmeticsManager.loadCosmeticTexture(activeSpecialCosmetic, CosmeticsCategory.SPECIAL);
+        }
+
         cosmeticsManager.setActiveCosmeticsForPlayer(uuid, compound);
+
+        NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, compound));
 
       //  NetworkHandler.sendToServer(new UpdateCosmeticsPacket(compound));
     }

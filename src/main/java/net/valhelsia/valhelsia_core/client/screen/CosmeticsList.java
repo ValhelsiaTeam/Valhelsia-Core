@@ -33,7 +33,7 @@ public class CosmeticsList extends AbstractOptionList<CosmeticsListEntry> {
     private final List<CosmeticsEntry> entries = new ArrayList<>();
     private final Minecraft minecraft;
 
-    private final List<CosmeticsEntry> selectedEntries = new ArrayList<>();
+    private CosmeticsWardrobeScreen screen;
 
     private final Button.IPressable onPress = button -> {
         CosmeticsEntry entry = ((CosmeticsEntry) button);
@@ -41,7 +41,7 @@ public class CosmeticsList extends AbstractOptionList<CosmeticsListEntry> {
         if (entry.isSelected()) {
             entry.setSelected(false);
 
-            this.selectedEntries.remove(entry);
+            this.screen.getSelectedCosmetics().remove(entry.getCategory());
         } else {
             entry.setSelected(true);
 
@@ -49,18 +49,18 @@ public class CosmeticsList extends AbstractOptionList<CosmeticsListEntry> {
                 if (cosmeticsEntry != button) {
                     cosmeticsEntry.setSelected(false);
                 }
-                this.selectedEntries.remove(cosmeticsEntry);
             });
 
-            this.selectedEntries.add(entry);
+            this.screen.getSelectedCosmetics().put(entry.getCategory(), entry.getCosmetic());
         }
     };
 
     private final int rowCount;
 
-    public CosmeticsList(Minecraft minecraft, int width, int height, int y0, int y1) {
+    public CosmeticsList(Minecraft minecraft, CosmeticsWardrobeScreen screen, int width, int height, int y0, int y1) {
         super(minecraft, width, height, y0, y1, 110);
         this.minecraft = minecraft;
+        this.screen = screen;
         this.rowCount = this.getRowWidth() / (ENTRY_WIDTH + ENTRY_SPACING);
 
         this.func_244605_b(false);
@@ -78,7 +78,7 @@ public class CosmeticsList extends AbstractOptionList<CosmeticsListEntry> {
         this.entries.clear();
 
         for (int i = 0; i < cosmetics.size(); i++) {
-            CosmeticsEntry leftEntry = new CosmeticsEntry(category, cosmetics.get(i), this.getRowLeft(), 0, ENTRY_WIDTH, ENTRY_HEIGHT, onPress, cosmetics.get(i).equals(category.getActiveCosmetic()));
+            CosmeticsEntry leftEntry = new CosmeticsEntry(category, cosmetics.get(i), this.getRowLeft(), 0, ENTRY_WIDTH, ENTRY_HEIGHT, onPress, cosmetics.get(i).equals(this.screen.getSelectedCosmetics().get(category)));
             CosmeticsEntry rightEntry = null;
 
             this.entries.add(leftEntry);
@@ -86,7 +86,7 @@ public class CosmeticsList extends AbstractOptionList<CosmeticsListEntry> {
             if (i + 1 != cosmetics.size() && this.rowCount != 1) {
                 i++;
 
-                rightEntry = new CosmeticsEntry(category, cosmetics.get(i), this.getRowLeft() + ENTRY_WIDTH + ENTRY_SPACING, 0, ENTRY_WIDTH, ENTRY_HEIGHT, onPress, cosmetics.get(i).equals(category.getActiveCosmetic()));
+                rightEntry = new CosmeticsEntry(category, cosmetics.get(i), this.getRowLeft() + ENTRY_WIDTH + ENTRY_SPACING, 0, ENTRY_WIDTH, ENTRY_HEIGHT, onPress, cosmetics.get(i).equals(this.screen.getSelectedCosmetics().get(category)));
 
                 this.entries.add(rightEntry);
             }
@@ -144,10 +144,6 @@ public class CosmeticsList extends AbstractOptionList<CosmeticsListEntry> {
         int j1 = i1 / this.itemHeight;
 
         return mouseX < (double) this.getScrollbarPosition() && mouseX >= left && mouseX <= right && j1 >= 0 && i1 >= 0 && j1 < this.getItemCount() ? this.getEventListeners().get(j1) : null;
-    }
-
-    public List<CosmeticsEntry> getSelectedEntries() {
-        return this.selectedEntries;
     }
 
     private Minecraft getMinecraft() {

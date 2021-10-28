@@ -30,6 +30,7 @@ public class NetworkHandler {
 
         INSTANCE.registerMessage(nextID(), UpdateCounterPacket.class, UpdateCounterPacket::encode, UpdateCounterPacket::decode, UpdateCounterPacket::consume);
         INSTANCE.registerMessage(nextID(), UpdateCosmeticsPacket.class, UpdateCosmeticsPacket::encode, UpdateCosmeticsPacket::decode, UpdateCosmeticsPacket::consume);
+        INSTANCE.registerMessage(nextID(), UploadCosmeticsPacket.class, UploadCosmeticsPacket::encode, UploadCosmeticsPacket::decode, UploadCosmeticsPacket::consume);
     }
 
     public static <MSG> void sendTo(PlayerEntity player, MSG msg) {
