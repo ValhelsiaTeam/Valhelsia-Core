@@ -13,12 +13,11 @@ import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.gui.component.CloseCosmeticsWardrobeButton;
 import net.valhelsia.valhelsia_core.client.gui.component.CosmeticsCategoryButton;
+import net.valhelsia.valhelsia_core.client.gui.component.CosmeticsEntry;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Cosmetics Wardrobe Screen <br>
@@ -42,16 +41,23 @@ public class CosmeticsWardrobeScreen extends Screen {
 
     private CosmeticsList cosmeticsList;
 
+    private final Map<CosmeticsCategory, Cosmetic> selectedCosmetics = new HashMap<>();
+
     public CosmeticsWardrobeScreen(Screen parentScreen) {
         super(new TranslatableComponent("gui.valhelsia_core.cosmeticsWardrobe"));
         this.parentScreen = parentScreen;
+        for (CosmeticsCategory category : CosmeticsCategory.values()) {
+            if (category.getActiveCosmetic() != null) {
+                this.getSelectedCosmetics().put(category, category.getActiveCosmetic());
+            }
+        }
     }
 
     @Override
     protected void init() {
         this.getMinecraft().keyboardHandler.setSendRepeatsToGui(true);
 
-        this.cosmeticsList = new CosmeticsList(this.getMinecraft(), this.width, this.height,75, this.height);
+        this.cosmeticsList = new CosmeticsList(this.getMinecraft(), this, this.width, this.height,75, this.height);
 
         int y = 75;
 
@@ -76,19 +82,20 @@ public class CosmeticsWardrobeScreen extends Screen {
             UUID uuid = this.getMinecraft().getUser().getGameProfile().getId();
             CompoundTag tag = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
 
-            this.cosmeticsList.getSelectedEntries().forEach(entry -> {
-                Cosmetic cosmetic = entry.getCosmetic();
-
+            this.getSelectedCosmetics().forEach((category, cosmetic) -> {
                 cosmeticsManager.loadCosmeticTexture(cosmetic, cosmetic.getCategory());
 
-                if (entry.isSelected()) {
-                    cosmetic.save(tag);
-                } else {
-                    tag.remove(cosmetic.getCategory().getName());
-                }
-
+                cosmetic.save(tag);
                 cosmetic.getCategory().setActiveCosmetic(cosmetic.getName());
             });
+
+            for (CosmeticsCategory category : CosmeticsCategory.values()) {
+                if (!this.getSelectedCosmetics().containsKey(category)) {
+                    tag.remove(category.getName());
+
+                    category.setActiveCosmetic("");
+                }
+            }
 
             cosmeticsManager.setActiveCosmeticsForPlayer(uuid, tag);
 
@@ -144,6 +151,10 @@ public class CosmeticsWardrobeScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         return super.mouseClicked(mouseX, mouseY, button) || this.cosmeticsList.mouseClicked(mouseX, mouseY, button);
+    }
+
+    public Map<CosmeticsCategory, Cosmetic> getSelectedCosmetics() {
+        return selectedCosmetics;
     }
 
     @Override

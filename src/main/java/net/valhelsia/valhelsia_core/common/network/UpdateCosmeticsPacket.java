@@ -17,31 +17,22 @@ import java.util.function.Supplier;
  * @version 0.1.1
  * @since 2021-09-12
  */
-public record UpdateCosmeticsPacket(CompoundTag activeCosmetics) {
+public record UpdateCosmeticsPacket(UUID uuid, CompoundTag activeCosmetics) {
 
     public static void encode(UpdateCosmeticsPacket packet, FriendlyByteBuf buffer) {
+        buffer.writeUUID(packet.uuid);
         buffer.writeNbt(packet.activeCosmetics);
     }
 
     public static UpdateCosmeticsPacket decode(FriendlyByteBuf buffer) {
-        return new UpdateCosmeticsPacket(buffer.readNbt());
+        return new UpdateCosmeticsPacket(buffer.readUUID(), buffer.readNbt());
     }
 
     public static void consume(UpdateCosmeticsPacket packet, Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
-                CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
-
-                packet.activeCosmetics.getAllKeys().forEach(s -> {
-                    System.out.println(UUID.fromString(s));
-                    System.out.println(packet.activeCosmetics.getCompound(s));
-
-                    cosmeticsManager.setActiveCosmeticsForPlayer(UUID.fromString(s), packet.activeCosmetics.getCompound(s));
-                });
-
-                //CosmeticsManager.getInstance().setActiveCosmeticsForPlayer(player.getUUID(), packet.activeCosmetics);
-
+                CosmeticsManager.getInstance().setActiveCosmeticsForPlayer(packet.uuid, packet.activeCosmetics);
             });
             ctx.get().setPacketHandled(true);
         }

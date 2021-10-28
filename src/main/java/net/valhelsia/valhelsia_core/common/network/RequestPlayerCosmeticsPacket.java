@@ -67,7 +67,7 @@ public record RequestPlayerCosmeticsPacket(List<UUID> missingPlayers) {
                 });
 
                 if (context.getSender() != null) {
-                    NetworkHandler.sendTo(context.getSender(), new UpdateCosmeticsPacket(tag));
+                   // NetworkHandler.sendTo(context.getSender(), new UpdateCosmeticsPacket(tag));
                 }
             });
             ctx.get().setPacketHandled(true);
