@@ -9,6 +9,7 @@
     "PotionEntityMixin"
   ],
   "client": [
+    "client.BipedArmorLayerMixin",
     "client.CapeLayerMixin",
     "client.ClientPlayNetHandlerMixin",
     "client.CustomizeSkinScreenMixin",
