@@ -14,7 +14,7 @@ import java.util.List;
  * @since 2021-10-28
  */
 public enum Bundles {
-    HALLOWEEN_BUNDLE_2021("halloween_bundle_2021", Arrays.asList("witchs_broom", "cauldron_backpack", "green_witchs_wand", "purple_witchs_wand", "green_witchs_hat", "purple_witchs_hat"));
+    HALLOWEEN_2021_COLLECTION_BUNDLE("halloween_2021_collection_bundle", Arrays.asList("witchs_broom", "cauldron_backpack", "green_witchs_wand", "purple_witchs_wand", "green_witch_hat", "purple_witch_hat"));
 
     private final String name;
     private final List<String> cosmetics;
