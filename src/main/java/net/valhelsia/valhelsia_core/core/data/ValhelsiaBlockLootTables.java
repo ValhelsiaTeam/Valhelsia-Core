@@ -7,6 +7,7 @@ import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.Registry;
+import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
@@ -46,7 +47,7 @@ import java.util.function.Predicate;
  * @version 0.1.1
  * @since 2020-11-22
  */
-public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
+public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
 
     public static final LootItemCondition.Builder SILK_TOUCH = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))));
     public static final LootItemCondition.Builder SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.Items.SHEARS));
@@ -172,6 +173,7 @@ public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<Re
         return dropping(block, SILK_TOUCH, builder);
     }
 
+
     protected static LootTable.Builder droppingWithSilkTouch(Block block, ItemLike noSilkTouch) {
         return droppingWithSilkTouch(block, withSurvivesExplosion(block, LootItem.lootTableItem(noSilkTouch)));
     }
@@ -181,15 +183,15 @@ public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<Re
     }
 
     protected void registerFlowerPot(Block flowerPot) {
-        this.registerLootTable(flowerPot, (pot) -> droppingAndFlowerPot(((FlowerPotBlock) pot).getContent()));
+        this.add(flowerPot, (pot) -> droppingAndFlowerPot(((FlowerPotBlock) pot).getContent()));
     }
 
     protected void registerSilkTouch(Block blockIn, Block silkTouchDrop) {
-        this.registerLootTable(blockIn, onlyWithSilkTouch(silkTouchDrop));
+        this.add(blockIn, onlyWithSilkTouch(silkTouchDrop));
     }
 
     protected void registerDropping(Block blockIn, ItemLike drop) {
-        this.registerLootTable(blockIn, dropping(drop));
+        this.add(blockIn, dropping(drop));
     }
 
     protected void registerSilkTouch(Block blockIn) {
@@ -200,12 +202,12 @@ public abstract class ValhelsiaBlockLootTables implements Consumer<BiConsumer<Re
         this.registerDropping(block, block);
     }
 
-    protected void registerLootTable(Block blockIn, Function<Block, LootTable.Builder> factory) {
-        this.registerLootTable(blockIn, factory.apply(blockIn));
+    protected void add(Block blockIn, Function<Block, LootTable.Builder> factory) {
+        this.add(blockIn, factory.apply(blockIn));
     }
 
-    protected void registerLootTable(Block block, LootTable.Builder table) {
-        blocks.add(block);
+    protected void add(Block block, LootTable.Builder table) {
+        this.blocks.add(block);
         this.lootTables.put(block.getLootTable(), table);
     }
 
