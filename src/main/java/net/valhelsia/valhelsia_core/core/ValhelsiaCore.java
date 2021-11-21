@@ -40,7 +40,7 @@ public class ValhelsiaCore {
 
     public static final String MOD_ID = "valhelsia_core";
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public static boolean allConfigsValidated = false;
 
