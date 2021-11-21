@@ -97,26 +97,10 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
                 .modelForState().modelFile(modelDown).addModel();
     }
 
-    public void buttonBlock(FaceAttachedHorizontalDirectionalBlock block, ResourceLocation texture) {
-        ModelFile model = models().withExistingParent(getName(block), mcLoc("block/button")).texture("texture", texture);
-        ModelFile modelPressed = models().withExistingParent(getName(block) + "_pressed", mcLoc("block/button_pressed")).texture("texture", texture);
+    @Override
+    public void buttonBlock(ButtonBlock block, ResourceLocation texture) {
+        super.buttonBlock(block, texture);
         models().withExistingParent(getName(block) + "_inventory", mcLoc("block/button_inventory")).texture("texture", texture);
-
-        getVariantBuilder(block)
-                .forAllStates(state -> {
-                    Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
-                    AttachFace face = state.getValue(BlockStateProperties.ATTACH_FACE);
-
-                    int rotationX = face == AttachFace.CEILING ? 180 : face == AttachFace.WALL ? 90 : 0;
-                    int rotationY = (int) facing.getClockWise().toYRot() + 90;
-
-                    return ConfiguredModel.builder()
-                            .modelFile(!state.getValue(BlockStateProperties.POWERED) ? model : modelPressed)
-                            .rotationX(rotationX)
-                            .rotationY(face == AttachFace.CEILING ? rotationY - 180 : rotationY)
-                            .uvLock(face == AttachFace.WALL)
-                            .build();
-                });
     }
 
     @Override
