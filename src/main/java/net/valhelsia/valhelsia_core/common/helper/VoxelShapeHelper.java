@@ -1,6 +1,5 @@
 package net.valhelsia.valhelsia_core.common.helper;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -73,6 +72,27 @@ public class VoxelShapeHelper {
             }
         }
         return new double[]{minX, minZ, maxX, maxZ};
+    }
+
+    public static VoxelShape rotate(VoxelShape shape, Direction.Axis axis) {
+        if (axis == Direction.Axis.Y) {
+            return shape;
+        }
+        Set<VoxelShape> rotatedShapes = new HashSet<>();
+
+        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
+            y1 = (y1 * 16); y2 = (y2 * 16);
+            x1 = (x1 * 16); x2 = (x2 * 16);
+            z1 = (z1 * 16); z2 = (z2 * 16);
+
+            if (axis == Direction.Axis.X) {
+                rotatedShapes.add(Block.box(y1, x1, z1, y2, x2, z2));
+            } else {
+                rotatedShapes.add(Block.box(x1, z1, y1, x2, z2, y2));
+            }
+        });
+
+        return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
     }
 
     public static VoxelShape add(double x1, double y1, double z1, double x2, double y2, double z2, VoxelShape... shapes) {
