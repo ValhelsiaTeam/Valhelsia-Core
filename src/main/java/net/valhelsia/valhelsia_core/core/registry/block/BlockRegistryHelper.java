@@ -1,17 +1,21 @@
 package net.valhelsia.valhelsia_core.core.registry.block;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.item.SignItem;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.valhelsia.valhelsia_core.common.block.ValhelsiaStandingSignBlock;
+import net.valhelsia.valhelsia_core.common.block.ValhelsiaWallSignBlock;
+import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.registry.AbstractRegistryHelper;
 import net.valhelsia.valhelsia_core.core.registry.ItemRegistryHelper;
 import net.valhelsia.valhelsia_core.client.util.ValhelsiaRenderType;
@@ -33,6 +37,7 @@ import java.util.function.Function;
 public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
 
     public final Map<ValhelsiaRenderType, List<Block>> renderTypes = new HashMap<>();
+    public final List<RegistryObject<? extends SignBlock>> signBlocks = new ArrayList<>();
 
     private CreativeModeTab defaultCreativeTab = null;
     private final FlammableHelper flammableHelper = new FlammableHelper();
@@ -118,5 +123,15 @@ public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
 
     public RegistryObject<RotatedPillarBlock> registerLogBlock(String name, MaterialColor topColor, MaterialColor barkColor) {
         return register(name, new RotatedPillarBlock(Block.Properties.of(Material.WOOD, (state) -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor).strength(2.0F).sound(SoundType.WOOD)), true, this.getDefaultCreativeTab());
+    }
+
+    public Pair<RegistryObject<ValhelsiaStandingSignBlock>, RegistryObject<ValhelsiaWallSignBlock>> createSignBlock(String name, MaterialColor color, WoodType woodType) {
+        RegistryObject<ValhelsiaStandingSignBlock> standing = this.deferredRegister.register(name + "_sign", () -> new ValhelsiaStandingSignBlock(Block.Properties.of(Material.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), woodType));
+        RegistryObject<ValhelsiaWallSignBlock> wall = this.deferredRegister.register(name + "_wall_sign", () -> new ValhelsiaWallSignBlock(Block.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(standing), woodType));
+        this.signBlocks.add(standing);
+        this.signBlocks.add(wall);
+
+        this.getItemRegistryHelper().register(name + "_sign", () -> new SignItem(new Item.Properties().stacksTo(16).tab(this.getDefaultCreativeTab()), standing.get(), wall.get()));
+        return Pair.of(standing, wall);
     }
 }

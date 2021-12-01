@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.client.event;
 
 import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.player.Player;
@@ -10,6 +11,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.valhelsia.valhelsia_core.client.model.*;
 import net.valhelsia.valhelsia_core.client.renderer.*;
+import net.valhelsia.valhelsia_core.core.init.ValhelsiaBlockEntities;
 
 /**
  * Entity Renderer Events <br>
@@ -50,5 +52,10 @@ public class EntityRendererEvents {
             livingRenderer.addLayer(new CosmeticsBackLayer(livingRenderer, event.getEntityModels()));
             livingRenderer.addLayer(new CosmeticsSpecialLayer(livingRenderer, event.getEntityModels()));
         }
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRenders(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ValhelsiaBlockEntities.SIGN.get(), SignRenderer::new);
     }
 }

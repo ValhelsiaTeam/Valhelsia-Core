@@ -1,5 +1,6 @@
 package net.valhelsia.valhelsia_core.core.data;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
@@ -11,6 +12,7 @@ import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.*;
@@ -29,7 +31,6 @@ import net.minecraft.world.level.storage.loot.functions.FunctionUserBuilder;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 
@@ -38,6 +39,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Valhelsia Block Loot Tables <br>
@@ -49,8 +51,13 @@ import java.util.function.Predicate;
  */
 public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
 
-    public static final LootItemCondition.Builder SILK_TOUCH = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))));
-    public static final LootItemCondition.Builder SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.Items.SHEARS));
+    public static final LootItemCondition.Builder HAS_SILK_TOUCH = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))));
+    public static final LootItemCondition.Builder HAS_NO_SILK_TOUCH = HAS_SILK_TOUCH.invert();
+    public static final LootItemCondition.Builder HAS_SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().of(Items.SHEARS));
+    public static final LootItemCondition.Builder HAS_SHEARS_OR_SILK_TOUCH = HAS_SHEARS.or(HAS_SILK_TOUCH);
+    public static final LootItemCondition.Builder HAS_NO_SHEARS_OR_SILK_TOUCH = HAS_SHEARS_OR_SILK_TOUCH.invert();
+    public static final float[] NORMAL_LEAVES_SAPLING_CHANCES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
+    public static final float[] JUNGLE_LEAVES_SAPLING_CHANGES = new float[]{0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F};
 
     private final List<Block> blocks = new ArrayList<>();
     private final Map<ResourceLocation, LootTable.Builder> lootTables = Maps.newHashMap();
@@ -133,10 +140,6 @@ public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Cons
         return LootTable.lootTable().withPool(withSurvivesExplosion(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(property, value))))));
     }
 
-    protected static LootTable.Builder onlyWithSilkTouch(ItemLike item) {
-        return LootTable.lootTable().withPool(LootPool.lootPool().when(SILK_TOUCH).setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(item)));
-    }
-
     protected static LootTable.Builder droppingAndFlowerPot(ItemLike flower) {
         return LootTable.lootTable().withPool(withSurvivesExplosion(Blocks.FLOWER_POT, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(Blocks.FLOWER_POT)))).withPool(withSurvivesExplosion(flower, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(flower))));
     }
@@ -149,33 +152,12 @@ public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Cons
         return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(withExplosionDecay(slab, LootItem.lootTableItem(slab).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2)).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(slab).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.DOUBLE)))))));
     }
 
-    protected static LootTable.Builder onlyWithShears(ItemLike item) {
-        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(SHEARS).add(LootItem.lootTableItem(item)));
-    }
-
-    protected static LootTable.Builder droppingSheared(Block sheared) {
-        return LootTable.lootTable().withPool(LootPool.lootPool().when(SHEARS).add(LootItem.lootTableItem(sheared)));
-    }
-
-    protected static LootTable.Builder droppingSheared(Block sheared, int count) {
-        return LootTable.lootTable().withPool(LootPool.lootPool().when(SHEARS).add(LootItem.lootTableItem(sheared).apply(SetItemCountFunction.setCount(ConstantValue.exactly(count)))));
-    }
-
     protected static LootTable.Builder registerDoor(Block door) {
         return droppingWhen(door, DoorBlock.HALF, DoubleBlockHalf.LOWER);
     }
 
     protected static LootTable.Builder dropping(Block block, LootItemCondition.Builder conditionBuilder, LootPoolEntryContainer.Builder<?> lootEntryBuilder) {
         return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(conditionBuilder).otherwise(lootEntryBuilder)));
-    }
-
-    protected static LootTable.Builder droppingWithSilkTouch(Block block, LootPoolEntryContainer.Builder<?> builder) {
-        return dropping(block, SILK_TOUCH, builder);
-    }
-
-
-    protected static LootTable.Builder droppingWithSilkTouch(Block block, ItemLike noSilkTouch) {
-        return droppingWithSilkTouch(block, withSurvivesExplosion(block, LootItem.lootTableItem(noSilkTouch)));
     }
 
     protected Iterable<Block> getKnownBlocks() {
@@ -186,16 +168,8 @@ public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Cons
         this.add(flowerPot, (pot) -> droppingAndFlowerPot(((FlowerPotBlock) pot).getContent()));
     }
 
-    protected void registerSilkTouch(Block blockIn, Block silkTouchDrop) {
-        this.add(blockIn, onlyWithSilkTouch(silkTouchDrop));
-    }
-
     protected void registerDropping(Block blockIn, ItemLike drop) {
         this.add(blockIn, dropping(drop));
-    }
-
-    protected void registerSilkTouch(Block blockIn) {
-        this.registerSilkTouch(blockIn, blockIn);
     }
 
     protected void registerDropSelfLootTable(Block block) {

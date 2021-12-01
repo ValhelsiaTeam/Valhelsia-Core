@@ -2,6 +2,7 @@ package net.valhelsia.valhelsia_core.core;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.valhelsia.valhelsia_core.common.capability.counter.ICounterCapability;
 import net.valhelsia.valhelsia_core.core.config.ModConfig;
+import net.valhelsia.valhelsia_core.core.init.ValhelsiaBlockEntities;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootConditions;
 import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.core.registry.LootModifierRegistryHelper;
@@ -60,6 +62,8 @@ public class ValhelsiaCore {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        ValhelsiaBlockEntities.BLOCK_ENTITIES.register(eventBus);
 
         REGISTRY_MANAGER.register(eventBus);
 
