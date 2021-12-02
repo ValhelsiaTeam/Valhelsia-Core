@@ -2,8 +2,9 @@ package net.valhelsia.valhelsia_core.client.event;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
+
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
@@ -27,8 +28,8 @@ import java.util.List;
 public class GuiEvents {
 
     @SubscribeEvent
-    public static void onGuiOpen(GuiOpenEvent event) {
-        if (event.getGui() instanceof TitleScreen && !ValhelsiaCore.allConfigsValidated) {
+    public static void onScreenOpen(ScreenOpenEvent event) {
+        if (event.getScreen() instanceof TitleScreen && !ValhelsiaCore.allConfigsValidated) {
             List<ConfigError> errors = new ArrayList<>();
 
             for (RegistryManager registryManager : ValhelsiaCore.REGISTRY_MANAGERS) {

@@ -74,7 +74,7 @@ public class CosmeticsManager {
             } catch (IOException e) {
                 // Either player is offline or hasn't bought any cosmetics.
             }
-        }, Util.backgroundExecutor());
+        }, Util.m_183991_());
 
         this.loadedPlayers.add(uuid);
     }

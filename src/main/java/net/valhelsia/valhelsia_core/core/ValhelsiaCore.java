@@ -2,10 +2,8 @@ package net.valhelsia.valhelsia_core.core;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -16,14 +14,13 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.valhelsia.valhelsia_core.common.capability.counter.ICounterCapability;
+import net.valhelsia.valhelsia_core.client.ClientSetup;
+import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.core.config.ModConfig;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaBlockEntities;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootConditions;
-import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.core.registry.LootModifierRegistryHelper;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
-import net.valhelsia.valhelsia_core.client.ClientSetup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,7 +69,7 @@ public class ValhelsiaCore {
 
     private void setup(final FMLCommonSetupEvent event) {
         NetworkHandler.init();
-        CapabilityManager.INSTANCE.register(ICounterCapability.class);
+        //CapabilityManager.INSTANCE.register(ICounterCapability.class);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {

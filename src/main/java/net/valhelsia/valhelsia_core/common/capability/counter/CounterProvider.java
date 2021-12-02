@@ -3,10 +3,7 @@ package net.valhelsia.valhelsia_core.common.capability.counter;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
@@ -23,8 +20,7 @@ import java.util.List;
  */
 public class CounterProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
 
-    @CapabilityInject(ICounterCapability.class)
-    public static Capability<ICounterCapability> CAPABILITY = null;
+    public static Capability<ICounterCapability> CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     private final ICounterCapability instance = new CounterImpl();
 

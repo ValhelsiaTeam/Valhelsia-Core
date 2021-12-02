@@ -66,7 +66,7 @@ public class TextureDownloader {
                     textureAvailableCallback.onTextureAvailable(resourceLocation);
                 }
             });
-        }, Util.backgroundExecutor());
+        }, Util.m_183991_());
     }
 
     public static ResourceLocation getTexture(String identifier) {

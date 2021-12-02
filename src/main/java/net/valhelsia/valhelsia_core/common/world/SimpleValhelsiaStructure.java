@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 
 /**
  * Simple Valhelsia Structure <br>
@@ -17,8 +18,8 @@ public abstract class SimpleValhelsiaStructure<C extends FeatureConfiguration> e
 
     private final String name;
 
-    public SimpleValhelsiaStructure(Codec<C> codec, String name) {
-        super(codec);
+    public SimpleValhelsiaStructure(Codec<C> codec, PieceGeneratorSupplier<C> pieceGeneratorSupplier, String name) {
+        super(codec, pieceGeneratorSupplier);
         this.name = name;
     }
 

@@ -2,9 +2,9 @@ package net.valhelsia.valhelsia_core.core.init;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.common.block.ValhelsiaSign;
 import net.valhelsia.valhelsia_core.common.block.entity.ValhelsiaSignBlockEntity;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;

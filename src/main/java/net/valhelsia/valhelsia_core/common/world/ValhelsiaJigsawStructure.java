@@ -5,6 +5,9 @@ import net.minecraft.world.level.levelgen.feature.JigsawFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
+
+import java.util.function.Predicate;
 
 /**
  * Valhelsia Jigsaw Structure <br>
@@ -18,8 +21,8 @@ public abstract class ValhelsiaJigsawStructure extends JigsawFeature implements 
 
     private final String name;
 
-    public ValhelsiaJigsawStructure(Codec<JigsawConfiguration> codec, String name) {
-        super(codec, 0, true, true);
+    public ValhelsiaJigsawStructure(Codec<JigsawConfiguration> codec, Predicate<PieceGeneratorSupplier.Context<JigsawConfiguration>> pieceGeneratorSupplier, String name) {
+        super(codec, 0, true, true, pieceGeneratorSupplier);
         this.name = name;
     }
 
