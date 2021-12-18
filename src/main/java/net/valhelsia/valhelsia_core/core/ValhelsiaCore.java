@@ -69,7 +69,6 @@ public class ValhelsiaCore {
 
     private void setup(final FMLCommonSetupEvent event) {
         NetworkHandler.init();
-        //CapabilityManager.INSTANCE.register(ICounterCapability.class);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
