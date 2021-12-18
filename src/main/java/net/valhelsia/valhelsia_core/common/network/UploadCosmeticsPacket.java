@@ -51,8 +51,8 @@ public record UploadCosmeticsPacket(UUID uuid, CompoundTag activeCosmetics) {
 
                 cosmeticsManager.getLoadedPlayers().forEach(uuid1 -> {
                     ServerPlayer player = ctx.get().getSender();
-                    if (player != null && player.level.getPlayerByUUID(uuid1) != null) {
-                        Player player1 = player.level.getPlayerByUUID(uuid1);
+                    if (player != null && player.getLevel().getPlayerByUUID(uuid1) != null) {
+                        Player player1 = player.getLevel().getPlayerByUUID(uuid1);
 
                         if (uuid1 != packet.uuid) {
                             NetworkHandler.sendTo(player1, new UpdateCosmeticsPacket(packet.uuid, packet.activeCosmetics));
