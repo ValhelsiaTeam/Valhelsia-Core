@@ -13,7 +13,7 @@ import java.util.List;
  * @version 0.1.1
  * @since 2021-02-03
  */
-public class CounterImpl implements ICounterCapability {
+public class CounterImpl implements CounterCapability {
 
     private List<SimpleCounter> timers = new ArrayList<>();
 

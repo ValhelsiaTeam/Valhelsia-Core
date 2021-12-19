@@ -2,6 +2,7 @@ package net.valhelsia.valhelsia_core.common.capability.counter;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.valhelsia.valhelsia_core.common.util.NeedsStoring;
 
 /**
  * Simple Counter <br>
@@ -11,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
  * @version 0.1.1
  * @since 2021-05-20
  */
-public class SimpleCounter {
+public class SimpleCounter implements NeedsStoring {
 
     private final ResourceLocation name;
     private int value;
@@ -45,6 +46,12 @@ public class SimpleCounter {
         this.value = timer;
     }
 
+    public void tick() {
+        if (this.isActive()) {
+            this.increase();
+        }
+    }
+
     public void increase() {
         this.value++;
     }
@@ -65,6 +72,7 @@ public class SimpleCounter {
         this.active = active;
     }
 
+    @Override
     public void load(CompoundTag compound) {
         this.value = compound.getInt("value");
         if (compound.contains("active")) {
@@ -74,6 +82,7 @@ public class SimpleCounter {
         }
     }
 
+    @Override
     public CompoundTag save(CompoundTag compound) {
         compound.putInt("value", this.value);
         if (!this.isActive()) {

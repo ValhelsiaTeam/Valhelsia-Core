@@ -23,10 +23,10 @@ import java.util.List;
  */
 public class CounterProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
 
-    @CapabilityInject(ICounterCapability.class)
-    public static Capability<ICounterCapability> CAPABILITY = null;
+    @CapabilityInject(CounterCapability.class)
+    public static Capability<CounterCapability> CAPABILITY = null;
 
-    private final ICounterCapability instance = new CounterImpl();
+    private final CounterCapability instance = new CounterImpl();
 
     public CounterProvider(List<SimpleCounter> counters) {
         for (SimpleCounter counter : counters) {
