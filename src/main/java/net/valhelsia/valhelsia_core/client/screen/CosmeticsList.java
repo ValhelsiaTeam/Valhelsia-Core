@@ -77,6 +77,8 @@ public class CosmeticsList extends AbstractOptionList<CosmeticsListEntry> {
 
         this.entries.clear();
 
+        this.setScrollAmount(0.0D);
+
         for (int i = 0; i < cosmetics.size(); i++) {
             CosmeticsEntry leftEntry = new CosmeticsEntry(category, cosmetics.get(i), this.getRowLeft(), 0, ENTRY_WIDTH, ENTRY_HEIGHT, onPress, cosmetics.get(i).equals(this.screen.getSelectedCosmetics().get(category)));
             CosmeticsEntry rightEntry = null;

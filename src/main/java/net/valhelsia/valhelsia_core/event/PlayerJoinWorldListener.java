@@ -8,12 +8,16 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
+import net.valhelsia.valhelsia_core.client.CosmeticsManager;
+import net.valhelsia.valhelsia_core.network.UpdateCosmeticsPacket;
+import net.valhelsia.valhelsia_core.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.registry.RegistryManager;
 import net.valhelsia.valhelsia_core.util.AbstractConfigValidator;
 import net.valhelsia.valhelsia_core.util.ConfigError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Player Join World Listener
@@ -51,6 +55,16 @@ public class PlayerJoinWorldListener {
                 player.sendMessage(new TranslationTextComponent("gui.valhelsia_core.config.error").appendString(": " + configError.getPath()), player.getUniqueID());
                 player.sendMessage(configError.getErrorMessage(), player.getUniqueID());
             });
+        }
+    }
+
+    @SubscribeEvent
+    public static void onStartTracking(PlayerEvent.StartTracking event) {
+        PlayerEntity player = event.getPlayer();
+        UUID uuid = player.getUniqueID();
+
+        if (event.getTarget() instanceof PlayerEntity) {
+            NetworkHandler.sendTo((PlayerEntity) event.getTarget(), new UpdateCosmeticsPacket(uuid, CosmeticsManager.getInstance().getActiveCosmeticsForPlayer(uuid)));
         }
     }
 }

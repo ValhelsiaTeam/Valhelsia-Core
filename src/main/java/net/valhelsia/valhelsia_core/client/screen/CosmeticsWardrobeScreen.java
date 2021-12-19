@@ -11,6 +11,8 @@ import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.client.Cosmetic;
 import net.valhelsia.valhelsia_core.client.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
+import net.valhelsia.valhelsia_core.network.UploadCosmeticsPacket;
+import net.valhelsia.valhelsia_core.network.NetworkHandler;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -95,6 +97,8 @@ public class CosmeticsWardrobeScreen extends Screen {
             }
 
             cosmeticsManager.setActiveCosmeticsForPlayer(uuid, tag);
+
+            NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, tag));
 
             this.getMinecraft().displayGuiScreen(this.parentScreen);
         }));

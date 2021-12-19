@@ -1,23 +1,22 @@
 package net.valhelsia.valhelsia_core.network;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.valhelsia.valhelsia_core.client.CosmeticsManager;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Upload Cosmetics Packet <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.network.UploadCosmeticsPacket
+ * Update Cosmetics Packet <br>
+ * Valhelsia Core - net.valhelsia.valhelsia_core.network.UpdateCosmeticsPacket
  *
  * @author Valhelsia Team
- * @version 16.0.13
- * @since 2021-10-28
+ * @version 1.17.1 - 0.3.0
+ * @since 2021-09-12
  */
 public class UploadCosmeticsPacket {
 
@@ -47,16 +46,7 @@ public class UploadCosmeticsPacket {
                 cosmeticsManager.setActiveCosmeticsForPlayer(packet.uuid, packet.activeCosmetics);
                 cosmeticsManager.getLoadedPlayers().add(packet.uuid);
 
-                cosmeticsManager.getLoadedPlayers().forEach(uuid1 -> {
-                    ServerPlayerEntity player = ctx.get().getSender();
-                    if (player != null && player.getServerWorld().getPlayerByUuid(uuid1) != null) {
-                        PlayerEntity player1 = player.getServerWorld().getPlayerByUuid(uuid1);
-
-                        if (uuid1 != packet.uuid) {
-                            NetworkHandler.sendTo(player1, new UpdateCosmeticsPacket(packet.uuid, packet.activeCosmetics));
-                        }
-                    }
-                });
+                NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(context::getSender), new UpdateCosmeticsPacket(packet.uuid, packet.activeCosmetics));
             });
             ctx.get().setPacketHandled(true);
         }

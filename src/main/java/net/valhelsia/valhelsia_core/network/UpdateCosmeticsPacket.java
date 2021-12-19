@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * Valhelsia Core - net.valhelsia.valhelsia_core.network.UpdateCosmeticsPacket
  *
  * @author Valhelsia Team
- * @version 16.0.11
+ * @version 1.17.1 - 0.3.0
  * @since 2021-09-12
  */
 public class UpdateCosmeticsPacket {
@@ -40,7 +40,10 @@ public class UpdateCosmeticsPacket {
         NetworkEvent.Context context = ctx.get();
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
-                CosmeticsManager.getInstance().setActiveCosmeticsForPlayer(packet.uuid, packet.activeCosmetics);
+                CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
+
+                cosmeticsManager.setActiveCosmeticsForPlayer(packet.uuid, packet.activeCosmetics);
+                cosmeticsManager.tryLoadCosmeticsForPlayer(packet.uuid, null);
             });
             ctx.get().setPacketHandled(true);
         }

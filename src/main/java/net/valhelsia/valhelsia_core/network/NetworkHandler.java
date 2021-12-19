@@ -42,6 +42,6 @@ public class NetworkHandler {
     }
 
     public static <MSG> void sendToServer(MSG msg) {
-        NetworkHandler.INSTANCE.sendToServer(msg);
+        NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), msg);
     }
 }

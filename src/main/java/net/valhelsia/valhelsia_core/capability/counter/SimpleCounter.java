@@ -45,6 +45,16 @@ public class SimpleCounter {
         this.value = timer;
     }
 
+    public void tick() {
+        this.tick(new CompoundNBT());
+    }
+
+    public void tick(CompoundNBT tag) {
+        if (this.isActive()) {
+            this.increase();
+        }
+    }
+
     public void increase() {
         this.value++;
     }
