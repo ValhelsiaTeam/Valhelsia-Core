@@ -9,7 +9,6 @@ import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
-import net.valhelsia.valhelsia_core.common.network.UpdateCosmeticsPacket;
 import net.valhelsia.valhelsia_core.common.network.UploadCosmeticsPacket;
 
 import java.util.UUID;

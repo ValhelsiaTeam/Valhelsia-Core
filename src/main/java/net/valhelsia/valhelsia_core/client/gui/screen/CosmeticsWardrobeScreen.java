@@ -13,7 +13,8 @@ import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.gui.component.CloseCosmeticsWardrobeButton;
 import net.valhelsia.valhelsia_core.client.gui.component.CosmeticsCategoryButton;
-import net.valhelsia.valhelsia_core.client.gui.component.CosmeticsEntry;
+import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
+import net.valhelsia.valhelsia_core.common.network.UploadCosmeticsPacket;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 
 import javax.annotation.Nonnull;
@@ -98,6 +99,8 @@ public class CosmeticsWardrobeScreen extends Screen {
             }
 
             cosmeticsManager.setActiveCosmeticsForPlayer(uuid, tag);
+
+            NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, tag));
 
             this.getMinecraft().setScreen(this.parentScreen);
         }));

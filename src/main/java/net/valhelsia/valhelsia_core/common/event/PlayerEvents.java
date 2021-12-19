@@ -10,8 +10,11 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.common.capability.counter.CounterProvider;
 import net.valhelsia.valhelsia_core.common.helper.CounterHelper;
+import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
+import net.valhelsia.valhelsia_core.common.network.UpdateCosmeticsPacket;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.config.AbstractConfigValidator;
 import net.valhelsia.valhelsia_core.core.config.ConfigError;
@@ -19,6 +22,7 @@ import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Player Events <br>
@@ -66,5 +70,15 @@ public class PlayerEvents {
         }
 
        // NetworkHandler.sendTo(player, new CompareCosmeticsPacket(CosmeticsManager.getInstance().getLoadedPlayers()));
+    }
+
+    @SubscribeEvent
+    public static void onStartTracking(PlayerEvent.StartTracking event) {
+        Player player = event.getPlayer();
+        UUID uuid = player.getUUID();
+
+        if (event.getTarget() instanceof Player target) {
+            NetworkHandler.sendTo(target, new UpdateCosmeticsPacket(uuid, CosmeticsManager.getInstance().getActiveCosmeticsForPlayer(uuid)));
+        }
     }
 }

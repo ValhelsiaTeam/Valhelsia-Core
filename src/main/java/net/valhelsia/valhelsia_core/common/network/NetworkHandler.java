@@ -30,8 +30,6 @@ public class NetworkHandler {
 
         INSTANCE.registerMessage(nextID(), UpdateCounterPacket.class, UpdateCounterPacket::encode, UpdateCounterPacket::decode, UpdateCounterPacket::consume);
         INSTANCE.registerMessage(nextID(), UpdateCosmeticsPacket.class, UpdateCosmeticsPacket::encode, UpdateCosmeticsPacket::decode, UpdateCosmeticsPacket::consume);
-        INSTANCE.registerMessage(nextID(), RequestPlayerCosmeticsPacket.class, RequestPlayerCosmeticsPacket::encode, RequestPlayerCosmeticsPacket::decode, RequestPlayerCosmeticsPacket::consume);
-        INSTANCE.registerMessage(nextID(), CompareCosmeticsPacket.class, CompareCosmeticsPacket::encode, CompareCosmeticsPacket::decode, CompareCosmeticsPacket::consume);
         INSTANCE.registerMessage(nextID(), UploadCosmeticsPacket.class, UploadCosmeticsPacket::encode, UploadCosmeticsPacket::decode, UploadCosmeticsPacket::consume);
 
     }
@@ -45,6 +43,6 @@ public class NetworkHandler {
     }
 
     public static <MSG> void sendToServer(MSG msg) {
-        NetworkHandler.INSTANCE.sendToServer(msg);
+        NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), msg);
     }
 }
