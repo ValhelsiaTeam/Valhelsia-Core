@@ -15,7 +15,8 @@ import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsModels;
-import net.valhelsia.valhelsia_core.client.model.*;
+import net.valhelsia.valhelsia_core.client.model.CauldronBackpackModel;
+import net.valhelsia.valhelsia_core.client.model.CosmeticsModel;
 
 import javax.annotation.Nonnull;
 import java.util.List;

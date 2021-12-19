@@ -47,6 +47,10 @@ public class SimpleCounter implements NeedsStoring {
     }
 
     public void tick() {
+        this.tick(new CompoundTag());
+    }
+
+    public void tick(CompoundTag tag) {
         if (this.isActive()) {
             this.increase();
         }
