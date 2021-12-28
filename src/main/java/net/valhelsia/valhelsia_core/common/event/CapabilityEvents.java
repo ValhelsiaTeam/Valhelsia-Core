@@ -3,7 +3,7 @@ package net.valhelsia.valhelsia_core.common.event;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.valhelsia.valhelsia_core.common.capability.counter.ICounterCapability;
+import net.valhelsia.valhelsia_core.common.capability.counter.CounterCapability;
 
 /**
  * Capability Events <br>
@@ -18,6 +18,6 @@ public class CapabilityEvents {
 
     @SubscribeEvent
     public static void onAttachEntityCapabilities(RegisterCapabilitiesEvent event) {
-        event.register(ICounterCapability.class);
+        event.register(CounterCapability.class);
     }
 }

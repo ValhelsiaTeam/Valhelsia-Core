@@ -3,7 +3,6 @@ package net.valhelsia.valhelsia_core.common.helper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.valhelsia.valhelsia_core.common.capability.counter.CounterProvider;
-import net.valhelsia.valhelsia_core.common.capability.counter.ICounterCapability;
 import net.valhelsia.valhelsia_core.common.capability.counter.SimpleCounter;
 
 import javax.annotation.Nullable;

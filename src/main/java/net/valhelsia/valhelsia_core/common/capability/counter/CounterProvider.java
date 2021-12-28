@@ -20,9 +20,9 @@ import java.util.List;
  */
 public class CounterProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
 
-    public static Capability<ICounterCapability> CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    public static Capability<CounterCapability> CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
-    private final ICounterCapability instance = new CounterImpl();
+    private final CounterCapability instance = new CounterImpl();
 
     public CounterProvider(List<SimpleCounter> counters) {
         for (SimpleCounter counter : counters) {
