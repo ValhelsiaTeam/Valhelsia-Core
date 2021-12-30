@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.CompoundNBT;
@@ -98,7 +99,9 @@ public class CosmeticsWardrobeScreen extends Screen {
 
             cosmeticsManager.setActiveCosmeticsForPlayer(uuid, tag);
 
-            NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, tag));
+            if (Minecraft.getInstance().getConnection() != null) {
+                NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, tag));
+            }
 
             this.getMinecraft().displayGuiScreen(this.parentScreen);
         }));

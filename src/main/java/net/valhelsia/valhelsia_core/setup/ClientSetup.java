@@ -48,6 +48,7 @@ public class ClientSetup {
             renderer.addLayer(new CosmeticsBackLayer<>(renderer));
             renderer.addLayer(new CosmeticsHatLayer<>(renderer));
             renderer.addLayer(new CosmeticsHandLayer<>(renderer));
+            renderer.addLayer(new CosmeticsFaceLayer<>(renderer));
             renderer.addLayer(new CosmeticsSpecialLayer<>(renderer));
         });
     }

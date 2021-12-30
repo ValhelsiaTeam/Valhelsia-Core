@@ -17,6 +17,7 @@ public enum CosmeticsCategory {
     HAT("hat"),
     BACK("back"),
     HAND("hand"),
+    FACE("face"),
     SPECIAL("special");
 
     private final String name;
@@ -57,6 +58,10 @@ public enum CosmeticsCategory {
             return CosmeticsCategory.BACK;
         } else if (cosmeticName.equals("witchs_broom")) {
             return CosmeticsCategory.SPECIAL;
+        } else if (cosmeticName.contains("beanie")) {
+            return CosmeticsCategory.HAT;
+        } else if (cosmeticName.contains("scarf")) {
+            return CosmeticsCategory.FACE;
         }
         return null;
     }

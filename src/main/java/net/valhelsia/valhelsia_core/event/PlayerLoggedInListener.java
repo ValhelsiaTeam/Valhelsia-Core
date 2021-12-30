@@ -39,6 +39,7 @@ public class PlayerLoggedInListener {
         Cosmetic activeBackCosmetic = CosmeticsCategory.BACK.getActiveCosmetic();
         Cosmetic activeHatCosmetic = CosmeticsCategory.HAT.getActiveCosmetic();
         Cosmetic activeHandCosmetic = CosmeticsCategory.HAND.getActiveCosmetic();
+        Cosmetic activeFaceCosmetic = CosmeticsCategory.FACE.getActiveCosmetic();
         Cosmetic activeSpecialCosmetic = CosmeticsCategory.SPECIAL.getActiveCosmetic();
 
         if (activeBackCosmetic != null) {
@@ -56,6 +57,11 @@ public class PlayerLoggedInListener {
             cosmeticsManager.loadCosmeticTexture(activeHandCosmetic, CosmeticsCategory.HAND);
         }
 
+        if (activeFaceCosmetic != null) {
+            activeFaceCosmetic.save(compound);
+            cosmeticsManager.loadCosmeticTexture(activeFaceCosmetic, CosmeticsCategory.FACE);
+        }
+
         if (activeSpecialCosmetic != null) {
             activeSpecialCosmetic.save(compound);
             cosmeticsManager.loadCosmeticTexture(activeSpecialCosmetic, CosmeticsCategory.SPECIAL);
@@ -64,7 +70,5 @@ public class PlayerLoggedInListener {
         cosmeticsManager.setActiveCosmeticsForPlayer(uuid, compound);
 
         NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, compound));
-
-      //  NetworkHandler.sendToServer(new UpdateCosmeticsPacket(compound));
     }
 }

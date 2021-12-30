@@ -17,7 +17,9 @@ public enum CosmeticsModels {
     WITCH_HAT(new WitchHatModel<>()),
     WITCHS_BROOM(new WitchsBroomModel<>()),
     WITCHS_WAND(new WitchsWandModel<>()),
-    CAULDRON_BACKPACK(new CauldronBackpackModel<>())
+    CAULDRON_BACKPACK(new CauldronBackpackModel<>()),
+    BEANIE(new BeanieModel<>()),
+    SCARF(new ScarfModel<>())
     ;
 
     private final CosmeticsModel<?> model;
@@ -38,6 +40,10 @@ public enum CosmeticsModels {
             return WITCH_HAT.getModel();
         } else if (name.contains("witchs_wand")) {
             return WITCHS_WAND.getModel();
+        } else if (name.contains("beanie")) {
+            return BEANIE.getModel();
+        } else if (name.contains("scarf")) {
+            return SCARF.getModel();
         } else {
             return CosmeticsModels.valueOf(name.toUpperCase(Locale.ROOT)).getModel();
         }
