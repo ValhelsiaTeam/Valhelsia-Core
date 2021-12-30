@@ -18,7 +18,7 @@ import java.util.UUID;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.event.ClientPlayerEvents
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.18.1 - 0.3.0
  * @since 2021-09-25
  */
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
@@ -40,6 +40,7 @@ public class ClientPlayerEvents {
         Cosmetic activeBackCosmetic = CosmeticsCategory.BACK.getActiveCosmetic();
         Cosmetic activeHatCosmetic = CosmeticsCategory.HAT.getActiveCosmetic();
         Cosmetic activeHandCosmetic = CosmeticsCategory.HAND.getActiveCosmetic();
+        Cosmetic activeFaceCosmetic = CosmeticsCategory.FACE.getActiveCosmetic();
         Cosmetic activeSpecialCosmetic = CosmeticsCategory.SPECIAL.getActiveCosmetic();
 
         if (activeBackCosmetic != null) {
@@ -57,6 +58,11 @@ public class ClientPlayerEvents {
             cosmeticsManager.loadCosmeticTexture(activeHandCosmetic, CosmeticsCategory.HAND);
         }
 
+        if (activeFaceCosmetic != null) {
+            activeFaceCosmetic.save(compound);
+            cosmeticsManager.loadCosmeticTexture(activeFaceCosmetic, CosmeticsCategory.FACE);
+        }
+
         if (activeSpecialCosmetic != null) {
             activeSpecialCosmetic.save(compound);
             cosmeticsManager.loadCosmeticTexture(activeSpecialCosmetic, CosmeticsCategory.SPECIAL);
@@ -66,7 +72,5 @@ public class ClientPlayerEvents {
         cosmeticsManager.setActiveCosmeticsForPlayer(uuid, compound);
 
         NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, compound));
-
-//        NetworkHandler.sendToServer(new UpdateCosmeticsPacket(compound));
     }
 }

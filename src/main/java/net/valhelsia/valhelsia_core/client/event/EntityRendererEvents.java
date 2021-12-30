@@ -33,6 +33,8 @@ public class EntityRendererEvents {
         event.registerLayerDefinition(WitchsWandModel.LAYER_LOCATION, WitchsWandModel::createBodyLayer);
         event.registerLayerDefinition(WitchsBroomModel.LAYER_LOCATION, WitchsBroomModel::createBodyLayer);
         event.registerLayerDefinition(CauldronBackpackModel.LAYER_LOCATION, CauldronBackpackModel::createBodyLayer);
+        event.registerLayerDefinition(BeanieModel.LAYER_LOCATION, BeanieModel::createBodyLayer);
+        event.registerLayerDefinition(ScarfModel.LAYER_LOCATION, ScarfModel::createBodyLayer);
     }
 
     @SubscribeEvent
@@ -46,10 +48,11 @@ public class EntityRendererEvents {
     private static void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, String skinName) {
         EntityRenderer<? extends Player> render = event.getSkin(skinName);
         if (render instanceof LivingEntityRenderer livingRenderer) {
-            livingRenderer.addLayer(new ValhelsiaCapeLayer<>(livingRenderer, event.getEntityModels()));
+            livingRenderer.addLayer(new ValhelsiaCapeLayer(livingRenderer, event.getEntityModels()));
             livingRenderer.addLayer(new CosmeticsHatLayer(livingRenderer, event.getEntityModels()));
             livingRenderer.addLayer(new CosmeticsHandLayer(livingRenderer, event.getEntityModels()));
             livingRenderer.addLayer(new CosmeticsBackLayer(livingRenderer, event.getEntityModels()));
+            livingRenderer.addLayer(new CosmeticsFaceLayer(livingRenderer, event.getEntityModels()));
             livingRenderer.addLayer(new CosmeticsSpecialLayer(livingRenderer, event.getEntityModels()));
         }
     }
