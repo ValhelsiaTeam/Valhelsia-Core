@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -130,24 +129,18 @@ public class CosmeticsManager {
     }
 
     public void loadCosmeticTexture(Cosmetic cosmetic, @Nullable CosmeticsCategory category) {
-      //  synchronized (this) {
-        String cosmeticName = cosmetic.getName();
+        synchronized (this) {
+            String cosmeticName = cosmetic.getName();
+
             if (!this.loadedTextures.containsKey(cosmeticName)) {
-                try {
-                    TextureDownloader.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png"), "cosmetics/", texture -> this.loadedTextures.put(cosmeticName, texture));
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
+                TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png", "cosmetics/", texture -> this.loadedTextures.put(cosmeticName, texture));
 
                 if (category == CosmeticsCategory.BACK && cosmeticName.contains("cape")) {
                     String name = cosmeticName.substring(0, cosmeticName.length() - 4).concat("elytra");
-                    try {
-                        TextureDownloader.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/" + name + ".png"), "cosmetics/", texture -> this.loadedTextures.put(name, texture));
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
+
+                    TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/" + name + ".png", "cosmetics/", texture -> this.loadedTextures.put(name, texture));
                 }
-           // }
+            }
         }
     }
 

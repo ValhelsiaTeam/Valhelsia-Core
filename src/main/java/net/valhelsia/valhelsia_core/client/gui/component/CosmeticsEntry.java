@@ -2,12 +2,9 @@ package net.valhelsia.valhelsia_core.client.gui.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
@@ -17,8 +14,6 @@ import net.valhelsia.valhelsia_core.client.gui.screen.CosmeticsWardrobeScreen;
 import net.valhelsia.valhelsia_core.client.util.TextureDownloader;
 
 import javax.annotation.Nonnull;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Cosmetics Entry <br>
@@ -45,11 +40,7 @@ public class CosmeticsEntry extends Button implements SelectableComponent {
         this.cosmetic = cosmetic;
         this.selected = selected;
 
-        try {
-            TextureDownloader.downloadTexture(new URL("https://static.valhelsia.net/cosmetics/preview/" + cosmetic.getName() + ".png"), "cosmetics/preview/", texture -> this.previewTexture = texture);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/preview/" + cosmetic.getName() + ".png", "cosmetics/preview/", texture -> this.previewTexture = texture);
     }
 
     @Override
@@ -73,13 +64,9 @@ public class CosmeticsEntry extends Button implements SelectableComponent {
         }
 
         if (this.previewTexture != null) {
-            DynamicTexture texture = (DynamicTexture) Minecraft.getInstance().getTextureManager().getTexture(this.previewTexture, MissingTextureAtlasSprite.getTexture());
-
             RenderSystem.setShaderTexture(0, this.previewTexture);
 
-            poseStack.pushPose();
-            GuiComponent.blit(poseStack, this.x, this.y, this.width, this.height, 0, 0, texture.getPixels().getWidth(), texture.getPixels().getHeight(), texture.getPixels().getWidth(), texture.getPixels().getHeight());
-            poseStack.popPose();
+            GuiComponent.blit(poseStack, this.x, this.y, this.width, this.height, 0, 0, 700, 800, 700, 800);
         }
     }
 
