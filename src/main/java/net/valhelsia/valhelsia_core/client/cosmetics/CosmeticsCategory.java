@@ -10,13 +10,14 @@ import javax.annotation.Nullable;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory
  *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.1.2
+ * @version 1.18.1 - 0.3.0
  * @since 2021-10-15
  */
 public enum CosmeticsCategory {
     HAT("hat"),
     BACK("back"),
     HAND("hand"),
+    FACE("face"),
     SPECIAL("special");
 
     private final String name;
@@ -51,6 +52,10 @@ public enum CosmeticsCategory {
             return CosmeticsCategory.HAT;
         } else if (cosmeticName.contains("cape")) {
             return CosmeticsCategory.BACK;
+        } else if (cosmeticName.contains("beanie")) {
+            return CosmeticsCategory.HAT;
+        } else if (cosmeticName.contains("scarf")) {
+            return CosmeticsCategory.FACE;
         }
         return switch (cosmeticName) {
             case "green_witchs_wand", "purple_witchs_wand" -> CosmeticsCategory.HAND;

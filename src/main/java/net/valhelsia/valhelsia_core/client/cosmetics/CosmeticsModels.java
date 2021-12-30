@@ -10,7 +10,7 @@ import java.util.Locale;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsModels
  *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.1.2
+ * @version 1.18.1 - 0.3
  * @since 2021-10-25
  */
 public enum CosmeticsModels {
@@ -18,7 +18,9 @@ public enum CosmeticsModels {
     WITCH_HAT(new WitchHatModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchHatModel.LAYER_LOCATION))),
     WITCHS_BROOM(new WitchsBroomModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchsBroomModel.LAYER_LOCATION))),
     WITCHS_WAND(new WitchsWandModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchsWandModel.LAYER_LOCATION))),
-    CAULDRON_BACKPACK(new CauldronBackpackModel<>(EntityRendererEvents.modelSet.bakeLayer(CauldronBackpackModel.LAYER_LOCATION)))
+    CAULDRON_BACKPACK(new CauldronBackpackModel<>(EntityRendererEvents.modelSet.bakeLayer(CauldronBackpackModel.LAYER_LOCATION))),
+    BEANIE(new BeanieModel<>(EntityRendererEvents.modelSet.bakeLayer(BeanieModel.LAYER_LOCATION))),
+    SCARF(new ScarfModel<>(EntityRendererEvents.modelSet.bakeLayer(ScarfModel.LAYER_LOCATION)))
     ;
 
     private final CosmeticsModel<?> model;
@@ -39,6 +41,10 @@ public enum CosmeticsModels {
             return WITCH_HAT.getModel();
         } else if (name.contains("witchs_wand")) {
             return WITCHS_WAND.getModel();
+        } else if (name.contains("beanie")) {
+            return BEANIE.getModel();
+        } else if (name.contains("scarf")) {
+            return SCARF.getModel();
         } else {
             return CosmeticsModels.valueOf(name.toUpperCase(Locale.ROOT)).getModel();
         }
