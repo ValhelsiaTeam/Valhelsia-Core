@@ -86,6 +86,6 @@ public class ScarfModel<T extends PlayerEntity> extends EntityModel<T> implement
 
     @Override
     public void setPosition(MatrixStack poseStack) {
-        poseStack.translate(0.0D, -1.0D, 0.0D);
+        poseStack.translate(0.0D, -1.05D, 0.0D);
     }
 }

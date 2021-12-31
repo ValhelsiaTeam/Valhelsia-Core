@@ -76,6 +76,6 @@ public class BeanieModel<T extends PlayerEntity> extends EntityModel<T> implemen
 
     @Override
     public void setPosition(MatrixStack poseStack) {
-        poseStack.translate(0.0D, -1.8D, 0.0D);
+        poseStack.translate(0.0D, -1.825D, 0.0D);
     }
 }
