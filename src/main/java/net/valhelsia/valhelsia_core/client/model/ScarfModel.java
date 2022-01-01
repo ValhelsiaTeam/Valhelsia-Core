@@ -69,6 +69,6 @@ public class ScarfModel<T extends Player> extends ListModel<T> implements Cosmet
 
     @Override
     public void setPosition(PoseStack poseStack) {
-        poseStack.translate(0.0D, -1.0D, 0.0D);
+        poseStack.translate(0.0D, -1.05D, 0.0D);
     }
 }
