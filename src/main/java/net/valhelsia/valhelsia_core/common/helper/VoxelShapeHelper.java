@@ -1,7 +1,12 @@
 package net.valhelsia.valhelsia_core.common.helper;
 
+import com.google.common.collect.ImmutableMap;
+import net.minecraft.Util;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -39,9 +44,61 @@ public class VoxelShapeHelper {
         return Arrays.stream(Direction.values()).collect(Collectors.toMap(Function.identity(), direction -> VoxelShapeHelper.rotateShape(shape, direction)));
     }
 
-    public static VoxelShape rotateShape(VoxelShape shape, Direction direction) {
+    public static Map<Direction, VoxelShape> getHorizontalRotatedShapes(VoxelShape shape) {
+        return Util.make(new EnumMap<>(Direction.class), map -> {
+            map.put(Direction.NORTH, shape);
+            map.put(Direction.EAST, rotateShapeHorizontal(shape, Direction.EAST));
+            map.put(Direction.SOUTH, rotateShapeHorizontal(shape, Direction.SOUTH));
+            map.put(Direction.WEST, rotateShapeHorizontal(shape, Direction.WEST));
+        });
+    }
+
+    public static VoxelShape rotateShapeOld(VoxelShape shape, Direction direction) {
         double[] adjustedValues = VoxelShapeHelper.adjustValues(direction, shape.min(Direction.Axis.X), shape.min(Direction.Axis.Z), shape.max(Direction.Axis.X), shape.max(Direction.Axis.Z));
         return Shapes.box(adjustedValues[0], shape.min(Direction.Axis.Y), adjustedValues[1], adjustedValues[2], shape.max(Direction.Axis.Y), adjustedValues[3]);
+    }
+
+    public static VoxelShape rotateShape(VoxelShape shape, Direction direction) {
+        List<VoxelShape> rotatedPieces = new ArrayList<>();
+        Vec3 vec3 = new Vec3(-0.5, -0.5, -0.5);
+
+        shape.toAabbs().forEach(aabb -> {
+            aabb = aabb.move(vec3.x, vec3.y, vec3.z);
+
+            AABB rotated = switch (direction) {
+                case DOWN -> aabb;
+                case UP -> new AABB(aabb.minX, -aabb.minY, -aabb.minZ, aabb.maxX, -aabb.maxY, -aabb.maxZ);
+                case NORTH -> new AABB(aabb.minX, -aabb.minZ, aabb.minY, aabb.maxX, -aabb.maxZ, aabb.maxY);
+                case SOUTH -> new AABB(-aabb.minX, -aabb.minZ, -aabb.minY, -aabb.maxX, -aabb.maxZ, -aabb.maxY);
+                case WEST -> new AABB(aabb.minY, -aabb.minZ, -aabb.minX, aabb.maxY, -aabb.maxZ, -aabb.maxX);
+                case EAST -> new AABB(-aabb.minY, -aabb.minZ, aabb.minX, -aabb.maxY, -aabb.maxZ, aabb.maxX);
+            };
+
+            rotatedPieces.add(Shapes.create(rotated.move(-vec3.x, -vec3.z, -vec3.z)));
+        });
+
+        return rotatedPieces.stream().reduce(Shapes.empty(), Shapes::or);
+    }
+
+    public static VoxelShape rotateShapeHorizontal(VoxelShape shape, Direction direction) {
+        List<VoxelShape> rotatedPieces = new ArrayList<>();
+        Vec3 vec3 = new Vec3(-0.5, -0.5, -0.5);
+
+        shape.toAabbs().forEach(aabb -> {
+            aabb = aabb.move(vec3.x, vec3.y, vec3.z);
+
+            AABB rotated = switch (direction) {
+                case NORTH -> aabb;
+                case SOUTH -> new AABB(-aabb.minX, aabb.minY, -aabb.minZ, -aabb.maxX, aabb.maxY, -aabb.maxZ);
+                case WEST -> new AABB(aabb.minZ, aabb.minY, -aabb.minX, aabb.maxZ, aabb.maxY, -aabb.maxX);
+                case EAST -> new AABB(-aabb.minZ, aabb.minY, aabb.minX, -aabb.maxZ, aabb.maxY, aabb.maxX);
+                default -> throw new IllegalStateException("Unexpected value: " + direction);
+            };
+
+            rotatedPieces.add(Shapes.create(rotated.move(-vec3.x, -vec3.z, -vec3.z)));
+        });
+
+        return rotatedPieces.stream().reduce(Shapes.empty(), Shapes::or);
     }
 
     private static double[] adjustValues(Direction direction, double minX, double minZ, double maxX, double maxZ) {
@@ -74,7 +131,15 @@ public class VoxelShapeHelper {
         return new double[]{minX, minZ, maxX, maxZ};
     }
 
-    public static VoxelShape rotate(VoxelShape shape, Direction.Axis axis) {
+    public static EnumMap<Direction.Axis, VoxelShape> rotateAxis(VoxelShape shape) {
+        return new EnumMap<>(ImmutableMap.of(
+                Direction.Axis.Y, shape,
+                Direction.Axis.X, rotateAxis(shape, Direction.Axis.X),
+                Direction.Axis.Z, rotateAxis(shape, Direction.Axis.Z)
+        ));
+    }
+
+    public static VoxelShape rotateAxis(VoxelShape shape, Direction.Axis axis) {
         if (axis == Direction.Axis.Y) {
             return shape;
         }
