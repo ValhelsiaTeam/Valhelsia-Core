@@ -2,6 +2,7 @@ package net.valhelsia.valhelsia_core.common.helper;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.valhelsia.valhelsia_core.common.capability.counter.CounterCreator;
 import net.valhelsia.valhelsia_core.common.capability.counter.CounterProvider;
 import net.valhelsia.valhelsia_core.common.capability.counter.SimpleCounter;
 
@@ -14,28 +15,25 @@ import java.util.List;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.helper.CounterHelper
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.18.1 - 0.3.2
  * @since 2021-05-31
  */
 public class CounterHelper {
 
-    private static final List<SimpleCounter> COUNTERS = new ArrayList<>();
+    private static final List<CounterCreator<? extends SimpleCounter>> COUNTERS = new ArrayList<>();
 
-    public static void addCounters(SimpleCounter... counters) {
-        for (SimpleCounter counter : counters) {
-            addCounter(counter);
+    @SafeVarargs
+    public static void addCounters(CounterCreator<? extends SimpleCounter>... counterCreators) {
+        for (CounterCreator<? extends SimpleCounter> counterCreator : counterCreators) {
+            addCounter(counterCreator);
         }
     }
 
-    public static void addCounter(SimpleCounter counter) {
-        COUNTERS.add(counter);
+    public static void addCounter(CounterCreator<? extends SimpleCounter> counterCreator) {
+        COUNTERS.add(counterCreator);
     }
 
-    public static void removeCounter(SimpleCounter counter) {
-        COUNTERS.remove(counter);
-    }
-
-    public static List<SimpleCounter> getCounters() {
+    public static List<CounterCreator<? extends SimpleCounter>> getCounters() {
         return COUNTERS;
     }
 
