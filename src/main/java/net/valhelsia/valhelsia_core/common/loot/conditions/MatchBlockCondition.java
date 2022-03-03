@@ -6,9 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,22 +36,22 @@ import java.util.Set;
  * @since 2021-05-03
  */
 public record MatchBlockCondition(@Nullable List<Block> blocks,
-                                  @Nullable Tag.Named<Block> tag,
+                                  @Nullable TagKey<Block> tag,
                                   @Nullable StatePropertiesPredicate properties) implements LootItemCondition {
 
     public static LootItemCondition.Builder builder(List<Block> blocks) {
         return () -> new MatchBlockCondition(blocks, null, null);
     }
 
-    public static LootItemCondition.Builder builder(Tag.Named<Block> tag) {
+    public static LootItemCondition.Builder builder(TagKey<Block> tag) {
         return () -> new MatchBlockCondition(null, tag, null);
     }
 
-    public static LootItemCondition.Builder builder(List<Block> blocks, Tag.Named<Block> tag) {
+    public static LootItemCondition.Builder builder(List<Block> blocks, TagKey<Block> tag) {
         return () -> new MatchBlockCondition(blocks, tag, null);
     }
 
-    public static LootItemCondition.Builder builder(List<Block> blocks, Tag.Named<Block> tag, StatePropertiesPredicate properties) {
+    public static LootItemCondition.Builder builder(List<Block> blocks, TagKey<Block> tag, StatePropertiesPredicate properties) {
         return () -> new MatchBlockCondition(blocks, tag, properties);
     }
 
@@ -77,7 +77,7 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
         boolean flag = false;
 
         if (this.tag != null) {
-            flag = this.tag.contains(state.getBlock());
+            flag = state.m_204336_(this.tag);
         }
         if (this.blocks != null && !flag) {
             flag = this.blocks.contains(state.getBlock());
@@ -94,7 +94,7 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
         @Override
         public void serialize(@Nonnull JsonObject jsonObject, MatchBlockCondition instance, @Nonnull JsonSerializationContext context) {
             if (instance.tag != null) {
-                jsonObject.addProperty("tag", instance.tag.getName().toString());
+                jsonObject.addProperty("tag", instance.tag.f_203868_().toString());
             }
             if (instance.properties != null) {
                 jsonObject.add("properties", instance.properties.serializeToJson());
@@ -107,7 +107,7 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
             if (jsonObject.has("tag")) {
                 ResourceLocation tag = new ResourceLocation(GsonHelper.getAsString(jsonObject, "tag"));
 
-                return new MatchBlockCondition(null, BlockTags.createOptional(tag), deserializeProperties(jsonObject));
+                return new MatchBlockCondition(null, TagKey.m_203882_(Registry.BLOCK_REGISTRY, tag), deserializeProperties(jsonObject));
             } else if (jsonObject.has("blocks")) {
                 List<Block> blocks = new ArrayList<>();
 

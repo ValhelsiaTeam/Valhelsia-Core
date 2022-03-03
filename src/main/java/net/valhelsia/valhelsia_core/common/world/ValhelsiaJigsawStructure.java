@@ -3,7 +3,6 @@ package net.valhelsia.valhelsia_core.common.world;
 import com.mojang.serialization.Codec;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 
@@ -44,7 +43,4 @@ public abstract class ValhelsiaJigsawStructure<C extends JigsawConfiguration> ex
     public StructureFeature<?> getStructure() {
         return this;
     }
-
-    @Override
-    public abstract StructureFeatureConfiguration getFeatureConfiguration();
 }

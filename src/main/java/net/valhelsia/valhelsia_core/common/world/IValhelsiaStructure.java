@@ -1,7 +1,6 @@
 package net.valhelsia.valhelsia_core.common.world;
 
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 
 /**
  * Valhelsia Structure Interface <br>
@@ -17,5 +16,4 @@ public interface IValhelsiaStructure {
         return false;
     }
     StructureFeature<?> getStructure();
-    StructureFeatureConfiguration getFeatureConfiguration();
 }

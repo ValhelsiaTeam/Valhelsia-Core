@@ -3,6 +3,7 @@ package net.valhelsia.valhelsia_core.common.util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.item.ItemStack;
@@ -11,14 +12,13 @@ import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -88,22 +88,22 @@ public class ItemStackUtils {
         return copy;
     }
 
-    public static ItemStack getFilledMap(Level level, BlockPos playerPos, StructureFeature<?> structure, MapDecoration.Type decorationType) {
-        if (!(level instanceof ServerLevel serverWorld)) {
+    public static ItemStack getFilledMap(Level level, BlockPos playerPos, TagKey<ConfiguredStructureFeature<?, ?>> destination, MapDecoration.Type decorationType, String name) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return null;
         }
 
-        BlockPos pos = serverWorld.findNearestMapFeature(structure, playerPos, 100, true);
+        BlockPos pos = serverLevel.m_207561_(destination, playerPos, 100, true);
 
         if (pos == null) {
             return null;
         }
 
-        ItemStack stack = MapItem.create(serverWorld, pos.getX(), pos.getZ(), (byte) 2, true, true);
+        ItemStack stack = MapItem.create(serverLevel, pos.getX(), pos.getZ(), (byte) 2, true, true);
 
-        MapItem.renderBiomePreviewMap(serverWorld, stack);
+        MapItem.renderBiomePreviewMap(serverLevel, stack);
         MapItemSavedData.addTargetDecoration(stack, pos, "+", decorationType);
 
-        return stack.setHoverName(new TranslatableComponent("filled_map." + structure.getFeatureName().toLowerCase(Locale.ROOT)));
+        return stack.setHoverName(new TranslatableComponent(name));
     }
 }
