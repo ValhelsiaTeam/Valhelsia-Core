@@ -3,7 +3,6 @@
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_16",
   "package": "net.valhelsia.valhelsia_core.core.mixin",
-  "refmap": "valhelsia_core.refmap.json",
   "mixins": [
     "FlintAndSteelItemMixin",
     "ThrownPotionMixin"
@@ -14,7 +13,8 @@
     "client.ElytraLayerMixin",
     "client.HumanoidArmorLayerMixin",
     "client.SkinCustomizationScreenMixin",
-    "client.SkinManagerMixin"
+    "client.SkinManagerMixin",
+    "client.PlayerRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

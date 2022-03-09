@@ -26,20 +26,20 @@ import java.util.UUID;
 @Mixin(ElytraLayer.class)
 public class ElytraLayerMixin<T extends LivingEntity> {
 
-    @Inject(at = @At(value = "HEAD"), method = "getElytraTexture", remap = false, cancellable = true)
-    private void valhelsia_getElytraTexture(ItemStack stack, T entity, CallbackInfoReturnable<ResourceLocation> cir) {
-        CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
-
-        UUID uuid = entity.getUUID();
-        List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.BACK);
-        Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.BACK);
-
-        if (activeCosmetic != null && activeCosmetic.getName().contains("cape") && cosmetics.contains(activeCosmetic)) {
-            ResourceLocation texture = cosmeticsManager.getCosmeticTexture(new Cosmetic(activeCosmetic.getName().substring(0, activeCosmetic.getName().length() - 4).concat("elytra"), CosmeticsCategory.BACK));
-
-            if (texture != null) {
-                cir.setReturnValue(texture);
-            }
-        }
-    }
+//    @Inject(at = @At(value = "HEAD"), method = "getElytraTexture", remap = false, cancellable = true)
+//    private void valhelsia_getElytraTexture(ItemStack stack, T entity, CallbackInfoReturnable<ResourceLocation> cir) {
+//        CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
+//
+//        UUID uuid = entity.getUUID();
+//        List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.BACK);
+//        Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.BACK);
+//
+//        if (activeCosmetic != null && activeCosmetic.getName().contains("cape") && cosmetics.contains(activeCosmetic)) {
+//            ResourceLocation texture = cosmeticsManager.getCosmeticTexture(new Cosmetic(activeCosmetic.getName().substring(0, activeCosmetic.getName().length() - 4).concat("elytra"), CosmeticsCategory.BACK));
+//
+//            if (texture != null) {
+//                cir.setReturnValue(texture);
+//            }
+//        }
+//    }
 }

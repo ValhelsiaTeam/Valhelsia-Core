@@ -93,7 +93,7 @@ public class ItemStackUtils {
             return null;
         }
 
-        BlockPos pos = serverLevel.m_207561_(destination, playerPos, 100, true);
+        BlockPos pos = serverLevel.findNearestMapFeature(destination, playerPos, 100, true);
 
         if (pos == null) {
             return null;

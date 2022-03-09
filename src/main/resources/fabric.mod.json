@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "valhelsia_core",
+  "version": "${version}",
+
+  "name": "Valhelsia Core",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "Me!"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "CC0-1.0",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.valhelsia.valhelsia_core.core.ValhelsiaCore"
+    ],
+    "client": [
+      "net.valhelsia.valhelsia_core.client.ClientSetup"
+    ]
+  },
+  "mixins": [
+    "valhelsia_core.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "accessWidener" : "valhelsia_core.accesswidener"
+}

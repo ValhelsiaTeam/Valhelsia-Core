@@ -5,9 +5,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
-import net.valhelsia.valhelsia_core.common.capability.counter.CounterProvider;
 import net.valhelsia.valhelsia_core.common.capability.counter.SimpleCounter;
 
 import java.util.Objects;
@@ -38,18 +35,18 @@ public record UpdateCounterPacket(SimpleCounter timer) {
         return new UpdateCounterPacket(timer);
     }
 
-    public static void consume(UpdateCounterPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            assert ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT;
-
-            LocalPlayer player = Minecraft.getInstance().player;
-
-            if (player != null) {
-                player.getCapability(CounterProvider.CAPABILITY).ifPresent((counterCapability) -> {
-                    counterCapability.getCounter(packet.timer.getName()).load(packet.timer.save(new CompoundTag()));
-                });
-            }
-        });
-        ctx.get().setPacketHandled(true);
-    }
+//    public static void consume(UpdateCounterPacket packet, Supplier<NetworkEvent.Context> ctx) {
+//        ctx.get().enqueueWork(() -> {
+//            assert ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT;
+//
+//            LocalPlayer player = Minecraft.getInstance().player;
+//
+//            if (player != null) {
+//                player.getCapability(CounterProvider.CAPABILITY).ifPresent((counterCapability) -> {
+//                    counterCapability.getCounter(packet.timer.getName()).load(packet.timer.save(new CompoundTag()));
+//                });
+//            }
+//        });
+//        ctx.get().setPacketHandled(true);
+//    }
 }

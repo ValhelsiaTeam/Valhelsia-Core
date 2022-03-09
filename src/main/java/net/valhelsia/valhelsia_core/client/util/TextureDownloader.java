@@ -4,10 +4,7 @@ import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.client.renderer.texture.HttpTexture;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.*;
 import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import org.apache.commons.io.FilenameUtils;
@@ -27,7 +24,7 @@ import java.util.Map;
  */
 public class TextureDownloader {
 
-    public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation(ValhelsiaCore.MOD_ID, "empty");
+    public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation(ValhelsiaCore.MOD_ID, "textures/empty.png");
 
     private static final Map<String, ResourceLocation> LOADED_TEXTURES = new HashMap<>();
 
@@ -45,6 +42,7 @@ public class TextureDownloader {
                 RenderSystem.recordRenderCall(() -> {
                     String s = Hashing.sha1().hashUnencodedChars(FilenameUtils.getPath(url) + FilenameUtils.getBaseName(url)).toString();
                     ResourceLocation resourceLocation = new ResourceLocation(ValhelsiaCore.MOD_ID, path + s);
+
                     TextureManager textureManager = Minecraft.getInstance().getTextureManager();
 
                     AbstractTexture texture = textureManager.getTexture(resourceLocation, MissingTextureAtlasSprite.getTexture());
@@ -53,15 +51,19 @@ public class TextureDownloader {
                         File file1 = new File(new File(Minecraft.getInstance().gameDirectory, "assets/"), s.length() > 2 ? s.substring(0, 2) : "xx");
                         File file2 = new File(file1, s);
 
-                        HttpTexture httpTexture = new HttpTexture(file2, url, textureFallback, false, null);
+                        HttpTexture httpTexture = new HttpTexture(file2, url, textureFallback, false, () -> {
+                            if (textureAvailableCallback != null) {
+                                textureAvailableCallback.onTextureAvailable(resourceLocation);
+                            }
+                        });
 
                         textureManager.register(resourceLocation, httpTexture);
+                    } else if (textureAvailableCallback != null) {
+                        textureAvailableCallback.onTextureAvailable(resourceLocation);
                     }
+
                     if (identifier != null) {
                         LOADED_TEXTURES.put(identifier, resourceLocation);
-                    }
-                    if (textureAvailableCallback != null) {
-                        textureAvailableCallback.onTextureAvailable(resourceLocation);
                     }
                 });
             });

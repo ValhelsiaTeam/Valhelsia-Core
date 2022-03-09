@@ -14,23 +14,23 @@ import net.minecraft.world.level.block.FireBlock;
  */
 public class FlammableHelper {
 
-    public void register(Block block, int encouragement, int flammability) {
-         ((FireBlock) Blocks.FIRE).setFlammable(block, encouragement, flammability);
-    }
-
-    public void registerLog(Block block) {
-        register(block, 5, 5);
-    }
-
-    public void registerWoodenBlock(Block block) {
-        register(block, 5, 20);
-    }
-
-    public void registerLeaves(Block block) {
-        register(block, 30, 60);
-    }
-
-    public void registerPlant(Block block) {
-        register(block, 60, 100);
-    }
+//    public void register(Block block, int encouragement, int flammability) {
+//         ((FireBlock) Blocks.FIRE).setFlammable(block, encouragement, flammability);
+//    }
+//
+//    public void registerLog(Block block) {
+//        register(block, 5, 5);
+//    }
+//
+//    public void registerWoodenBlock(Block block) {
+//        register(block, 5, 20);
+//    }
+//
+//    public void registerLeaves(Block block) {
+//        register(block, 30, 60);
+//    }
+//
+//    public void registerPlant(Block block) {
+//        register(block, 60, 100);
+//    }
 }

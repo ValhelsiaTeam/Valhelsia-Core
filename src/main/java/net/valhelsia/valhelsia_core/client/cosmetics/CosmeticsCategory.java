@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.client.cosmetics;
 
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.valhelsia.valhelsia_core.core.config.ValhelsiaConfigSpec;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +23,7 @@ public enum CosmeticsCategory {
     private final String name;
     private final TranslatableComponent component;
 
-    public ForgeConfigSpec.ConfigValue<String> activeCosmetic;
+    public ValhelsiaConfigSpec.ConfigValue<String> activeCosmetic;
 
     CosmeticsCategory(String name) {
         this.name = name;

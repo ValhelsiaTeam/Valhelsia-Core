@@ -5,6 +5,8 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+import net.fabricmc.fabric.impl.registry.sync.FabricRegistry;
+import net.fabricmc.fabric.impl.registry.sync.FabricRegistryInit;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +19,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootConditions;
 
 import javax.annotation.Nonnull;
@@ -77,7 +78,7 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
         boolean flag = false;
 
         if (this.tag != null) {
-            flag = state.m_204336_(this.tag);
+            flag = state.is(this.tag);
         }
         if (this.blocks != null && !flag) {
             flag = this.blocks.contains(state.getBlock());
@@ -94,7 +95,7 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
         @Override
         public void serialize(@Nonnull JsonObject jsonObject, MatchBlockCondition instance, @Nonnull JsonSerializationContext context) {
             if (instance.tag != null) {
-                jsonObject.addProperty("tag", instance.tag.f_203868_().toString());
+                jsonObject.addProperty("tag", instance.tag.location().toString());
             }
             if (instance.properties != null) {
                 jsonObject.add("properties", instance.properties.serializeToJson());
@@ -107,20 +108,20 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
             if (jsonObject.has("tag")) {
                 ResourceLocation tag = new ResourceLocation(GsonHelper.getAsString(jsonObject, "tag"));
 
-                return new MatchBlockCondition(null, TagKey.m_203882_(Registry.BLOCK_REGISTRY, tag), deserializeProperties(jsonObject));
+                return new MatchBlockCondition(null, TagKey.create(Registry.BLOCK_REGISTRY, tag), deserializeProperties(jsonObject));
             } else if (jsonObject.has("blocks")) {
                 List<Block> blocks = new ArrayList<>();
 
                 for (JsonElement e : GsonHelper.getAsJsonArray(jsonObject, "blocks")) {
                     ResourceLocation blockName = new ResourceLocation(e.getAsString());
-                    blocks.add(ForgeRegistries.BLOCKS.getValue(blockName));
+                    blocks.add(Registry.BLOCK.get(blockName));
                 }
 
                 return new MatchBlockCondition(blocks, null, deserializeProperties(jsonObject));
             } else if (jsonObject.has("block")) {
                 ResourceLocation block = new ResourceLocation(GsonHelper.getAsString(jsonObject, "block"));
 
-                return new MatchBlockCondition(Collections.singletonList(ForgeRegistries.BLOCKS.getValue(block)), null, deserializeProperties(jsonObject));
+                return new MatchBlockCondition(Collections.singletonList(Registry.BLOCK.get(block)), null, deserializeProperties(jsonObject));
             }
             throw new RuntimeException("match_block must have one of 'tag', 'block' or 'blocks' key");
         }

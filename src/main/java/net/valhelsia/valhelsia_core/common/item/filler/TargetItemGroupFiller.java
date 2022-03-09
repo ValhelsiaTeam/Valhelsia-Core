@@ -31,20 +31,20 @@ public class TargetItemGroupFiller implements IItemGroupFiller {
 
     @Override
     public void fill(ItemStack stack, CreativeModeTab tab, NonNullList<ItemStack> items) {
-        if (stack.getItem().allowdedIn(tab)) {
-            int index = -1;
-
-            for (int i = 0; i < items.size(); i++) {
-                if (items.get(i).is(this.target.get())) {
-                    index = i;
-                    break;
-                }
-            }
-            if (index != -1) {
-                items.add(this.before ? index : index + 1, stack);
-            } else {
-                items.add(stack);
-            }
-        }
+//        if (stack.getItem().allowdedIn(tab)) {
+//            int index = -1;
+//
+//            for (int i = 0; i < items.size(); i++) {
+//                if (items.get(i).is(this.target.get())) {
+//                    index = i;
+//                    break;
+//                }
+//            }
+//            if (index != -1) {
+//                items.add(this.before ? index : index + 1, stack);
+//            } else {
+//                items.add(stack);
+//            }
+//        }
     }
 }

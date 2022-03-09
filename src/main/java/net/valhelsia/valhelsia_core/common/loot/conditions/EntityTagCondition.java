@@ -53,20 +53,20 @@ public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemC
         }
         Entity entity = lootContext.getParam(LootContextParams.THIS_ENTITY);
 
-        return entity.getType().m_204039_(this.tag);
+        return entity.getType().is(this.tag);
     }
 
     public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<EntityTagCondition> {
         @Override
         public void serialize(@Nonnull JsonObject jsonObject, EntityTagCondition instance, @Nonnull JsonSerializationContext context) {
-            jsonObject.addProperty("tag", instance.tag.f_203868_().toString());
+            jsonObject.addProperty("tag", instance.tag.location().toString());
         }
 
         @Override
         @Nonnull
         public EntityTagCondition deserialize(@Nonnull JsonObject jsonObject, @Nonnull JsonDeserializationContext context) {
             ResourceLocation resourceLocation = new ResourceLocation(GsonHelper.getAsString(jsonObject, "tag"));
-            TagKey<EntityType<?>> tag = TagKey.m_203882_(Registry.ENTITY_TYPE_REGISTRY, resourceLocation);
+            TagKey<EntityType<?>> tag = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, resourceLocation);
             return new EntityTagCondition(tag);
         }
     }

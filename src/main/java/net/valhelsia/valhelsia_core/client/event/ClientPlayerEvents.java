@@ -1,10 +1,9 @@
 package net.valhelsia.valhelsia_core.client.event;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
@@ -21,56 +20,53 @@ import java.util.UUID;
  * @version 1.18.1 - 0.3.0
  * @since 2021-09-25
  */
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ClientPlayerEvents {
 
-    @SubscribeEvent
-    public static void onPlayerLoggedIn(ClientPlayerNetworkEvent.LoggedInEvent event) {
-        CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
+    public static void registerEvents() {
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, minecraft) -> {
+            CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
-        if (event.getPlayer() == null) {
-            return;
-        }
+            UUID uuid = minecraft.player.getUUID();
 
-        UUID uuid = event.getPlayer().getUUID();
+            cosmeticsManager.tryLoadCosmeticsForPlayer(uuid, null);
+            CompoundTag compound = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
 
-        cosmeticsManager.tryLoadCosmeticsForPlayer(uuid, null);
-        CompoundTag compound = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
-        System.out.println(compound);
-        Cosmetic activeBackCosmetic = CosmeticsCategory.BACK.getActiveCosmetic();
-        Cosmetic activeHatCosmetic = CosmeticsCategory.HAT.getActiveCosmetic();
-        Cosmetic activeHandCosmetic = CosmeticsCategory.HAND.getActiveCosmetic();
-        Cosmetic activeFaceCosmetic = CosmeticsCategory.FACE.getActiveCosmetic();
-        Cosmetic activeSpecialCosmetic = CosmeticsCategory.SPECIAL.getActiveCosmetic();
+            Cosmetic activeBackCosmetic = CosmeticsCategory.BACK.getActiveCosmetic();
+            Cosmetic activeHatCosmetic = CosmeticsCategory.HAT.getActiveCosmetic();
+            Cosmetic activeHandCosmetic = CosmeticsCategory.HAND.getActiveCosmetic();
+            Cosmetic activeFaceCosmetic = CosmeticsCategory.FACE.getActiveCosmetic();
+            Cosmetic activeSpecialCosmetic = CosmeticsCategory.SPECIAL.getActiveCosmetic();
 
-        if (activeBackCosmetic != null) {
-            activeBackCosmetic.save(compound);
-            cosmeticsManager.loadCosmeticTexture(activeBackCosmetic, CosmeticsCategory.BACK);
-        }
+            if (activeBackCosmetic != null) {
+                activeBackCosmetic.save(compound);
+                cosmeticsManager.loadCosmeticTexture(activeBackCosmetic, CosmeticsCategory.BACK);
+            }
 
-        if (activeHatCosmetic != null) {
-            activeHatCosmetic.save(compound);
-            cosmeticsManager.loadCosmeticTexture(activeHatCosmetic, CosmeticsCategory.HAT);
-        }
+            if (activeHatCosmetic != null) {
+                activeHatCosmetic.save(compound);
+                cosmeticsManager.loadCosmeticTexture(activeHatCosmetic, CosmeticsCategory.HAT);
+            }
 
-        if (activeHandCosmetic != null) {
-            activeHandCosmetic.save(compound);
-            cosmeticsManager.loadCosmeticTexture(activeHandCosmetic, CosmeticsCategory.HAND);
-        }
+            if (activeHandCosmetic != null) {
+                activeHandCosmetic.save(compound);
+                cosmeticsManager.loadCosmeticTexture(activeHandCosmetic, CosmeticsCategory.HAND);
+            }
 
-        if (activeFaceCosmetic != null) {
-            activeFaceCosmetic.save(compound);
-            cosmeticsManager.loadCosmeticTexture(activeFaceCosmetic, CosmeticsCategory.FACE);
-        }
+            if (activeFaceCosmetic != null) {
+                activeFaceCosmetic.save(compound);
+                cosmeticsManager.loadCosmeticTexture(activeFaceCosmetic, CosmeticsCategory.FACE);
+            }
 
-        if (activeSpecialCosmetic != null) {
-            activeSpecialCosmetic.save(compound);
-            cosmeticsManager.loadCosmeticTexture(activeSpecialCosmetic, CosmeticsCategory.SPECIAL);
-        }
+            if (activeSpecialCosmetic != null) {
+                activeSpecialCosmetic.save(compound);
+                cosmeticsManager.loadCosmeticTexture(activeSpecialCosmetic, CosmeticsCategory.SPECIAL);
+            }
 
-        System.out.println(compound);
-        cosmeticsManager.setActiveCosmeticsForPlayer(uuid, compound);
+            cosmeticsManager.setActiveCosmeticsForPlayer(uuid, compound);
 
-        NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, compound));
+            UploadCosmeticsPacket.send(uuid, compound);
+
+            //NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, compound));
+        });
     }
 }

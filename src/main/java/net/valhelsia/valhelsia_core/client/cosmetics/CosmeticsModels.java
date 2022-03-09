@@ -1,5 +1,6 @@
 package net.valhelsia.valhelsia_core.client.cosmetics;
 
+import net.minecraft.client.Minecraft;
 import net.valhelsia.valhelsia_core.client.event.EntityRendererEvents;
 import net.valhelsia.valhelsia_core.client.model.*;
 
@@ -14,13 +15,13 @@ import java.util.Locale;
  * @since 2021-10-25
  */
 public enum CosmeticsModels {
-    CAPE(new ValhelsiaCapeModel<>(EntityRendererEvents.modelSet.bakeLayer(ValhelsiaCapeModel.VALHELSIA_CAPE))),
-    WITCH_HAT(new WitchHatModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchHatModel.LAYER_LOCATION))),
-    WITCHS_BROOM(new WitchsBroomModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchsBroomModel.LAYER_LOCATION))),
-    WITCHS_WAND(new WitchsWandModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchsWandModel.LAYER_LOCATION))),
-    CAULDRON_BACKPACK(new CauldronBackpackModel<>(EntityRendererEvents.modelSet.bakeLayer(CauldronBackpackModel.LAYER_LOCATION))),
-    BEANIE(new BeanieModel<>(EntityRendererEvents.modelSet.bakeLayer(BeanieModel.LAYER_LOCATION))),
-    SCARF(new ScarfModel<>(EntityRendererEvents.modelSet.bakeLayer(ScarfModel.LAYER_LOCATION)))
+    CAPE(new ValhelsiaCapeModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(ValhelsiaCapeModel.VALHELSIA_CAPE))),
+    WITCH_HAT(new WitchHatModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(WitchHatModel.LAYER_LOCATION))),
+    WITCHS_BROOM(new WitchsBroomModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(WitchsBroomModel.LAYER_LOCATION))),
+    WITCHS_WAND(new WitchsWandModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(WitchsWandModel.LAYER_LOCATION))),
+    CAULDRON_BACKPACK(new CauldronBackpackModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(CauldronBackpackModel.LAYER_LOCATION))),
+    BEANIE(new BeanieModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(BeanieModel.LAYER_LOCATION))),
+    SCARF(new ScarfModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(ScarfModel.LAYER_LOCATION)))
     ;
 
     private final CosmeticsModel<?> model;

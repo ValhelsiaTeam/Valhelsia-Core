@@ -1,9 +1,5 @@
 package net.valhelsia.valhelsia_core.core.registry;
 
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
@@ -15,7 +11,7 @@ import java.util.function.Supplier;
  * @version 0.1.1
  * @since 2021-04-10
  */
-public class LootModifierRegistryHelper extends AbstractRegistryHelper<GlobalLootModifierSerializer<?>> {
+/*public class LootModifierRegistryHelper extends AbstractRegistryHelper<GlobalLootModifierSerializer<?>> {
 
     @Override
     public IForgeRegistry<GlobalLootModifierSerializer<?>> getRegistry() {
@@ -25,4 +21,4 @@ public class LootModifierRegistryHelper extends AbstractRegistryHelper<GlobalLoo
     public <T extends GlobalLootModifierSerializer<?>> RegistryObject<T> register(String name, Supplier<T> item) {
         return this.deferredRegister.register(name, item);
     }
-}
+}*/

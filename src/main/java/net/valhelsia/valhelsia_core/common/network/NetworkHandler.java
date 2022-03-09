@@ -1,11 +1,10 @@
 package net.valhelsia.valhelsia_core.common.network;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 
 /**
@@ -18,31 +17,11 @@ import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
  */
 public class NetworkHandler {
 
-    public static SimpleChannel INSTANCE;
-    private static int id = 0;
-
-    public static int nextID() {
-        return id++;
-    }
-
     public static void init() {
-        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(ValhelsiaCore.MOD_ID, "channel"), () -> "1.0", s -> true, s -> true);
-
-        INSTANCE.registerMessage(nextID(), UpdateCounterPacket.class, UpdateCounterPacket::encode, UpdateCounterPacket::decode, UpdateCounterPacket::consume);
-        INSTANCE.registerMessage(nextID(), UpdateCosmeticsPacket.class, UpdateCosmeticsPacket::encode, UpdateCosmeticsPacket::decode, UpdateCosmeticsPacket::consume);
-        INSTANCE.registerMessage(nextID(), UploadCosmeticsPacket.class, UploadCosmeticsPacket::encode, UploadCosmeticsPacket::decode, UploadCosmeticsPacket::consume);
-
+        ServerPlayNetworking.registerGlobalReceiver(UploadCosmeticsPacket.ID, UploadCosmeticsPacket::handle);
     }
 
-    public static <MSG> void sendTo(Player player, MSG msg) {
-        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), msg);
-    }
-
-    public static <MSG> void sendToAll(MSG msg) {
-        NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), msg);
-    }
-
-    public static <MSG> void sendToServer(MSG msg) {
-        NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), msg);
+    public static void initClient() {
+        ClientPlayNetworking.registerGlobalReceiver(UpdateCosmeticsPacket.ID, UpdateCosmeticsPacket.Handler::handle);
     }
 }

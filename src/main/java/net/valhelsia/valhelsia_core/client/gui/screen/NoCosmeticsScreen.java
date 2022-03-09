@@ -2,12 +2,14 @@ package net.valhelsia.valhelsia_core.client.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.*;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * No Cosmetics Screen <br>
@@ -55,5 +57,10 @@ public class NoCosmeticsScreen extends Screen {
         super.render(poseStack, mouseX, mouseY, partialTick);
         drawCenteredString(poseStack, this.font, new TranslatableComponent("gui.valhelsia_core.cosmeticsSettings.noCosmetics"), this.width / 2, 60, 16777215);
         drawCenteredString(poseStack, this.font, this.supportUsComponent, this.width / 2, 75, 16777215);
+    }
+
+    @Nonnull
+    public Minecraft getMinecraft() {
+        return Objects.requireNonNull(this.minecraft);
     }
 }

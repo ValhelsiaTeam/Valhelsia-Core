@@ -102,7 +102,7 @@ public class CosmeticsWardrobeScreen extends Screen {
             cosmeticsManager.setActiveCosmeticsForPlayer(uuid, tag);
 
             if (this.getMinecraft().getConnection() != null) {
-                NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, tag));
+                UploadCosmeticsPacket.send(uuid, tag);
             }
 
             this.getMinecraft().setScreen(this.parentScreen);
@@ -171,5 +171,10 @@ public class CosmeticsWardrobeScreen extends Screen {
     @Override
     public void onClose() {
         this.getMinecraft().setScreen(this.parentScreen);
+    }
+
+    @Nonnull
+    public Minecraft getMinecraft() {
+        return Objects.requireNonNull(this.minecraft);
     }
 }

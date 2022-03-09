@@ -25,6 +25,7 @@ public class ValhelsiaSignBlockEntity extends SignBlockEntity {
     @Nonnull
     @Override
     public BlockEntityType<?> getType() {
-        return ValhelsiaBlockEntities.SIGN.get();
+        //return ValhelsiaBlockEntities.SIGN.get();
+        return null;
     }
 }

@@ -1,7 +1,6 @@
 package net.valhelsia.valhelsia_core.common.util;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.crafting.NBTIngredient;
 
 /**
  * Valhelsia NBT Ingredient <br>
@@ -13,9 +12,9 @@ import net.minecraftforge.common.crafting.NBTIngredient;
  * @version 1.17.1-0.1.1
  * @since 2021-10-02
  */
-public class ValhelsiaNBTIngredient extends NBTIngredient {
-
-    public  ValhelsiaNBTIngredient(ItemStack stack) {
-        super(stack);
-    }
-}
+//public class ValhelsiaNBTIngredient extends NBTIngredient {
+//
+//    public  ValhelsiaNBTIngredient(ItemStack stack) {
+//        super(stack);
+//    }
+//}

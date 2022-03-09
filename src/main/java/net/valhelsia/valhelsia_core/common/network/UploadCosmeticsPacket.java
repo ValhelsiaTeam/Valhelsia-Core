@@ -1,14 +1,19 @@
 package net.valhelsia.valhelsia_core.common.network;
 
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
+import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * Update Cosmetics Packet <br>
@@ -20,27 +25,36 @@ import java.util.function.Supplier;
  */
 public record UploadCosmeticsPacket(UUID uuid, CompoundTag activeCosmetics) {
 
-    public static void encode(UploadCosmeticsPacket packet, FriendlyByteBuf buffer) {
-        buffer.writeUUID(packet.uuid);
-        buffer.writeNbt(packet.activeCosmetics);
+    public static final ResourceLocation ID = new ResourceLocation(ValhelsiaCore.MOD_ID, "upload_cosmetics");
+
+    public static void send(UUID uuid, CompoundTag activeCosmetics) {
+        FriendlyByteBuf buffer = encode(new FriendlyByteBuf(Unpooled.buffer()), uuid, activeCosmetics);
+
+        ClientPlayNetworking.send(ID, buffer);
     }
 
-    public static UploadCosmeticsPacket decode(FriendlyByteBuf buffer) {
-        return new UploadCosmeticsPacket(buffer.readUUID(), buffer.readNbt());
+    public static FriendlyByteBuf encode(FriendlyByteBuf buffer, UUID uuid, CompoundTag activeCosmetics) {
+        buffer.writeUUID(uuid);
+        buffer.writeNbt(activeCosmetics);
+
+        return buffer;
     }
 
-    public static void consume(UploadCosmeticsPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        NetworkEvent.Context context = ctx.get();
-        if (context.getDirection().getReceptionSide() == LogicalSide.SERVER) {
-            context.enqueueWork(() -> {
-                CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
+    public static void handle(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buffer, PacketSender responseSender) {
+        UUID uuid = buffer.readUUID();
+        CompoundTag activeCosmetics = buffer.readNbt();
 
-                cosmeticsManager.setActiveCosmeticsForPlayer(packet.uuid, packet.activeCosmetics);
-                cosmeticsManager.getLoadedPlayers().add(packet.uuid);
+        server.execute(() -> {
+            CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
-                NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(context::getSender), new UpdateCosmeticsPacket(packet.uuid, packet.activeCosmetics));
-            });
-            ctx.get().setPacketHandled(true);
-        }
+            cosmeticsManager.setActiveCosmeticsForPlayer(uuid, activeCosmetics);
+            cosmeticsManager.getLoadedPlayers().add(uuid);
+
+            for (ServerPlayer serverPlayer : server.getPlayerList().getPlayers()) {
+                UpdateCosmeticsPacket.send(serverPlayer, uuid, activeCosmetics);
+            }
+
+            //player.getLevel().getChunkSource().broadcast(player, ServerPlayNetworking.createS2CPacket(UpdateCosmeticsPacket.ID, UpdateCosmeticsPacket.encode(new FriendlyByteBuf(Unpooled.buffer()), uuid, activeCosmetics)));
+        });
     }
 }

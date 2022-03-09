@@ -16,6 +16,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -52,5 +54,10 @@ public class SkinCustomizationScreenMixin extends OptionsSubScreen {
                 }));
 
         return i;
+    }
+
+    @Nonnull
+    public Minecraft getMinecraft() {
+        return Objects.requireNonNull(this.minecraft);
     }
 }
