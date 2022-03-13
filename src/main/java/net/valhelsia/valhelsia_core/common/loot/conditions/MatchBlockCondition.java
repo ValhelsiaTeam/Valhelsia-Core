@@ -77,7 +77,7 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
         boolean flag = false;
 
         if (this.tag != null) {
-            flag = state.m_204336_(this.tag);
+            flag = state.is(this.tag);
         }
         if (this.blocks != null && !flag) {
             flag = this.blocks.contains(state.getBlock());
@@ -94,7 +94,7 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
         @Override
         public void serialize(@Nonnull JsonObject jsonObject, MatchBlockCondition instance, @Nonnull JsonSerializationContext context) {
             if (instance.tag != null) {
-                jsonObject.addProperty("tag", instance.tag.f_203868_().toString());
+                jsonObject.addProperty("tag", instance.tag.location().toString());
             }
             if (instance.properties != null) {
                 jsonObject.add("properties", instance.properties.serializeToJson());
@@ -107,7 +107,7 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
             if (jsonObject.has("tag")) {
                 ResourceLocation tag = new ResourceLocation(GsonHelper.getAsString(jsonObject, "tag"));
 
-                return new MatchBlockCondition(null, TagKey.m_203882_(Registry.BLOCK_REGISTRY, tag), deserializeProperties(jsonObject));
+                return new MatchBlockCondition(null, TagKey.create(Registry.BLOCK_REGISTRY, tag), deserializeProperties(jsonObject));
             } else if (jsonObject.has("blocks")) {
                 List<Block> blocks = new ArrayList<>();
 

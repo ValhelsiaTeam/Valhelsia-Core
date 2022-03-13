@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.util.ItemStackUtils
  *
  * @author Valhelsia Team
- * @version 1.17.1-0.1.0
+ * @version 1.18.1 - 0.3.0
  * @since 2021-10-02
  */
 public class ItemStackUtils {
@@ -93,7 +93,7 @@ public class ItemStackUtils {
             return null;
         }
 
-        BlockPos pos = serverLevel.m_207561_(destination, playerPos, 100, true);
+        BlockPos pos = serverLevel.findNearestMapFeature(destination, playerPos, 100, true);
 
         if (pos == null) {
             return null;

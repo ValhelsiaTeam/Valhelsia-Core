@@ -22,12 +22,12 @@ import java.util.Map;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.util.TextureDownloader
  *
  * @author Valhelsia Team
- * @version 1.17.1-0.1.0
+ * @version 1.18.2 - 0.3.0
  * @since 2021-10-10
  */
 public class TextureDownloader {
 
-    public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation(ValhelsiaCore.MOD_ID, "empty");
+    public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation(ValhelsiaCore.MOD_ID, "textures/empty.png");
 
     private static final Map<String, ResourceLocation> LOADED_TEXTURES = new HashMap<>();
 
