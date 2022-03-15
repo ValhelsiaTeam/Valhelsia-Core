@@ -34,7 +34,7 @@ public class ClientSetup {
             if (registryManager.hasHelper(ForgeRegistries.BLOCKS)) {
                 for (Map.Entry<ValhelsiaRenderType, List<RegistryObject<? extends Block>>> entry : registryManager.getBlockHelper().renderTypes.entrySet()) {
                     for (RegistryObject<? extends Block> block : entry.getValue()) {
-                        ItemBlockRenderTypes.setRenderLayer(block.get(), entry.getKey().getRenderType());
+                        ItemBlockRenderTypes.setRenderLayer(block.get(), entry.getKey().getRenderType().get());
                     }
                 }
             }

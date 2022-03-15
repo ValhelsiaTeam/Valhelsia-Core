@@ -2,6 +2,8 @@ package net.valhelsia.valhelsia_core.client.util;
 
 import net.minecraft.client.renderer.RenderType;
 
+import java.util.function.Supplier;
+
 /**
  * Valhelsia Render Type <br>
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.util.ValhelsiaRenderType
@@ -16,12 +18,12 @@ public enum ValhelsiaRenderType {
     CUTOUT,
     TRANSLUCENT;
 
-    public RenderType getRenderType() {
+    public Supplier<RenderType> getRenderType() {
         return switch (this) {
-            case CUTOUT_MIPPED -> RenderType.cutoutMipped();
-            case CUTOUT -> RenderType.cutout();
-            case TRANSLUCENT -> RenderType.translucent();
-            default -> RenderType.solid();
+            case CUTOUT_MIPPED -> RenderType::cutoutMipped;
+            case CUTOUT -> RenderType::cutout;
+            case TRANSLUCENT -> RenderType::translucent;
+            default -> RenderType::solid;
         };
     }
 }
