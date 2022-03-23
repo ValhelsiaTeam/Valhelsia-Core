@@ -9,7 +9,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.AbstractRegistryHelper
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.18.2 - 0.3.0
  * @since 2020-11-18
  */
 public abstract class AbstractRegistryHelper<T extends IForgeRegistryEntry<T>> implements IRegistryHelper<T> {
@@ -22,7 +22,7 @@ public abstract class AbstractRegistryHelper<T extends IForgeRegistryEntry<T>> i
     }
 
     protected void createDeferredRegister() {
-        this.deferredRegister = DeferredRegister.create(getRegistry(), getRegistryManager().getModId());
+        this.deferredRegister = DeferredRegister.create(this.getRegistryKey(), this.getRegistryManager().getModId());
     }
 
     protected void setRegistryManager(RegistryManager registryManager) {

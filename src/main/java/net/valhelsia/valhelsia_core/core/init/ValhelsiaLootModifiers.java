@@ -18,7 +18,7 @@ import net.valhelsia.valhelsia_core.common.loot.modifiers.AppendLootTableModifie
 @Mod.EventBusSubscriber
 public class ValhelsiaLootModifiers {
 
-    public static final LootModifierRegistryHelper HELPER = (LootModifierRegistryHelper) ValhelsiaCore.REGISTRY_MANAGER.getHelper(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS);
+    public static final LootModifierRegistryHelper HELPER = (LootModifierRegistryHelper) ValhelsiaCore.REGISTRY_MANAGER.getHelper(ForgeRegistries.Keys.LOOT_MODIFIER_SERIALIZERS);
 
     public static final RegistryObject<AppendLootTableModifier.Serializer> APPEND_LOOT_MODIFIER = HELPER.register("append_loot", AppendLootTableModifier.Serializer::new);
 }

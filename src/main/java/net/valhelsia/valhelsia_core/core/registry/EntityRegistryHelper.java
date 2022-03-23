@@ -1,9 +1,10 @@
 package net.valhelsia.valhelsia_core.core.registry;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryObject;
 
 /**
@@ -11,14 +12,14 @@ import net.minecraftforge.registries.RegistryObject;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.EntityRegistryHelper
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.18.2 - 0.3.0
  * @since 2021-02-20
  */
 public class EntityRegistryHelper extends AbstractRegistryHelper<EntityType<?>> {
 
     @Override
-    public IForgeRegistry<EntityType<?>> getRegistry() {
-        return ForgeRegistries.ENTITIES;
+    public ResourceKey<Registry<EntityType<?>>> getRegistryKey() {
+        return ForgeRegistries.Keys.ENTITY_TYPES;
     }
 
     public <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> builder) {

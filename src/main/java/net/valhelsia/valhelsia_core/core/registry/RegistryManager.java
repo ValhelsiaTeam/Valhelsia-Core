@@ -1,11 +1,13 @@
 package net.valhelsia.valhelsia_core.core.registry;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
-import net.valhelsia.valhelsia_core.core.registry.block.BlockRegistryHelper;
 import net.valhelsia.valhelsia_core.core.config.AbstractConfigValidator;
+import net.valhelsia.valhelsia_core.core.registry.block.BlockRegistryHelper;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -16,12 +18,12 @@ import java.util.Map;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.RegistryHelper
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.18.2 - 0.3.0
  * @since 2020-11-18
  */
 public class RegistryManager {
 
-    private final Map<IForgeRegistry<?>, AbstractRegistryHelper<?>> helpers = new HashMap<>();
+    private final Map<ResourceKey<?>, AbstractRegistryHelper<?>> helpers = new HashMap<>();
 
     private final String modId;
 
@@ -35,36 +37,36 @@ public class RegistryManager {
 
     private AbstractConfigValidator configValidator = null;
 
-    public boolean hasHelper(IForgeRegistry<?> forgeRegistry) {
-        return helpers.containsKey(forgeRegistry);
+    public<T extends IForgeRegistryEntry<T>> boolean hasHelper(ResourceKey<Registry<T>> registryResourceKey) {
+        return helpers.containsKey(registryResourceKey);
     }
 
-    private void addHelper(AbstractRegistryHelper<?> registryHelper) {
-        helpers.put(registryHelper.getRegistry(), registryHelper);
+    private<T extends IForgeRegistryEntry<T>> void addHelper(AbstractRegistryHelper<T> registryHelper) {
+        helpers.put(registryHelper.getRegistryKey(), registryHelper);
     }
 
-    public AbstractRegistryHelper<?> getHelper(IForgeRegistry<?> forgeRegistry) {
-        if (!hasHelper(forgeRegistry)) {
-            throw new NullPointerException("Registry Manager for '" + getModId() + "' has no Helper for registry: " + forgeRegistry);
+    public<T extends IForgeRegistryEntry<T>> AbstractRegistryHelper<?> getHelper(ResourceKey<Registry<T>> registryResourceKey) {
+        if (!this.hasHelper(registryResourceKey)) {
+            throw new NullPointerException("Registry Manager for '" + getModId() + "' has no Helper for registry: " + registryResourceKey.getRegistryName());
         }
 
-        return helpers.get(forgeRegistry);
+        return helpers.get(registryResourceKey);
     }
 
     public ItemRegistryHelper getItemHelper() {
-        return (ItemRegistryHelper) getHelper(ForgeRegistries.ITEMS);
+        return (ItemRegistryHelper) this.getHelper(ForgeRegistries.Keys.ITEMS);
     }
 
     public BlockRegistryHelper getBlockHelper() {
-        return (BlockRegistryHelper) getHelper(ForgeRegistries.BLOCKS);
+        return (BlockRegistryHelper) this.getHelper(ForgeRegistries.Keys.BLOCKS);
     }
 
     public EntityRegistryHelper getEntityHelper() {
-        return (EntityRegistryHelper) getHelper(ForgeRegistries.ENTITIES);
+        return (EntityRegistryHelper) this.getHelper(ForgeRegistries.Keys.ENTITY_TYPES);
     }
 
     public void register(IEventBus eventBus) {
-        this.helpers.forEach((forgeRegistry, abstractRegistryHelper) -> abstractRegistryHelper.register(eventBus));
+        this.helpers.values().forEach(abstractRegistryHelper -> abstractRegistryHelper.register(eventBus));
     }
 
     public void registerConfigValidator(AbstractConfigValidator configValidator) {

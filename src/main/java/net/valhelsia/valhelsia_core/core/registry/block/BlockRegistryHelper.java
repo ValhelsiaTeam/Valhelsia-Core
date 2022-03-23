@@ -2,6 +2,8 @@ package net.valhelsia.valhelsia_core.core.registry.block;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -14,7 +16,6 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.client.util.ValhelsiaRenderType;
 import net.valhelsia.valhelsia_core.common.block.StrippableRotatedPillarBlock;
@@ -48,8 +49,8 @@ public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
     private final CompostableHelper compostableHelper = new CompostableHelper();
 
     @Override
-    public IForgeRegistry<Block> getRegistry() {
-        return ForgeRegistries.BLOCKS;
+    public ResourceKey<Registry<Block>> getRegistryKey() {
+        return ForgeRegistries.Keys.BLOCKS;
     }
 
     public void setDefaultGroup(CreativeModeTab creativeModeTab) {
@@ -129,11 +130,11 @@ public class BlockRegistryHelper extends AbstractRegistryHelper<Block> {
         return registryObject;
     }
 
-    public RegistryObject<? extends Block> registerLogBlock(String name, Supplier<RotatedPillarBlock> strippedBlock, MaterialColor topColor, MaterialColor barkColor) {
+    public RegistryObject<RotatedPillarBlock> registerLogBlock(String name, Supplier<RotatedPillarBlock> strippedBlock, MaterialColor topColor, MaterialColor barkColor) {
         return register(name, () -> new StrippableRotatedPillarBlock(strippedBlock, Block.Properties.of(Material.WOOD, (state) -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor).strength(2.0F).sound(SoundType.WOOD)));
     }
 
-    public RegistryObject<? extends Block> registerStrippedLogBlock(String name, MaterialColor topColor, MaterialColor barkColor) {
+    public RegistryObject<RotatedPillarBlock> registerStrippedLogBlock(String name, MaterialColor topColor, MaterialColor barkColor) {
         return register(name, () -> new RotatedPillarBlock(Block.Properties.of(Material.WOOD, (state) -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor).strength(2.0F).sound(SoundType.WOOD)));
     }
 

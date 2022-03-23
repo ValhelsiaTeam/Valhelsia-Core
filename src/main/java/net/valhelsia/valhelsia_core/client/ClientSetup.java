@@ -31,7 +31,7 @@ public class ClientSetup {
 
     public void onClientSetup(FMLClientSetupEvent event) {
         ValhelsiaCore.REGISTRY_MANAGERS.forEach(registryManager -> {
-            if (registryManager.hasHelper(ForgeRegistries.BLOCKS)) {
+            if (registryManager.hasHelper(ForgeRegistries.Keys.BLOCKS)) {
                 for (Map.Entry<ValhelsiaRenderType, List<RegistryObject<? extends Block>>> entry : registryManager.getBlockHelper().renderTypes.entrySet()) {
                     for (RegistryObject<? extends Block> block : entry.getValue()) {
                         ItemBlockRenderTypes.setRenderLayer(block.get(), entry.getKey().getRenderType().get());
