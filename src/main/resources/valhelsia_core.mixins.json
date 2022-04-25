@@ -5,6 +5,7 @@
   "package": "net.valhelsia.valhelsia_core.core.mixin",
   "refmap": "valhelsia_core.refmap.json",
   "mixins": [
+    "BlockStateBaseMixin",
     "FlintAndSteelItemMixin",
     "ThrownPotionMixin"
   ],
