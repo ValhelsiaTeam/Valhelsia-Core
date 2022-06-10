@@ -31,9 +31,9 @@ public class ModelBlockRendererMixin {
     private int valhelsia_renderModelFaceFlat(int value, BlockAndTintGetter level, BlockState state, BlockPos pos) {
         for (var entry : BlockCombiner.BRIGHTNESS_COMBINERS.entrySet()) {
             if (entry.getKey().test(state)) {
-                if (this.cachedPositions.containsKey(pos)) {
-                    return this.cachedPositions.remove(pos);
-                }
+//                if (this.cachedPositions.containsKey(pos)) {
+//                    return this.cachedPositions.remove(pos);
+//                }
 
                 BlockCombineResult<BlockPos> combineResult = entry.getValue().apply(level, state, pos);
                 int newBrightness = combineResult.apply(new PosBasedBrightnessCombiner()).get(value);
