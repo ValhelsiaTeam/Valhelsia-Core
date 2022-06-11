@@ -3,6 +3,7 @@ package net.valhelsia.valhelsia_core.common.loot.modifiers;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -21,7 +23,7 @@ import java.util.List;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.loot.modifiers.AppendLootTableModifier
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.19 - 0.3.0
  * @since 2021-04-10
  */
 public class AppendLootTableModifier extends LootModifier {
@@ -42,7 +44,7 @@ public class AppendLootTableModifier extends LootModifier {
 
     @Nonnull
     @Override
-    protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
+    protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         if (reentryPrevention) {
             return generatedLoot;
         }

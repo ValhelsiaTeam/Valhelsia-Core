@@ -1,11 +1,7 @@
 package net.valhelsia.valhelsia_core.core;
 
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -14,12 +10,13 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.client.ClientSetup;
 import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.core.config.ModConfig;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaBlockEntities;
-import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootConditions;
-import net.valhelsia.valhelsia_core.core.registry.LootModifierRegistryHelper;
+import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootModifiers;
+import net.valhelsia.valhelsia_core.core.registry.RegistryHelper;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +29,7 @@ import java.util.List;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.ValhelsiaCore
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.19 - 0.3.0
  */
 @Mod(ValhelsiaCore.MOD_ID)
 public class ValhelsiaCore {
@@ -44,7 +41,9 @@ public class ValhelsiaCore {
     public static boolean allConfigsValidated = false;
 
     public static final List<RegistryManager> REGISTRY_MANAGERS = new ArrayList<>();
-    public static final RegistryManager REGISTRY_MANAGER = new RegistryManager.Builder(MOD_ID).addHelpers(new LootModifierRegistryHelper()).build();
+    public static final RegistryManager REGISTRY_MANAGER = RegistryManager.builder(MOD_ID)
+            .addHelper(ForgeRegistries.Keys.LOOT_MODIFIER_SERIALIZERS, new RegistryHelper<>(ValhelsiaLootModifiers::new))
+            .create();
 
     public ValhelsiaCore() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -54,8 +53,6 @@ public class ValhelsiaCore {
         eventBus.addListener(this::setup);
         eventBus.addListener(this::enqueueIMC);
         eventBus.addListener(this::processIMC);
-
-        eventBus.addGenericListener(GlobalLootModifierSerializer.class, this::registerLootConditions);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -75,11 +72,5 @@ public class ValhelsiaCore {
     }
 
     private void processIMC(final InterModProcessEvent event) {
-    }
-
-    private void registerLootConditions(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-        Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(ValhelsiaCore.MOD_ID, "match_block"), ValhelsiaLootConditions.MATCH_BLOCK);
-        Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(ValhelsiaCore.MOD_ID, "date"), ValhelsiaLootConditions.DATE);
-        Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(ValhelsiaCore.MOD_ID, "entity_tag"), ValhelsiaLootConditions.ENTITY_TAG);
     }
 }

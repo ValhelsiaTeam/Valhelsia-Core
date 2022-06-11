@@ -1,8 +1,7 @@
 package net.valhelsia.valhelsia_core.common.event;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +28,7 @@ import java.util.UUID;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.event.PlayerEvents
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.19 - 0.3.0
  * @since 2021-09-25
  */
 @Mod.EventBusSubscriber
@@ -48,13 +47,13 @@ public class PlayerEvents {
         List<ConfigError> errors = new ArrayList<>();
 
         for (RegistryManager registryManager : ValhelsiaCore.REGISTRY_MANAGERS) {
-            if (registryManager.getConfigValidator() != null) {
-                AbstractConfigValidator configValidator = registryManager.getConfigValidator();
+            if (registryManager.configValidator() != null) {
+                AbstractConfigValidator configValidator = registryManager.configValidator();
 
                 if (configValidator.getType() == AbstractConfigValidator.Type.WORLD_LOAD) {
                     configValidator.validate();
                     configValidator.getErrors().forEach(configError -> {
-                        configError.setModID(registryManager.getModId());
+                        configError.setModID(registryManager.modId());
                     });
 
                     errors.addAll(configValidator.getErrors());
@@ -63,9 +62,9 @@ public class PlayerEvents {
         }
         if (!errors.isEmpty()) {
             errors.forEach(configError -> {
-                player.sendMessage(new TextComponent(configError.getModID()).withStyle(ChatFormatting.UNDERLINE), player.getUUID());
-                player.sendMessage(new TranslatableComponent("gui.valhelsia_core.config.error").append(": " + configError.getPath()), player.getUUID());
-                player.sendMessage(configError.getErrorMessage(), player.getUUID());
+                player.sendSystemMessage(Component.literal(configError.getModID()).withStyle(ChatFormatting.UNDERLINE));
+                player.sendSystemMessage(Component.translatable("gui.valhelsia_core.config.error").append(": " + configError.getPath()));
+                player.sendSystemMessage(configError.getErrorMessage());
             });
         }
 

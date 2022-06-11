@@ -1,6 +1,5 @@
 package net.valhelsia.valhelsia_core.core.data;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
@@ -39,14 +38,13 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 /**
  * Valhelsia Block Loot Tables <br>
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.data.ValhelsiaBlockLootTables
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.19 - 0.3.0
  * @since 2020-11-22
  */
 public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
@@ -65,7 +63,7 @@ public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Cons
     private final Set<RegistryObject<Block>> remainingBlocks;
 
     public ValhelsiaBlockLootTables(RegistryManager registryManager) {
-        this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getDeferredRegister().getEntries());
+        this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getRegistryObjects());
     }
 
     public abstract void addTables();
@@ -124,11 +122,11 @@ public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Cons
         }
     }
 
-    protected static <T> T withExplosionDecay(ItemLike item, FunctionUserBuilder<T> function) {
+    protected static <T extends FunctionUserBuilder<T>> T withExplosionDecay(ItemLike item, FunctionUserBuilder<T> function) {
         return !immuneToExplosion().contains(item.asItem()) ? function.apply(ApplyExplosionDecay.explosionDecay()) : function.unwrap();
     }
 
-    protected static <T> T withSurvivesExplosion(ItemLike item, ConditionUserBuilder<T> condition) {
+    protected static <T extends ConditionUserBuilder<T>> T withSurvivesExplosion(ItemLike item, ConditionUserBuilder<T> condition) {
         return !immuneToExplosion().contains(item.asItem()) ? condition.when(ExplosionCondition.survivesExplosion()) : condition.unwrap();
     }
 

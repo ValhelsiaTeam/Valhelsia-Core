@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.client.cosmetics;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
@@ -10,7 +11,7 @@ import javax.annotation.Nullable;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory
  *
  * @author Valhelsia Team
- * @version 1.18.1 - 0.3.0
+ * @version 1.19 - 0.3.0
  * @since 2021-10-15
  */
 public enum CosmeticsCategory {
@@ -21,20 +22,20 @@ public enum CosmeticsCategory {
     SPECIAL("special");
 
     private final String name;
-    private final TranslatableComponent component;
+    private final MutableComponent component;
 
     public ForgeConfigSpec.ConfigValue<String> activeCosmetic;
 
     CosmeticsCategory(String name) {
         this.name = name;
-        this.component = new TranslatableComponent("cosmetic.valhelsia_core.category." + name);
+        this.component = Component.translatable("cosmetic.valhelsia_core.category." + name);
     }
 
     public String getName() {
         return name;
     }
 
-    public TranslatableComponent getComponent() {
+    public MutableComponent getComponent() {
         return this.component;
     }
 

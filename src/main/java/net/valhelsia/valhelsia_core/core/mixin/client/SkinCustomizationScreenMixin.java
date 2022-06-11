@@ -7,7 +7,6 @@ import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.SkinCustomizationScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.gui.screen.CosmeticsWardrobeScreen;
 import net.valhelsia.valhelsia_core.client.gui.screen.NoCosmeticsScreen;
@@ -23,7 +22,7 @@ import java.util.UUID;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.mixin.client.SkinCustomizationScreenMixin
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.19 - 0.3.0
  * @since 2021-08-08
  */
 @Mixin(SkinCustomizationScreen.class)
@@ -33,7 +32,7 @@ public class SkinCustomizationScreenMixin extends OptionsSubScreen {
         super(previousScreen, options, textComponent);
     }
 
-    @ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CycleOption;createButton(Lnet/minecraft/client/Options;III)Lnet/minecraft/client/gui/components/AbstractWidget;", shift = At.Shift.AFTER), method = "init", index = 1)
+    @ModifyVariable(method = "init", ordinal = 0, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/SkinCustomizationScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;", ordinal = 1, shift = At.Shift.AFTER))
     public int init(int i) {
         Minecraft minecraft = this.getMinecraft();
         i++;
@@ -42,7 +41,7 @@ public class SkinCustomizationScreenMixin extends OptionsSubScreen {
         UUID uuid = this.getMinecraft().getUser().getGameProfile().getId();
 
         this.addRenderableWidget(new Button(this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), 150, 20,
-                new TranslatableComponent("gui." + ValhelsiaCore.MOD_ID + ".cosmeticsSettings").append("..."),
+                Component.translatable("gui." + ValhelsiaCore.MOD_ID + ".cosmeticsSettings").append("..."),
                 (button) -> {
                     if (!cosmeticsManager.getLoadedPlayers().contains(uuid) || cosmeticsManager.getCosmeticsForPlayer(uuid).isEmpty()) {
                         minecraft.setScreen(new NoCosmeticsScreen(this));

@@ -7,18 +7,19 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import net.valhelsia.valhelsia_core.client.util.ValhelsiaRenderType;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
+import net.valhelsia.valhelsia_core.core.registry.block.BlockRegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.block.RenderType;
 
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * Client Setup <br>
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.ClientSetup
  *
  * @author Valhelsia Team
- * @version 1.18.2 - 0.3.0
+ * @version 1.19 - 0.3.0
  * @since 2021-05-15
  */
 public class ClientSetup {
@@ -31,13 +32,32 @@ public class ClientSetup {
 
     public void onClientSetup(FMLClientSetupEvent event) {
         ValhelsiaCore.REGISTRY_MANAGERS.forEach(registryManager -> {
-            if (registryManager.hasHelper(ForgeRegistries.Keys.BLOCKS)) {
-                for (Map.Entry<ValhelsiaRenderType, List<RegistryObject<? extends Block>>> entry : registryManager.getBlockHelper().renderTypes.entrySet()) {
-                    for (RegistryObject<? extends Block> block : entry.getValue()) {
-                        ItemBlockRenderTypes.setRenderLayer(block.get(), entry.getKey().getRenderType().get());
+            if (!registryManager.hasHelper(ForgeRegistries.Keys.BLOCKS)) {
+                return;
+            }
+
+            BlockRegistryHelper registryHelper= registryManager.getBlockHelper();
+
+            registryHelper.getRegistryClasses().forEach(registryClass -> {
+                for (Field field : registryClass.get().getClass().getDeclaredFields()) {
+                    if (!Modifier.isStatic(field.getModifiers())) {
+                        continue;
+                    }
+
+                    if (field.isAnnotationPresent(RenderType.class)) {
+                        RenderType renderType = field.getAnnotation(RenderType.class);
+
+                        RegistryObject<Block> value;
+                        try {
+                            value = (RegistryObject<Block>) field.get(null);
+                        } catch (IllegalAccessException e) {
+                            continue;
+                        }
+
+                        ItemBlockRenderTypes.setRenderLayer(value.get(), renderType.value().getRenderType().get());
                     }
                 }
-            }
+            });
         });
     }
 }

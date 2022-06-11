@@ -2,11 +2,10 @@ package net.valhelsia.valhelsia_core.client.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
@@ -26,7 +25,7 @@ import java.util.*;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.gui.screen.CosmeticsWardrobeScreen
  *
  * @author Valhelsia Team
- * @version 1.17.1-0.1.2
+ * @version 1.19 - 0.3.0
  * @since 2021-10-14
  */
 public class CosmeticsWardrobeScreen extends Screen {
@@ -46,7 +45,7 @@ public class CosmeticsWardrobeScreen extends Screen {
     private final Map<CosmeticsCategory, Cosmetic> selectedCosmetics = new HashMap<>();
 
     public CosmeticsWardrobeScreen(Screen parentScreen) {
-        super(new TranslatableComponent("gui.valhelsia_core.cosmeticsWardrobe"));
+        super(Component.translatable("gui.valhelsia_core.cosmeticsWardrobe"));
         this.parentScreen = parentScreen;
         for (CosmeticsCategory category : CosmeticsCategory.values()) {
             if (category.getActiveCosmetic() != null) {
@@ -79,7 +78,7 @@ public class CosmeticsWardrobeScreen extends Screen {
 
         int i = (int) (this.width / 1.882F) + (this.width - (int) (this.width / 1.882F)) / 2;
 
-        this.addRenderableWidget(new CloseCosmeticsWardrobeButton(i - 7 - 100, this.height - 50, 100, 35, 100, 0, TEXTURE, new TranslatableComponent("gui.valhelsia_core.cosmeticsWardrobe.save"), button -> {
+        this.addRenderableWidget(new CloseCosmeticsWardrobeButton(i - 7 - 100, this.height - 50, 100, 35, 100, 0, TEXTURE, Component.translatable("gui.valhelsia_core.cosmeticsWardrobe.save"), button -> {
             CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
             UUID uuid = this.getMinecraft().getUser().getGameProfile().getId();
             CompoundTag tag = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
@@ -108,7 +107,7 @@ public class CosmeticsWardrobeScreen extends Screen {
             this.getMinecraft().setScreen(this.parentScreen);
         }));
 
-        this.addRenderableWidget(new CloseCosmeticsWardrobeButton(i + 7, this.height - 50, 100, 35, 0, 0, TEXTURE, new TranslatableComponent("gui.valhelsia_core.cosmeticsWardrobe.cancel"), button -> {
+        this.addRenderableWidget(new CloseCosmeticsWardrobeButton(i + 7, this.height - 50, 100, 35, 0, 0, TEXTURE, Component.translatable("gui.valhelsia_core.cosmeticsWardrobe.cancel"), button -> {
             this.getMinecraft().setScreen(this.parentScreen);
         }));
 
@@ -137,7 +136,7 @@ public class CosmeticsWardrobeScreen extends Screen {
         int x = 78;
         y = 58;
 
-        this.font.draw(poseStack, new TranslatableComponent("gui.valhelsia_core.categories"), (int) (this.width / 32.0F), y, 16777215);
+        this.font.draw(poseStack, Component.translatable("gui.valhelsia_core.categories"), (int) (this.width / 32.0F), y, 16777215);
         this.font.draw(poseStack, this.activeCategory.getComponent(), (int) (this.width / 5.73F), y, 16777215);
 
         RenderSystem.setShaderTexture(0, BG_IMAGE);

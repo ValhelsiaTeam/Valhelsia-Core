@@ -1,21 +1,19 @@
 package net.valhelsia.valhelsia_core.core.data;
 
-import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -25,7 +23,7 @@ import java.util.function.Predicate;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.data.ValhelsiaBlockStateProvider
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.19 - 0.3.0
  * @since 2021-01-07
  */
 public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
@@ -33,8 +31,8 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
     private final Set<RegistryObject<Block>> remainingBlocks;
 
     public ValhelsiaBlockStateProvider(DataGenerator gen, RegistryManager registryManager, ExistingFileHelper exFileHelper) {
-        super(gen, registryManager.getModId(), exFileHelper);
-        this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getDeferredRegister().getEntries());
+        super(gen, registryManager.modId(), exFileHelper);
+        this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getRegistryObjects());
     }
 
     public Set<RegistryObject<Block>> getRemainingBlocks() {
@@ -71,7 +69,7 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
     }
 
     public String getName(Block block) {
-        return Objects.requireNonNull(block.getRegistryName()).getPath();
+        return ForgeRegistries.BLOCKS.getKey(block).getPath();
     }
 
     public ModelFile.ExistingModelFile getExistingModel(ResourceLocation resourceLocation) {

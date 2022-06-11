@@ -21,7 +21,7 @@ import java.util.List;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.event.GuiListener
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.19 - 0.3.0
  * @since 2021-02-16
  */
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
@@ -33,13 +33,13 @@ public class GuiEvents {
             List<ConfigError> errors = new ArrayList<>();
 
             for (RegistryManager registryManager : ValhelsiaCore.REGISTRY_MANAGERS) {
-                if (registryManager.getConfigValidator() != null) {
-                    AbstractConfigValidator configValidator = registryManager.getConfigValidator();
+                if (registryManager.configValidator() != null) {
+                    AbstractConfigValidator configValidator = registryManager.configValidator();
 
                     if (configValidator.getType() == AbstractConfigValidator.Type.LOAD_FINISH) {
                         configValidator.validate();
                         configValidator.getErrors().forEach(configError -> {
-                            configError.setModID(registryManager.getModId());
+                            configError.setModID(registryManager.modId());
                         });
 
                         errors.addAll(configValidator.getErrors());

@@ -25,7 +25,7 @@ import java.util.Set;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.loot.conditions.EntityTagCondition
  *
  * @author Valhelsia Team
- * @version 1.18.1 - 0.3.0
+ * @version 1.19 - 0.3.0
  * @since 2021-10-26
  */
 public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemCondition {
@@ -37,7 +37,7 @@ public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemC
     @Override
     @Nonnull
     public LootItemConditionType getType() {
-        return ValhelsiaLootConditions.ENTITY_TAG;
+        return ValhelsiaLootConditions.ENTITY_TAG.get();
     }
 
     @Override

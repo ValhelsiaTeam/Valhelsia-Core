@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.item.filler.TargetItemGroupFiller
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.19 - 0.3.0
  * @since 2021-02-24
  */
 public class TargetItemGroupFiller implements IItemGroupFiller {
@@ -31,7 +31,7 @@ public class TargetItemGroupFiller implements IItemGroupFiller {
 
     @Override
     public void fill(ItemStack stack, CreativeModeTab tab, NonNullList<ItemStack> items) {
-        if (stack.getItem().allowdedIn(tab)) {
+        if (stack.getItem().allowedIn(tab)) {
             int index = -1;
 
             for (int i = 0; i < items.size(); i++) {

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.data.ValhelsiaItemModelProvider
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.19 - 0.3.0
  * @since 2021-01-07
  */
 public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
@@ -31,9 +31,9 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
     private final Set<RegistryObject<Item>> remainingBlockItems;
 
     public ValhelsiaItemModelProvider(DataGenerator generator, RegistryManager registryManager, ExistingFileHelper existingFileHelper) {
-        super(generator, registryManager.getModId(), existingFileHelper);
-        this.remainingItems = registryManager.getItemHelper().getDeferredRegister().getEntries().stream().filter(item -> !(item.get() instanceof BlockItem)).collect(Collectors.toSet());
-        this.remainingBlockItems = registryManager.getItemHelper().getDeferredRegister().getEntries().stream().filter(item -> item.get() instanceof BlockItem).collect(Collectors.toSet());
+        super(generator, registryManager.modId(), existingFileHelper);
+        this.remainingItems = registryManager.getItemHelper().getRegistryObjects().stream().filter(item -> !(item.get() instanceof BlockItem)).collect(Collectors.toSet());
+        this.remainingBlockItems = registryManager.getItemHelper().getRegistryObjects().stream().filter(item -> item.get() instanceof BlockItem).collect(Collectors.toSet());
     }
 
     public Set<RegistryObject<Item>> getRemainingItems() {
@@ -96,28 +96,31 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
 
     public final void takeBlockItem(Consumer<BlockItem> consumer, RegistryObject<?>... registryObjects) {
         for (RegistryObject<?> registryObject : registryObjects) {
-            if (registryObject.get() instanceof Block) {
-                consumer.accept((BlockItem) ((Block) registryObject.get()).asItem());
-                getRemainingBlockItems().remove(RegistryObject.of(((Block) registryObject.get()).asItem().getRegistryName(), ForgeRegistries.ITEMS));
+            BlockItem item;
+
+            if (registryObject.get() instanceof Block block) {
+                item = (BlockItem) block.asItem();
             } else {
-                consumer.accept((BlockItem) registryObject.get());
-                getRemainingBlockItems().remove(RegistryObject.of(registryObject.get().getRegistryName(), ForgeRegistries.ITEMS));
+                item = (BlockItem) registryObject.get();
             }
+
+            consumer.accept(item);
+            getRemainingBlockItems().remove(RegistryObject.create(ForgeRegistries.ITEMS.getKey(item), ForgeRegistries.ITEMS));
         }
     }
 
     public <T extends Item> void simpleModel(T item) {
-        String name = Objects.requireNonNull(item.getRegistryName()).getPath();
+        String name = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
         getBuilder(name).parent(getExistingFile(mcLoc("item/generated"))).texture("layer0", "item/" + name);
     }
 
     public <T extends Item> void simpleModelBlockTexture(T item) {
-        String name = Objects.requireNonNull(item.getRegistryName()).getPath();
+        String name = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
         simpleModelBlockTexture(item, name);
     }
 
     public <T extends Item> void simpleModelBlockTexture(T item, String texture) {
-        String name = Objects.requireNonNull(item.getRegistryName()).getPath();
+        String name = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
         getBuilder(name).parent(getExistingFile(mcLoc("item/generated"))).texture("layer0", "block/" + texture);
     }
 
@@ -126,7 +129,7 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
     }
 
     public <T extends Item> void withParent(T item, boolean mcLoc) {
-        String name = Objects.requireNonNull(item.getRegistryName()).getPath();
+        String name = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
         withParent(item, name, mcLoc);
     }
 
@@ -135,12 +138,12 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
     }
 
     public <T extends Item> void withParent(T item, String loc, boolean mcLoc) {
-        String name = Objects.requireNonNull(item.getRegistryName()).getPath();
+        String name = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
         withExistingParent(name, mcLoc ? mcLoc("block/" + loc) : modLoc("block/" + loc));
     }
 
     public <T extends Item> void withParentInventory(T item) {
-        String name = Objects.requireNonNull(item.getRegistryName()).getPath();
+        String name = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
         withExistingParent(name, modLoc("block/" + name + "_inventory"));
     }
 }

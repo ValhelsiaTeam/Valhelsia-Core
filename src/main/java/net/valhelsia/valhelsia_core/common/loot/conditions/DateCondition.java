@@ -20,7 +20,7 @@ import java.util.Set;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.loot.conditions.DateCondition
  *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.1.2
+ * @version 1.19 - 0.3.0
  * @since 2021-10-26
  */
 public record DateCondition(int month,
@@ -34,7 +34,7 @@ public record DateCondition(int month,
     @Override
     @Nonnull
     public LootItemConditionType getType() {
-        return ValhelsiaLootConditions.DATE;
+        return ValhelsiaLootConditions.DATE.get();
     }
 
     @Override

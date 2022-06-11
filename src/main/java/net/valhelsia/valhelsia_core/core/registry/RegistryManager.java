@@ -1,10 +1,11 @@
 package net.valhelsia.valhelsia_core.core.registry;
 
+import com.google.common.collect.ImmutableBiMap;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.config.AbstractConfigValidator;
 import net.valhelsia.valhelsia_core.core.registry.block.BlockRegistryHelper;
@@ -12,98 +13,88 @@ import net.valhelsia.valhelsia_core.core.registry.block.BlockRegistryHelper;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Registry Helper <br>
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.RegistryHelper
  *
  * @author Valhelsia Team
- * @version 1.18.2 - 0.3.0
+ * @version 1.19 - 0.3.0
  * @since 2020-11-18
  */
-public class RegistryManager {
+public record RegistryManager(String modId, ImmutableBiMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers, @Nullable AbstractConfigValidator configValidator) {
 
-    private final Map<ResourceKey<?>, AbstractRegistryHelper<?>> helpers = new HashMap<>();
-
-    private final String modId;
-
-    private RegistryManager(String modId) {
+    public RegistryManager(String modId, ImmutableBiMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers, @Nullable AbstractConfigValidator configValidator) {
         this.modId = modId;
+        this.registryHelpers = registryHelpers;
+        this.configValidator = configValidator;
+
+        this.registryHelpers.forEach((key, helper) -> helper.setup(this));
     }
 
-    public String getModId() {
-        return modId;
+    public static RegistryManager.Builder builder(String modId) {
+        return new RegistryManager.Builder(modId);
     }
 
-    private AbstractConfigValidator configValidator = null;
-
-    public<T extends IForgeRegistryEntry<T>> boolean hasHelper(ResourceKey<Registry<T>> registryResourceKey) {
-        return helpers.containsKey(registryResourceKey);
+    public <T> boolean hasHelper(ResourceKey<Registry<T>> registryResourceKey) {
+        return this.registryHelpers.containsKey(registryResourceKey);
     }
 
-    private<T extends IForgeRegistryEntry<T>> void addHelper(AbstractRegistryHelper<T> registryHelper) {
-        helpers.put(registryHelper.getRegistryKey(), registryHelper);
-    }
-
-    public<T extends IForgeRegistryEntry<T>> AbstractRegistryHelper<?> getHelper(ResourceKey<Registry<T>> registryResourceKey) {
+    public <T, H extends RegistryHelper<T>> H getHelper(ResourceKey<Registry<T>> registryResourceKey) {
         if (!this.hasHelper(registryResourceKey)) {
-            throw new NullPointerException("Registry Manager for '" + getModId() + "' has no Helper for registry: " + registryResourceKey.getRegistryName());
+            throw new NullPointerException("Registry Manager for '" + this.modId() + "' has no Helper for registry: " + registryResourceKey.registry());
         }
 
-        return helpers.get(registryResourceKey);
-    }
-
-    public ItemRegistryHelper getItemHelper() {
-        return (ItemRegistryHelper) this.getHelper(ForgeRegistries.Keys.ITEMS);
+        return (H) this.registryHelpers.get(registryResourceKey);
     }
 
     public BlockRegistryHelper getBlockHelper() {
-        return (BlockRegistryHelper) this.getHelper(ForgeRegistries.Keys.BLOCKS);
+        return this.getHelper(ForgeRegistries.Keys.BLOCKS);
     }
 
-    public EntityRegistryHelper getEntityHelper() {
-        return (EntityRegistryHelper) this.getHelper(ForgeRegistries.Keys.ENTITY_TYPES);
+    public RegistryHelper<Item> getItemHelper() {
+        return this.getHelper(ForgeRegistries.Keys.ITEMS);
     }
 
     public void register(IEventBus eventBus) {
-        this.helpers.values().forEach(abstractRegistryHelper -> abstractRegistryHelper.register(eventBus));
-    }
+        for (RegistryHelper<?> registryHelper : this.registryHelpers.values()) {
+            registryHelper.getRegistryClasses().forEach(Supplier::get);
+        }
 
-    public void registerConfigValidator(AbstractConfigValidator configValidator) {
-        this.configValidator = configValidator;
-    }
-
-    @Nullable
-    public AbstractConfigValidator getConfigValidator() {
-        return configValidator;
+        this.registryHelpers.values().forEach(registryHelper -> registryHelper.registerDeferredRegister(eventBus));
     }
 
     public static class Builder {
-        private final RegistryManager registryManager;
 
-        public Builder(String modId) {
-            this.registryManager = new RegistryManager(modId);
+        private final String modId;
+        private final Map<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers = new HashMap<>();
+        private AbstractConfigValidator configValidator = null;
+
+        private Builder(String modId) {
+            this.modId = modId;
         }
 
-        public Builder addDefaultHelpers() {
-            return addHelpers(
-                    new ItemRegistryHelper(),
-                    new BlockRegistryHelper());
-        }
+        public <T> Builder addHelper(ResourceKey<? extends Registry<T>> key, RegistryHelper<T> helper) {
+            this.registryHelpers.put(key, helper);
 
-        public Builder addHelpers(AbstractRegistryHelper<?>... registryHelpers) {
-            for (AbstractRegistryHelper<?> registryHelper : registryHelpers) {
-                registryHelper.setRegistryManager(this.registryManager);
-                registryHelper.createDeferredRegister();
-
-                this.registryManager.addHelper(registryHelper);
-            }
             return this;
         }
 
-        public RegistryManager build() {
-            ValhelsiaCore.REGISTRY_MANAGERS.add(this.registryManager);
-            return this.registryManager;
+        public Builder setConfigValidator(AbstractConfigValidator configValidator) {
+            this.configValidator = configValidator;
+
+            return this;
+        }
+
+        public RegistryManager create() {
+            RegistryManager registryManager = new RegistryManager(this.modId, ImmutableBiMap.copyOf(this.registryHelpers), this.configValidator);
+
+            ValhelsiaCore.REGISTRY_MANAGERS.add(registryManager);
+
+            System.out.println(this.registryHelpers.values());
+
+            return registryManager;
         }
     }
 }

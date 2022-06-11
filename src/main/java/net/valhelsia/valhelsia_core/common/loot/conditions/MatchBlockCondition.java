@@ -32,7 +32,7 @@ import java.util.Set;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.loot.conditions.MatchBlockCondition
  *
  * @author Valhelsia Team
- * @version 0.1.1
+ * @version 1.19 - 0.3.0
  * @since 2021-05-03
  */
 public record MatchBlockCondition(@Nullable List<Block> blocks,
@@ -58,7 +58,7 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
     @Override
     @Nonnull
     public LootItemConditionType getType() {
-        return ValhelsiaLootConditions.MATCH_BLOCK;
+        return ValhelsiaLootConditions.MATCH_BLOCK.get();
     }
 
     @Override

@@ -1,9 +1,6 @@
 package net.valhelsia.valhelsia_core.common.block;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolAction;
@@ -17,7 +14,7 @@ import java.util.function.Supplier;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.block.StrippableBlock
  *
  * @author Valhelsia Team
- * @version 1.18.1 - 0.3.3
+ * @version 1.19 - 0.3.0
  * @since 2022-01-19
  */
 public class StrippableBlock extends Block {
@@ -31,8 +28,8 @@ public class StrippableBlock extends Block {
 
     @Nullable
     @Override
-    public BlockState getToolModifiedState(BlockState state, Level world, BlockPos pos, Player player, ItemStack stack, ToolAction toolAction) {
-        if (!stack.canPerformAction(toolAction)) {
+    public BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
+        if (!context.getItemInHand().canPerformAction(toolAction)) {
             return null;
         }
 
