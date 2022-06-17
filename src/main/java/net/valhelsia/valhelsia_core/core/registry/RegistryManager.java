@@ -43,7 +43,7 @@ public record RegistryManager(String modId, ImmutableBiMap<ResourceKey<? extends
 
     public <T, H extends RegistryHelper<T>> H getHelper(ResourceKey<Registry<T>> registryResourceKey) {
         if (!this.hasHelper(registryResourceKey)) {
-            throw new NullPointerException("Registry Manager for '" + this.modId() + "' has no Helper for registry: " + registryResourceKey.registry());
+            throw new NullPointerException("Registry Manager for '" + this.modId() + "' has no Helper for registry: " + registryResourceKey.location());
         }
 
         return (H) this.registryHelpers.get(registryResourceKey);

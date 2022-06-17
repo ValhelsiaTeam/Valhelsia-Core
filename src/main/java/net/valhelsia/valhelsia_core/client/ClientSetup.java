@@ -13,6 +13,8 @@ import net.valhelsia.valhelsia_core.core.registry.block.RenderType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Client Setup <br>
@@ -47,17 +49,44 @@ public class ClientSetup {
                     if (field.isAnnotationPresent(RenderType.class)) {
                         RenderType renderType = field.getAnnotation(RenderType.class);
 
-                        RegistryObject<Block> value;
-                        try {
-                            value = (RegistryObject<Block>) field.get(null);
-                        } catch (IllegalAccessException e) {
-                            continue;
+                        if (Collection.class.isAssignableFrom(field.getType())) {
+                            try {
+                                Collection<?> collection = (Collection<?>) field.get(null);
+                                collection.forEach(block -> {
+                                    if (block instanceof RegistryObject<?> registryObject) {
+                                        this.setRenderLayer((RegistryObject<Block>) registryObject, renderType);
+                                    }
+                                });
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (Map.class.isAssignableFrom(field.getType())) {
+                            try {
+                                Map<?, ?> map = (Map<?, ?>) field.get(null);
+                                map.forEach((o, o2) -> {
+                                    if (o instanceof RegistryObject<?> registryObject) {
+                                        this.setRenderLayer((RegistryObject<Block>) registryObject, renderType);
+                                    } else if (o2 instanceof RegistryObject<?> registryObject) {
+                                        this.setRenderLayer((RegistryObject<Block>) registryObject, renderType);
+                                    }
+                                });
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                this.setRenderLayer((RegistryObject<Block>) field.get(null), renderType);
+                            } catch (IllegalAccessException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
-
-                        ItemBlockRenderTypes.setRenderLayer(value.get(), renderType.value().getRenderType().get());
                     }
                 }
             });
         });
+    }
+
+    private void setRenderLayer(RegistryObject<Block> block, RenderType renderType) {
+        ItemBlockRenderTypes.setRenderLayer(block.get(), renderType.value().getRenderType().get());
     }
 }

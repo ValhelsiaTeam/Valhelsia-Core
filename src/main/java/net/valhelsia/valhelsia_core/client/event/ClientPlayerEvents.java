@@ -27,11 +27,6 @@ public class ClientPlayerEvents {
     @SubscribeEvent
     public static void onPlayerLoggedIn(ClientPlayerNetworkEvent.LoggedInEvent event) {
         CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
-
-        if (event.getPlayer() == null) {
-            return;
-        }
-
         UUID uuid = event.getPlayer().getUUID();
 
         cosmeticsManager.tryLoadCosmeticsForPlayer(uuid, null);

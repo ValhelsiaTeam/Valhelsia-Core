@@ -1,9 +1,6 @@
 package net.valhelsia.valhelsia_core.common.world;
 
-import com.mojang.serialization.Codec;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 
 /**
  * Simple Valhelsia Structure <br>
@@ -13,11 +10,11 @@ import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplie
  * @version 1.19 - 0.3.0
  * @since 2021-05-27
  */
-public abstract class SimpleValhelsiaStructure<C extends FeatureConfiguration> extends Structure implements IValhelsiaStructure {
+public abstract class SimpleValhelsiaStructure extends Structure implements IValhelsiaStructure {
 
     private final String name;
 
-    public SimpleValhelsiaStructure(Structure.StructureSettings settings, Codec<C> codec, PieceGeneratorSupplier<C> pieceGeneratorSupplier, String name) {
+    public SimpleValhelsiaStructure(Structure.StructureSettings settings, String name) {
         super(settings);
         this.name = name;
     }
