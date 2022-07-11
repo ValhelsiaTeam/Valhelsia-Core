@@ -2,12 +2,13 @@ package net.valhelsia.valhelsia_core.core.init;
 
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.common.loot.conditions.DateCondition;
 import net.valhelsia.valhelsia_core.common.loot.conditions.EntityTagCondition;
 import net.valhelsia.valhelsia_core.common.loot.conditions.MatchBlockCondition;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
+import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
+import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
 
 /**
  * Valhelsia Loot Conditions <br>
@@ -17,9 +18,9 @@ import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
  * @version 1.19 - 0.3.0
  * @since 2021-05-05
  */
-public class ValhelsiaLootConditions {
+public class ValhelsiaLootConditions implements RegistryClass {
 
-    public static final DeferredRegister<LootItemConditionType> LOOT_CONDITION_TYPES = DeferredRegister.create(Registry.LOOT_CONDITION_TYPE.key(), ValhelsiaCore.MOD_ID);
+    public static final RegistryHelper<LootItemConditionType> LOOT_CONDITION_TYPES = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registry.LOOT_ITEM_REGISTRY);
 
     public static final RegistryObject<LootItemConditionType> MATCH_BLOCK = LOOT_CONDITION_TYPES.register("match_block", () -> new LootItemConditionType(new MatchBlockCondition.Serializer()));
     public static final RegistryObject<LootItemConditionType> DATE = LOOT_CONDITION_TYPES.register("date", () -> new LootItemConditionType(new DateCondition.Serializer()));

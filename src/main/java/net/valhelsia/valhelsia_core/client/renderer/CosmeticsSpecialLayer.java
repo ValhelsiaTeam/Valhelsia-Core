@@ -62,7 +62,7 @@ public class CosmeticsSpecialLayer<T extends AbstractClientPlayer, M extends Pla
         poseStack.pushPose();
 
         if (this.model.translateToParent()) {
-            this.getParentModel().translateToHand(player.getMainArm().getOpposite(), poseStack);
+            this.getParentModel().getHead().translateAndRotate(poseStack);
         }
 
         if (this.model != null) {

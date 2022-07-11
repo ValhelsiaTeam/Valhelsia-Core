@@ -35,6 +35,10 @@ public class EntityRendererEvents {
         event.registerLayerDefinition(CauldronBackpackModel.LAYER_LOCATION, CauldronBackpackModel::createBodyLayer);
         event.registerLayerDefinition(BeanieModel.LAYER_LOCATION, BeanieModel::createBodyLayer);
         event.registerLayerDefinition(ScarfModel.LAYER_LOCATION, ScarfModel::createBodyLayer);
+        event.registerLayerDefinition(CapModel.LAYER_LOCATION, CapModel::createBodyLayer);
+        event.registerLayerDefinition(PropellerCapModel.LAYER_LOCATION, PropellerCapModel::createBodyLayer);
+        event.registerLayerDefinition(PropellerCapModel.PROPELLER_LAYER_LOCATION, PropellerCapModel::createPropellerLayer);
+        event.registerLayerDefinition(FlamingoFloatModel.LAYER_LOCATION, FlamingoFloatModel::createBodyLayer);
     }
 
     @SubscribeEvent

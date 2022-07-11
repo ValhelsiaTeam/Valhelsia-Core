@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.core.registry.block;
+package net.valhelsia.valhelsia_core.core.registry.helper.block;
 
 import net.valhelsia.valhelsia_core.client.util.ValhelsiaRenderType;
 

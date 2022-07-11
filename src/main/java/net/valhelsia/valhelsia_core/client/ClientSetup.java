@@ -8,8 +8,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
-import net.valhelsia.valhelsia_core.core.registry.block.BlockRegistryHelper;
-import net.valhelsia.valhelsia_core.core.registry.block.RenderType;
+import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.block.RenderType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

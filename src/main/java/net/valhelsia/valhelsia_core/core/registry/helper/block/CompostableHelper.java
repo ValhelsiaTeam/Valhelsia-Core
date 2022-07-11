@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.core.registry.block;
+package net.valhelsia.valhelsia_core.core.registry.helper.block;
 
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.ComposterBlock;

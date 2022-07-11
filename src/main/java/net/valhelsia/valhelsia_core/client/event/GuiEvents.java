@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
 
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ScreenOpenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
@@ -28,7 +28,7 @@ import java.util.List;
 public class GuiEvents {
 
     @SubscribeEvent
-    public static void onScreenOpen(ScreenOpenEvent event) {
+    public static void onScreenOpen(ScreenEvent.Opening event) {
         if (event.getScreen() instanceof TitleScreen && !ValhelsiaCore.allConfigsValidated) {
             List<ConfigError> errors = new ArrayList<>();
 

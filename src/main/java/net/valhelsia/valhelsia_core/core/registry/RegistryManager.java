@@ -8,7 +8,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.config.AbstractConfigValidator;
-import net.valhelsia.valhelsia_core.core.registry.block.BlockRegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.function.Supplier;
 
 /**
  * Registry Helper <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.RegistryHelper
+ * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper
  *
  * @author Valhelsia Team
  * @version 1.19 - 0.3.0

@@ -1,5 +1,6 @@
 package net.valhelsia.valhelsia_core.core;
 
+import net.minecraft.core.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -15,8 +16,9 @@ import net.valhelsia.valhelsia_core.client.ClientSetup;
 import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.core.config.ModConfig;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaBlockEntities;
+import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootConditions;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootModifiers;
-import net.valhelsia.valhelsia_core.core.registry.RegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +44,9 @@ public class ValhelsiaCore {
 
     public static final List<RegistryManager> REGISTRY_MANAGERS = new ArrayList<>();
     public static final RegistryManager REGISTRY_MANAGER = RegistryManager.builder(MOD_ID)
+            .addHelper(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, new RegistryHelper<>(ValhelsiaBlockEntities::new))
             .addHelper(ForgeRegistries.Keys.LOOT_MODIFIER_SERIALIZERS, new RegistryHelper<>(ValhelsiaLootModifiers::new))
+            .addHelper(Registry.LOOT_ITEM_REGISTRY, new RegistryHelper<>(ValhelsiaLootConditions::new))
             .create();
 
     public ValhelsiaCore() {
@@ -56,8 +60,6 @@ public class ValhelsiaCore {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
-        ValhelsiaBlockEntities.BLOCK_ENTITIES.register(eventBus);
 
         REGISTRY_MANAGER.register(eventBus);
 

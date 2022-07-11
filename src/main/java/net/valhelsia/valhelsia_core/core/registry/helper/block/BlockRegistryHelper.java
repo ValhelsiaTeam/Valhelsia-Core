@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.core.registry.block;
+package net.valhelsia.valhelsia_core.core.registry.helper.block;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
@@ -18,7 +18,7 @@ import net.valhelsia.valhelsia_core.common.block.StrippableRotatedPillarBlock;
 import net.valhelsia.valhelsia_core.common.block.ValhelsiaStandingSignBlock;
 import net.valhelsia.valhelsia_core.common.block.ValhelsiaWallSignBlock;
 import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
-import net.valhelsia.valhelsia_core.core.registry.RegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
 
 import java.util.ArrayList;
 import java.util.List;

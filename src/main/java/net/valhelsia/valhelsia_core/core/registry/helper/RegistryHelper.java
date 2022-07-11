@@ -1,10 +1,12 @@
-package net.valhelsia.valhelsia_core.core.registry;
+package net.valhelsia.valhelsia_core.core.registry.helper;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
+import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +15,7 @@ import java.util.function.Supplier;
 
 /**
  * Registry Helper <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.RegistryHelper
+ * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper
  *
  * @author Valhelsia Team
  * @version 1.19 - 0.3.0
@@ -47,7 +49,7 @@ public class RegistryHelper<T> {
         return this.registryClasses;
     }
 
-    protected void registerDeferredRegister(IEventBus eventBus) {
+    public void registerDeferredRegister(IEventBus eventBus) {
         this.deferredRegister.register(eventBus);
     }
 

@@ -1,32 +1,31 @@
 package net.valhelsia.valhelsia_core.common.loot.modifiers;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.common.base.Suppliers;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.Deserializers;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Append Loot Table Modifier <br>
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.loot.modifiers.AppendLootTableModifier
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-04-10
  */
 public class AppendLootTableModifier extends LootModifier {
+
+    public static final Supplier<Codec<AppendLootTableModifier>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder.create(instance -> codecStart(instance).and(ResourceLocation.CODEC.fieldOf("loot_addition").forGetter(modifier -> modifier.lootTable)).apply(instance, AppendLootTableModifier::new)));
 
     private final ResourceLocation lootTable;
 
@@ -58,25 +57,8 @@ public class AppendLootTableModifier extends LootModifier {
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<AppendLootTableModifier> {
-
-        private static final Gson GSON = Deserializers.createConditionSerializer().create();
-
-        @Override
-        public AppendLootTableModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] conditions) {
-            ResourceLocation lootTable = new ResourceLocation(GsonHelper.getAsString(object, "add_loot"));
-            return new AppendLootTableModifier(conditions, lootTable);
-        }
-
-        @Override
-        public JsonObject write(AppendLootTableModifier instance) {
-            JsonObject object = new JsonObject();
-            object.addProperty("add_loot", instance.lootTable.toString());
-
-            JsonElement conditions = GSON.toJsonTree(instance.conditions);
-            object.add("conditions", conditions);
-
-            return object;
-        }
+    @Override
+    public Codec<? extends IGlobalLootModifier> codec() {
+        return CODEC.get();
     }
 }

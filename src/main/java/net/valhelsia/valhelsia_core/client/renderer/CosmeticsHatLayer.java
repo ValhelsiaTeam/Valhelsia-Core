@@ -11,13 +11,14 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.HumanoidArm;
 import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsModels;
 import net.valhelsia.valhelsia_core.client.model.CosmeticsModel;
+import net.valhelsia.valhelsia_core.client.model.PropellerCapModel;
 import net.valhelsia.valhelsia_core.client.model.WitchHatModel;
+import net.valhelsia.valhelsia_core.client.util.TextureDownloader;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -35,6 +36,8 @@ public class CosmeticsHatLayer<T extends AbstractClientPlayer, M extends PlayerM
 
     private final CosmeticsManager cosmeticsManager;
     private CosmeticsModel<T> model;
+
+    private static int TICK_COUNT = 0;
 
     public CosmeticsHatLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
         super(renderLayerParent);
@@ -59,7 +62,7 @@ public class CosmeticsHatLayer<T extends AbstractClientPlayer, M extends PlayerM
             return;
         }
 
-        model = (CosmeticsModel<T>) CosmeticsModels.getFromCosmetic(activeHat);
+        this.model = (CosmeticsModel<T>) CosmeticsModels.getFromCosmetic(activeHat);
 
         poseStack.pushPose();
 
@@ -73,6 +76,14 @@ public class CosmeticsHatLayer<T extends AbstractClientPlayer, M extends PlayerM
             this.model.getModel().setupAnim(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             this.model.setPosition(poseStack);
             this.model.getModel().renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+
+            if (this.model instanceof PropellerCapModel<T> propellerCapModel) {
+                TICK_COUNT++;
+
+                vertexConsumer = buffer.getBuffer(RenderType.entityCutout(TextureDownloader.getTexture("propeller_animation_" + player.level.getGameTime() % 10)));
+
+                propellerCapModel.renderPropeller(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            }
         }
 
         poseStack.popPose();

@@ -22,7 +22,6 @@ import java.util.Map;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.util.TextureDownloader
  *
  * @author Valhelsia Team
- * @version 1.18.2 - 0.3.0
  * @since 2021-10-10
  */
 public class TextureDownloader {
@@ -33,6 +32,10 @@ public class TextureDownloader {
 
     public static void downloadTextureNoFallback(String url, String path, @Nullable TextureAvailableCallback textureAvailableCallback) {
         TextureDownloader.downloadTexture(url, path, null, EMPTY_TEXTURE, textureAvailableCallback);
+    }
+
+    public static void downloadTextureNoFallback(String url, String path, String identifier, @Nullable TextureAvailableCallback textureAvailableCallback) {
+        TextureDownloader.downloadTexture(url, path, identifier, EMPTY_TEXTURE, textureAvailableCallback);
     }
 
     public static void downloadTexture(String url, String path, ResourceLocation textureFallback, @Nullable TextureAvailableCallback textureAvailableCallback) {
