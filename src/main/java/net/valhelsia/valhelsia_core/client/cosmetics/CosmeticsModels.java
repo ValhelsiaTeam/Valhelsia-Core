@@ -20,8 +20,10 @@ public enum CosmeticsModels {
     WITCHS_WAND(new WitchsWandModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchsWandModel.LAYER_LOCATION))),
     CAULDRON_BACKPACK(new CauldronBackpackModel<>(EntityRendererEvents.modelSet.bakeLayer(CauldronBackpackModel.LAYER_LOCATION))),
     BEANIE(new BeanieModel<>(EntityRendererEvents.modelSet.bakeLayer(BeanieModel.LAYER_LOCATION))),
-    SCARF(new ScarfModel<>(EntityRendererEvents.modelSet.bakeLayer(ScarfModel.LAYER_LOCATION)))
-    ;
+    SCARF(new ScarfModel<>(EntityRendererEvents.modelSet.bakeLayer(ScarfModel.LAYER_LOCATION))),
+    PROPELLER_CAP(new PropellerCapModel<>(EntityRendererEvents.modelSet.bakeLayer(PropellerCapModel.LAYER_LOCATION), EntityRendererEvents.modelSet.bakeLayer(PropellerCapModel.PROPELLER_LAYER_LOCATION))),
+    CAP(new CapModel<>(EntityRendererEvents.modelSet.bakeLayer(CapModel.LAYER_LOCATION))),
+    FLAMINGO_FLOAT(new FlamingoFloatModel<>(EntityRendererEvents.modelSet.bakeLayer(FlamingoFloatModel.LAYER_LOCATION)));
 
     private final CosmeticsModel<?> model;
 
@@ -45,6 +47,10 @@ public enum CosmeticsModels {
             return BEANIE.getModel();
         } else if (name.contains("scarf")) {
             return SCARF.getModel();
+        } else if (name.contains("propeller_cap")) {
+            return PROPELLER_CAP.getModel();
+        }  else if (name.contains("cap")) {
+            return CAP.getModel();
         } else {
             return CosmeticsModels.valueOf(name.toUpperCase(Locale.ROOT)).getModel();
         }

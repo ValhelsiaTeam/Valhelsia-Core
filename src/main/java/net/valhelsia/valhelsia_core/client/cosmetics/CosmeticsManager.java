@@ -139,6 +139,10 @@ public class CosmeticsManager {
                     String name = cosmeticName.substring(0, cosmeticName.length() - 4).concat("elytra");
 
                     TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/" + name + ".png", "cosmetics/", texture -> this.loadedTextures.put(name, texture));
+                } else if (cosmeticName.equalsIgnoreCase("propeller_cap")) {
+                    for (int i = 0; i < 10; i++) {
+                        TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/propeller_animation_" + i + ".png", "cosmetics/", "propeller_animation_" + i, null);
+                    }
                 }
             }
         }

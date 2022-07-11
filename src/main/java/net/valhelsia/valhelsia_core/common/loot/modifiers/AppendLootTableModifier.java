@@ -69,8 +69,8 @@ public class AppendLootTableModifier extends LootModifier {
         @Override
         public JsonObject write(AppendLootTableModifier instance) {
             JsonObject object = new JsonObject();
-            object.addProperty("add_loot", instance.lootTable.toString());
 
+            object.addProperty("add_loot", instance.lootTable.toString());
             JsonElement conditions = GSON.toJsonTree(instance.conditions);
             object.add("conditions", conditions);
 

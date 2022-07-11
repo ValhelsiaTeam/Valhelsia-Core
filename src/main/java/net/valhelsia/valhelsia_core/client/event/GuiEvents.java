@@ -2,16 +2,15 @@ package net.valhelsia.valhelsia_core.client.event;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.client.gui.screen.ConfigErrorScreen;
-import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.config.AbstractConfigValidator;
 import net.valhelsia.valhelsia_core.core.config.ConfigError;
+import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 
 import java.util.ArrayList;
 import java.util.List;

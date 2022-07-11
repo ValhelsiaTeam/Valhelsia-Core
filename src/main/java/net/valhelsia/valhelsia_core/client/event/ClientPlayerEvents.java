@@ -18,7 +18,6 @@ import java.util.UUID;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.event.ClientPlayerEvents
  *
  * @author Valhelsia Team
- * @version 1.18.1 - 0.3.0
  * @since 2021-09-25
  */
 @Mod.EventBusSubscriber(value = Dist.CLIENT)

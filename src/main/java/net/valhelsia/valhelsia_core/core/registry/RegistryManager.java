@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * Registry Helper <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.RegistryHelper
+ * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper
  *
  * @author Valhelsia Team
  * @version 1.18.2 - 0.3.0

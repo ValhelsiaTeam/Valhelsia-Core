@@ -24,7 +24,7 @@ mixin {
 
 version = '1.18.2-0.3.1'
 group = 'net.valhelsia.valhelsia_core' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'valhelsia_core'
+archivesBaseName = 'valhelsia_core-forge'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
