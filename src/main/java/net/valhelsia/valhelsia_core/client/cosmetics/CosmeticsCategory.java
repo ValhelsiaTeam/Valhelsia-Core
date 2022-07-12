@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.client.cosmetics;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.valhelsia.valhelsia_core.core.config.ValhelsiaConfigSpec;
 
 import javax.annotation.Nullable;
@@ -21,20 +22,20 @@ public enum CosmeticsCategory {
     SPECIAL("special");
 
     private final String name;
-    private final TranslatableComponent component;
+    private final MutableComponent component;
 
     public ValhelsiaConfigSpec.ConfigValue<String> activeCosmetic;
 
     CosmeticsCategory(String name) {
         this.name = name;
-        this.component = new TranslatableComponent("cosmetic.valhelsia_core.category." + name);
+        this.component = Component.translatable("cosmetic.valhelsia_core.category." + name);
     }
 
     public String getName() {
         return name;
     }
 
-    public TranslatableComponent getComponent() {
+    public MutableComponent getComponent() {
         return this.component;
     }
 
@@ -56,10 +57,13 @@ public enum CosmeticsCategory {
             return CosmeticsCategory.HAT;
         } else if (cosmeticName.contains("scarf")) {
             return CosmeticsCategory.FACE;
+        } else if (cosmeticName.contains("cap")) {
+            return CosmeticsCategory.HAT;
         }
+
         return switch (cosmeticName) {
             case "green_witchs_wand", "purple_witchs_wand" -> CosmeticsCategory.HAND;
-            case "witchs_broom" -> CosmeticsCategory.SPECIAL;
+            case "witchs_broom", "flamingo_float" -> CosmeticsCategory.SPECIAL;
             case "cauldron_backpack" -> CosmeticsCategory.BACK;
             default -> null;
         };

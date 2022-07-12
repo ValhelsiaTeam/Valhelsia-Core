@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
@@ -35,7 +35,7 @@ public class CosmeticsEntry extends Button implements SelectableComponent {
     private boolean selected;
 
     public CosmeticsEntry(CosmeticsCategory category, Cosmetic cosmetic, int x, int y, int width, int height, OnPress onPress, boolean selected) {
-        super(x, y, width, height, new TranslatableComponent("cosmetic.valhelsia_core." + cosmetic.getName()), onPress);
+        super(x, y, width, height, Component.translatable("cosmetic.valhelsia_core." + cosmetic.getName()), onPress);
         this.category = category;
         this.cosmetic = cosmetic;
         this.selected = selected;

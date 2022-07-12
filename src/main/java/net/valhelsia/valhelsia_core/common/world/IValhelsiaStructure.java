@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.common.world;
 
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 
 /**
  * Valhelsia Structure Interface <br>
@@ -15,5 +15,5 @@ public interface IValhelsiaStructure {
     default boolean transformsSurroundingLand() {
         return false;
     }
-    StructureFeature<?> getStructure();
+    Structure getStructure();
 }

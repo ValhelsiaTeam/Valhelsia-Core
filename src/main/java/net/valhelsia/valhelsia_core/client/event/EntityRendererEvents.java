@@ -1,15 +1,7 @@
 package net.valhelsia.valhelsia_core.client.event;
 
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.blockentity.SignRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.world.entity.player.Player;
 import net.valhelsia.valhelsia_core.client.model.*;
-import net.valhelsia.valhelsia_core.client.renderer.*;
-import net.valhelsia.valhelsia_core.core.init.ValhelsiaBlockEntities;
 
 /**
  * Entity Renderer Events <br>
@@ -30,6 +22,10 @@ public class EntityRendererEvents {
         EntityModelLayerRegistry.registerModelLayer(CauldronBackpackModel.LAYER_LOCATION, CauldronBackpackModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(BeanieModel.LAYER_LOCATION, BeanieModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ScarfModel.LAYER_LOCATION, ScarfModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(CapModel.LAYER_LOCATION, CapModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(PropellerCapModel.LAYER_LOCATION, PropellerCapModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(PropellerCapModel.PROPELLER_LAYER_LOCATION, PropellerCapModel::createPropellerLayer);
+        EntityModelLayerRegistry.registerModelLayer(FlamingoFloatModel.LAYER_LOCATION, FlamingoFloatModel::createBodyLayer);
     }
 
 //    @SubscribeEvent

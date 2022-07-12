@@ -1,13 +1,10 @@
 package net.valhelsia.valhelsia_core.client.event;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.nbt.CompoundTag;
 import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
-import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.common.network.UploadCosmeticsPacket;
 
 import java.util.UUID;

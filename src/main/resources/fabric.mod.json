@@ -4,16 +4,15 @@
   "version": "${version}",
 
   "name": "Valhelsia Core",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "API mainly used by the official Valhelsia mods!",
   "authors": [
-    "Me!"
+    "stal111"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://valhelsia.net/"
   },
 
-  "license": "CC0-1.0",
+  "license": "ARR",
 
   "environment": "*",
   "entrypoints": {
@@ -29,9 +28,9 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.13.3",
+    "fabricloader": ">=0.14.8",
     "fabric": "*",
-    "minecraft": "1.18.x",
+    "minecraft": "1.19.x",
     "java": ">=17"
   },
   "suggests": {

@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.common.util;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
@@ -88,12 +88,12 @@ public class ItemStackUtils {
         return copy;
     }
 
-    public static ItemStack getFilledMap(Level level, BlockPos playerPos, TagKey<ConfiguredStructureFeature<?, ?>> destination, MapDecoration.Type decorationType, String name) {
+    public static ItemStack getFilledMap(Level level, BlockPos playerPos, TagKey<Structure> destination, MapDecoration.Type decorationType, String name) {
         if (!(level instanceof ServerLevel serverLevel)) {
             return null;
         }
 
-        BlockPos pos = serverLevel.findNearestMapFeature(destination, playerPos, 100, true);
+        BlockPos pos = serverLevel.findNearestMapStructure(destination, playerPos, 100, true);
 
         if (pos == null) {
             return null;
@@ -104,6 +104,6 @@ public class ItemStackUtils {
         MapItem.renderBiomePreviewMap(serverLevel, stack);
         MapItemSavedData.addTargetDecoration(stack, pos, "+", decorationType);
 
-        return stack.setHoverName(new TranslatableComponent(name));
+        return stack.setHoverName(Component.translatable(name));
     }
 }

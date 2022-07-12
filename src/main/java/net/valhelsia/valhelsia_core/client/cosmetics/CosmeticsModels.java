@@ -1,7 +1,6 @@
 package net.valhelsia.valhelsia_core.client.cosmetics;
 
 import net.minecraft.client.Minecraft;
-import net.valhelsia.valhelsia_core.client.event.EntityRendererEvents;
 import net.valhelsia.valhelsia_core.client.model.*;
 
 import java.util.Locale;
@@ -21,8 +20,10 @@ public enum CosmeticsModels {
     WITCHS_WAND(new WitchsWandModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(WitchsWandModel.LAYER_LOCATION))),
     CAULDRON_BACKPACK(new CauldronBackpackModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(CauldronBackpackModel.LAYER_LOCATION))),
     BEANIE(new BeanieModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(BeanieModel.LAYER_LOCATION))),
-    SCARF(new ScarfModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(ScarfModel.LAYER_LOCATION)))
-    ;
+    SCARF(new ScarfModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(ScarfModel.LAYER_LOCATION))),
+    PROPELLER_CAP(new PropellerCapModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(PropellerCapModel.LAYER_LOCATION), Minecraft.getInstance().getEntityModels().bakeLayer(PropellerCapModel.PROPELLER_LAYER_LOCATION))),
+    CAP(new CapModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(CapModel.LAYER_LOCATION))),
+    FLAMINGO_FLOAT(new FlamingoFloatModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(FlamingoFloatModel.LAYER_LOCATION)));
 
     private final CosmeticsModel<?> model;
 
@@ -46,6 +47,10 @@ public enum CosmeticsModels {
             return BEANIE.getModel();
         } else if (name.contains("scarf")) {
             return SCARF.getModel();
+        }  else if (name.contains("propeller_cap")) {
+            return PROPELLER_CAP.getModel();
+        } else if (name.contains("cap")) {
+            return CAP.getModel();
         } else {
             return CosmeticsModels.valueOf(name.toUpperCase(Locale.ROOT)).getModel();
         }
