@@ -30,6 +30,10 @@ public class EntityRendererEvents {
         EntityModelLayerRegistry.registerModelLayer(CauldronBackpackModel.LAYER_LOCATION, CauldronBackpackModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(BeanieModel.LAYER_LOCATION, BeanieModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ScarfModel.LAYER_LOCATION, ScarfModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(CapModel.LAYER_LOCATION, CapModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(PropellerCapModel.LAYER_LOCATION, PropellerCapModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(PropellerCapModel.PROPELLER_LAYER_LOCATION, PropellerCapModel::createPropellerLayer);
+        EntityModelLayerRegistry.registerModelLayer(FlamingoFloatModel.LAYER_LOCATION, FlamingoFloatModel::createBodyLayer);
     }
 
 //    @SubscribeEvent

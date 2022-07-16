@@ -32,6 +32,10 @@ public class TextureDownloader {
         TextureDownloader.downloadTexture(url, path, null, EMPTY_TEXTURE, textureAvailableCallback);
     }
 
+    public static void downloadTextureNoFallback(String url, String path, String identifier, @Nullable TextureAvailableCallback textureAvailableCallback) {
+        TextureDownloader.downloadTexture(url, path, identifier, EMPTY_TEXTURE, textureAvailableCallback);
+    }
+
     public static void downloadTexture(String url, String path, ResourceLocation textureFallback, @Nullable TextureAvailableCallback textureAvailableCallback) {
         TextureDownloader.downloadTexture(url, path, null, textureFallback, textureAvailableCallback);
     }
