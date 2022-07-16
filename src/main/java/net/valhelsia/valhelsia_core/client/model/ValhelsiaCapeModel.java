@@ -33,7 +33,9 @@ public class ValhelsiaCapeModel<T extends Player> extends ListModel<T> implement
     public final ModelPart hood;
     public final ModelPart cape;
 
-    public ValhelsiaCapeModel(ModelPart modelPart) {
+    public ValhelsiaCapeModel() {
+        ModelPart modelPart = this.getModelSet().bakeLayer(VALHELSIA_CAPE);
+
         this.pin = modelPart.getChild("pin");
         this.hood = modelPart.getChild("hood");
         this.cape = modelPart.getChild("cape");

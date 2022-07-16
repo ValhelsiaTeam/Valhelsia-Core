@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -37,9 +36,9 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayer, M extends Entity
 
     private final ValhelsiaCapeModel<T> capeModel;
 
-    public ValhelsiaCapeLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
+    public ValhelsiaCapeLayer(RenderLayerParent<T, M> renderLayerParent) {
         super(renderLayerParent);
-        this.capeModel = new ValhelsiaCapeModel<>(modelSet.bakeLayer(ValhelsiaCapeModel.VALHELSIA_CAPE));
+        this.capeModel = new ValhelsiaCapeModel<>();
     }
 
     @Override
@@ -52,7 +51,7 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayer, M extends Entity
         List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.BACK);
         Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.BACK);
 
-        if (stack.getItem() == Items.ELYTRA || activeCosmetic == null || !activeCosmetic.getName().contains("cape") || !cosmetics.contains(activeCosmetic)) {
+        if (stack.is(Items.ELYTRA) || activeCosmetic == null || !activeCosmetic.getName().contains("cape") || !cosmetics.contains(activeCosmetic)) {
             return;
         }
 
@@ -66,19 +65,16 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayer, M extends Entity
 
         poseStack.translate(0.0D, 0.0D, 0.2D);
 
-        double d0 = Mth.lerp(partialTicks, player.xCloakO, player.xCloak) - Mth.lerp(partialTicks, player.xo, player.getX());
-        double d1 = Mth.lerp(partialTicks, player.yCloakO, player.yCloak) - Mth.lerp(partialTicks, player.yo, player.getY());
-        double d2 = Mth.lerp(partialTicks, player.zCloakO, player.zCloak) - Mth.lerp(partialTicks, player.zo, player.getZ());
-        float f = player.yBodyRotO + (player.yBodyRot - player.yBodyRotO);
-        double d3 = Mth.sin(f * ((float) Math.PI / 180F));
-        double d4 = -Mth.cos(f * ((float) Math.PI / 180F));
-        float f1 = (float) d1 * 10.0F;
+        double x = Mth.lerp(partialTicks, player.xCloakO, player.xCloak) - Mth.lerp(partialTicks, player.xo, player.getX());
+        double y = Mth.lerp(partialTicks, player.yCloakO, player.yCloak) - Mth.lerp(partialTicks, player.yo, player.getY());
+        double z = Mth.lerp(partialTicks, player.zCloakO, player.zCloak) - Mth.lerp(partialTicks, player.zo, player.getZ());
+        float rotation = player.yBodyRotO + (player.yBodyRot - player.yBodyRotO);
+
+        float f0 = rotation * ((float) Math.PI / 180F);
+        float f1 = (float) y * 10.0F;
         f1 = Mth.clamp(f1, -6.0F, 32.0F);
-        float f2 = (float) (d0 * d3 + d2 * d4) * 100.0F;
+        float f2 = (float) (x * Mth.sin(f0) + z * -Mth.cos(f0)) * 100.0F;
         f2 = Mth.clamp(f2, 0.0F, 150.0F);
-        if (f2 < 0.0F) {
-            f2 = 0.0F;
-        }
 
         float f4 = Mth.lerp(partialTicks, player.oBob, player.bob);
         f1 = f1 + Mth.sin(Mth.lerp(partialTicks, player.walkDistO, player.walkDist) * 6.0F) * 32.0F * f4;
@@ -101,7 +97,7 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayer, M extends Entity
         poseStack.translate(0.0D, 0.075D, 0.0D);
         this.capeModel.renderPinToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY);
 
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(Math.min(70.0F, 6.0F + f2 / 2.0F + f1)));
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(Math.min(70.0F, 6.0F + Math.max(f2, 0.0F) / 2.0F + f1)));
         poseStack.translate(0.0D, -0.115D, -0.045D);
 
         this.capeModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);

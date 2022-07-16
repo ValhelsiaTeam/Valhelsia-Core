@@ -34,7 +34,7 @@ public class NoCosmeticsScreen extends Screen {
 
     @Override
     protected void init() {
-        CosmeticsManager.getInstance().tryLoadCosmeticsForPlayer(
+        CosmeticsManager.getInstance().loadCosmeticsFor(
                 this.getMinecraft().getUser().getGameProfile().getId(),
                 () -> this.dataAvailable = true
         );

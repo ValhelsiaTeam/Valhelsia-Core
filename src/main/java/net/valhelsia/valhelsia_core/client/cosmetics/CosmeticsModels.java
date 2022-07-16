@@ -14,7 +14,7 @@ import java.util.Locale;
  * @since 2021-10-25
  */
 public enum CosmeticsModels {
-    CAPE(new ValhelsiaCapeModel<>(EntityRendererEvents.modelSet.bakeLayer(ValhelsiaCapeModel.VALHELSIA_CAPE))),
+    CAPE(new ValhelsiaCapeModel<>()),
     WITCH_HAT(new WitchHatModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchHatModel.LAYER_LOCATION))),
     WITCHS_BROOM(new WitchsBroomModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchsBroomModel.LAYER_LOCATION))),
     WITCHS_WAND(new WitchsWandModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchsWandModel.LAYER_LOCATION))),

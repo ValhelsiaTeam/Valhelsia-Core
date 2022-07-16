@@ -31,9 +31,9 @@ public class CapModel<T extends Player> extends ListModel<T> implements Cosmetic
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
 
-        partDefinition.addOrReplaceChild("cap", CubeListBuilder.create().texOffs(24, 2).addBox(-1.0F, -4.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.1F))
-                .texOffs(0, 0).addBox(-4.0F, -3.0F, -4.0F, 8.0F, 3.0F, 8.0F, new CubeDeformation(0.45F))
-                .texOffs(-7, 25).addBox(-5.0F, 0.9F, -7.0F, 10.0F, -1.0F, 7.0F, new CubeDeformation(0.5F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+        partDefinition.addOrReplaceChild("cap", CubeListBuilder.create().texOffs(24, 2).addBox(-1.0F, -3.5F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 0).addBox(-4.0F, -3.0F, -4.0F, 8.0F, 3.0F, 8.0F, new CubeDeformation(0.01F))
+                .texOffs(-7, 25).addBox(-5.0F, 0.0F, -7.0F, 10.0F, 0.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
         return LayerDefinition.create(meshDefinition, 32, 32);
     }

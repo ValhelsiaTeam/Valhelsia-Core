@@ -4,11 +4,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
-import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
-import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 
-import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -38,7 +35,7 @@ public record UpdateCosmeticsPacket(UUID uuid, CompoundTag activeCosmetics) {
                 CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
                 cosmeticsManager.setActiveCosmeticsForPlayer(packet.uuid, packet.activeCosmetics);
-                cosmeticsManager.tryLoadCosmeticsForPlayer(packet.uuid, null);
+                cosmeticsManager.loadCosmeticsFor(packet.uuid);
             });
             ctx.get().setPacketHandled(true);
         }

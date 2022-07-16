@@ -20,7 +20,7 @@ import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
 @Mod.EventBusSubscriber
 public class ValhelsiaLootModifiers implements RegistryClass {
 
-    public static final RegistryHelper<Codec<? extends IGlobalLootModifier>> HELPER = ValhelsiaCore.REGISTRY_MANAGER.getHelper(ForgeRegistries.Keys.LOOT_MODIFIER_SERIALIZERS);
+    public static final RegistryHelper<Codec<? extends IGlobalLootModifier>> HELPER = ValhelsiaCore.REGISTRY_MANAGER.getHelper(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS);
 
     public static final RegistryObject<Codec<AppendLootTableModifier>> APPEND_LOOT_MODIFIER = HELPER.register("append_loot", AppendLootTableModifier.CODEC);
 

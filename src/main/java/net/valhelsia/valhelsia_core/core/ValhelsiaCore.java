@@ -45,7 +45,7 @@ public class ValhelsiaCore {
     public static final List<RegistryManager> REGISTRY_MANAGERS = new ArrayList<>();
     public static final RegistryManager REGISTRY_MANAGER = RegistryManager.builder(MOD_ID)
             .addHelper(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, new RegistryHelper<>(ValhelsiaBlockEntities::new))
-            .addHelper(ForgeRegistries.Keys.LOOT_MODIFIER_SERIALIZERS, new RegistryHelper<>(ValhelsiaLootModifiers::new))
+            .addHelper(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, new RegistryHelper<>(ValhelsiaLootModifiers::new))
             .addHelper(Registry.LOOT_ITEM_REGISTRY, new RegistryHelper<>(ValhelsiaLootConditions::new))
             .create();
 

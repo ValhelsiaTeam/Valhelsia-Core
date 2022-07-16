@@ -1,9 +1,10 @@
 package net.valhelsia.valhelsia_core.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ListModel;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.world.entity.player.Player;
-import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 
 /**
  * Cosmetics Model <br>
@@ -18,5 +19,9 @@ public interface CosmeticsModel<T extends Player> {
     void setPosition(PoseStack poseStack);
     default boolean translateToParent() {
         return true;
+    }
+
+    default EntityModelSet getModelSet() {
+        return Minecraft.getInstance().getEntityModels();
     }
 }
