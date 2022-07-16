@@ -22,7 +22,7 @@ mixin {
     add sourceSets.main, "valhelsia_core.refmap.json"
 }
 
-version = '1.18.2-0.3.1'
+version = '1.18.2-0.4.0'
 group = 'net.valhelsia.valhelsia_core' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'valhelsia_core-forge'
 
