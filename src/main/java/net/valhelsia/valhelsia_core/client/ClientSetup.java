@@ -1,12 +1,18 @@
 package net.valhelsia.valhelsia_core.client;
 
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticType;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsRegistry;
+import net.valhelsia.valhelsia_core.client.cosmetics.ValhelsiaCosmeticsSource;
+import net.valhelsia.valhelsia_core.client.model.ValhelsiaCapeModel;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryHelper;
 import net.valhelsia.valhelsia_core.core.registry.helper.block.RenderType;
@@ -33,6 +39,11 @@ public class ClientSetup {
     }
 
     public void onClientSetup(FMLClientSetupEvent event) {
+        CosmeticsRegistry.addSource(new ValhelsiaCosmeticsSource());
+
+        CosmeticsRegistry.registerType(new ResourceLocation(ValhelsiaCore.MOD_ID, "valhelsia_cape"),
+                new CosmeticType(CosmeticsCategory.BACK, ValhelsiaCapeModel::new, s -> s.contains("valhelsia_cape")));
+
         ValhelsiaCore.REGISTRY_MANAGERS.forEach(registryManager -> {
             if (!registryManager.hasHelper(ForgeRegistries.Keys.BLOCKS)) {
                 return;

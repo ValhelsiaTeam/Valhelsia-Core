@@ -52,7 +52,7 @@ public class EntityRendererEvents {
     private static void addLayerToPlayerSkin(EntityRenderersEvent.AddLayers event, String skinName) {
         EntityRenderer<? extends Player> render = event.getSkin(skinName);
         if (render instanceof LivingEntityRenderer livingRenderer) {
-            livingRenderer.addLayer(new ValhelsiaCapeLayer(livingRenderer, event.getEntityModels()));
+            livingRenderer.addLayer(new ValhelsiaCapeLayer(livingRenderer));
             livingRenderer.addLayer(new CosmeticsHatLayer(livingRenderer, event.getEntityModels()));
             livingRenderer.addLayer(new CosmeticsHandLayer(livingRenderer, event.getEntityModels()));
             livingRenderer.addLayer(new CosmeticsBackLayer(livingRenderer, event.getEntityModels()));

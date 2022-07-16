@@ -43,7 +43,7 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public static void onPlayerJoinWorld(PlayerEvent.PlayerLoggedInEvent event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         List<ConfigError> errors = new ArrayList<>();
 
         for (RegistryManager registryManager : ValhelsiaCore.REGISTRY_MANAGERS) {
@@ -73,7 +73,7 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public static void onStartTracking(PlayerEvent.StartTracking event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         UUID uuid = player.getUUID();
 
         if (event.getTarget() instanceof Player target) {

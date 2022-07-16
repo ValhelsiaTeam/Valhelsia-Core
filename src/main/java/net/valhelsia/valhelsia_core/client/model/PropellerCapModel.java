@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class PropellerCapModel<T extends Player> extends ListModel<T> implements CosmeticsModel<T> {
 
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(ValhelsiaCore.MOD_ID, "cap"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(ValhelsiaCore.MOD_ID, "propeller_cap"), "main");
     public static final ModelLayerLocation PROPELLER_LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(ValhelsiaCore.MOD_ID, "propeller"), "main");
 
     private final ModelPart cap;
@@ -35,9 +35,9 @@ public class PropellerCapModel<T extends Player> extends ListModel<T> implements
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
 
-        partDefinition.addOrReplaceChild("cap", CubeListBuilder.create().texOffs(24, 2).addBox(-1.0F, -4.5F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.1F))
-                .texOffs(0, 0).addBox(-4.0F, -3.0F, -4.0F, 8.0F, 3.0F, 8.0F, new CubeDeformation(0.45F))
-                .texOffs(-7, 25).addBox(-5.0F, 0.9F, -7.0F, 10.0F, -1.0F, 7.0F, new CubeDeformation(0.5F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+        partDefinition.addOrReplaceChild("cap", CubeListBuilder.create().texOffs(24, 2).addBox(-1.0F, -4.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 0).addBox(-4.0F, -3.0F, -4.0F, 8.0F, 3.0F, 8.0F, new CubeDeformation(0.01F))
+                .texOffs(-7, 25).addBox(-5.0F, 0.0F, -7.0F, 10.0F, 0.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
         return LayerDefinition.create(meshDefinition, 32, 32);
     }
@@ -46,7 +46,7 @@ public class PropellerCapModel<T extends Player> extends ListModel<T> implements
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
 
-        partDefinition.addOrReplaceChild("propeller", CubeListBuilder.create().texOffs(16, 16).addBox(-8.0F, -3.5F, -8.0F, 16.0F, 7.0F, 16.0F, new CubeDeformation(-3.0F)), PartPose.offset(0.0F, 20.0F, 0.0F));
+        partDefinition.addOrReplaceChild("propeller", CubeListBuilder.create().texOffs(0, 0).addBox(-8.0F, 0.0F, -8.0F, 16.0F, 0.1F, 16.0F, new CubeDeformation(-3.0F, 0.0F, -3.0F)), PartPose.offset(0.0F, 20.5F, 0.0F));
 
         return LayerDefinition.create(meshDefinition, 16, 16);
     }

@@ -28,7 +28,8 @@ public class ClientPlayerEvents {
         CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
         UUID uuid = event.getPlayer().getUUID();
 
-        cosmeticsManager.tryLoadCosmeticsForPlayer(uuid, null);
+        cosmeticsManager.loadCosmeticsFor(uuid);
+
         CompoundTag compound = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
         System.out.println(compound);
         Cosmetic activeBackCosmetic = CosmeticsCategory.BACK.getActiveCosmetic();

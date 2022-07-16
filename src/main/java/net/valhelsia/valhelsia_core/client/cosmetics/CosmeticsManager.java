@@ -1,30 +1,17 @@
 package net.valhelsia.valhelsia_core.client.cosmetics;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.valhelsia.valhelsia_core.client.util.TextureDownloader;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
- * Cosmetics Manager <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager
- *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.2.0
  * @since 2021-08-26
  */
 public class CosmeticsManager {
@@ -44,75 +31,48 @@ public class CosmeticsManager {
         return instance;
     }
 
-    public void tryLoadCosmeticsForPlayer(UUID uuid, @Nullable DataAvailableCallback callback) {
+    /**
+     * Loads the cosmetics for the given player.
+     *
+     * @param uuid the UUID of the player
+     */
+    public void loadCosmeticsFor(UUID uuid) {
+        this.loadCosmeticsFor(uuid, DataAvailableCallback.EMPTY);
+    }
+
+    /**
+     * Loads the cosmetics for the given player with the possibility to add a callback that runs after all cosmetics have been loaded.
+     * Loading happens async.
+     *
+     * @param uuid the UUID of the player
+     * @param callback to run after loading has been completed
+     */
+    public void loadCosmeticsFor(UUID uuid, DataAvailableCallback callback) {
         if (this.loadedPlayers.contains(uuid)) {
             return;
         }
 
         CompletableFuture.runAsync(() -> {
-            try {
-                URL url = new URL("https://valhelsia.net/api/webhook/mod/valhelsia_core/purchases?uuid=" + uuid.toString().replace("-", ""));
-
-                //URL url = new URL("https://valhelsia.net/api/webhook/mod/valhelsia_core/purchases?uuid=435be545e56241878cd5e148908c139b");
-
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-                InputStream stream = connection.getInputStream();
-
-                if (connection.getResponseCode() != 200) {
-                    if (stream != null) {
-                        stream.close();
-                    }
-                    if (connection.getErrorStream() != null) {
-                        connection.getErrorStream().close();
-                    }
-                } else if (stream != null) {
-                    this.loadCosmeticsForPlayer(uuid, GsonHelper.parse(new InputStreamReader(stream)), callback);
+            for (CosmeticsSource source : CosmeticsRegistry.getSources()) {
+                for (Cosmetic cosmetic : source.loadCosmeticsFor(uuid)) {
+                    System.out.println(cosmetic.getName());
+                    this.addCosmeticToPlayer(uuid, cosmetic);
                 }
-
-            } catch (IOException e) {
-                // Either player is offline or hasn't bought any cosmetics.
             }
-        }, Util.backgroundExecutor());
-
-        this.loadedPlayers.add(uuid);
-    }
-
-    private void loadCosmeticsForPlayer(UUID uuid, JsonObject jsonObject, @Nullable DataAvailableCallback callback) {
-        if (!jsonObject.has("data")) {
-            return;
-        }
-
-        JsonArray purchases = jsonObject.getAsJsonObject("data").getAsJsonArray("purchases");
-
-        for (JsonElement purchase : purchases) {
-            String name = purchase.getAsJsonObject().get("name").getAsString().toLowerCase(Locale.ROOT).replace(" ", "_").replace("'", "");
-
-            this.cosmetics.computeIfAbsent(uuid, k -> new ArrayList<>());
-
-            if (name.contains("bundle")) {
-                CosmeticsBundle.getCosmeticsFromBundle(name).forEach(s -> this.addCosmeticToPlayer(uuid, new Cosmetic(s, CosmeticsCategory.getForCosmetic(s))));
-            } else {
-                this.addCosmeticToPlayer(uuid, new Cosmetic(name, CosmeticsCategory.getForCosmetic(name)));
-            }
-        }
-
-        if (callback != null) {
+        }, Util.backgroundExecutor()).whenComplete((unused, throwable) -> {
             callback.onDataAvailable();
-        }
+
+            this.loadedPlayers.add(uuid);
+        });
     }
 
     private void addCosmeticToPlayer(UUID uuid, Cosmetic cosmetic) {
-        boolean flag = true;
-        for (Cosmetic cosmetic1 : this.cosmetics.get(uuid)) {
-            if (cosmetic1.equals(cosmetic)) {
-                flag = false;
-                break;
-            }
-        }
+        this.cosmetics.putIfAbsent(uuid, new ArrayList<>());
 
-        if (flag) {
-            this.cosmetics.get(uuid).add(cosmetic);
+        List<Cosmetic> playerCosmetics = this.cosmetics.get(uuid);
+
+        if (playerCosmetics.stream().noneMatch(cosmetic1 -> cosmetic1.equals(cosmetic))) {
+            playerCosmetics.add(cosmetic);
         }
     }
 
@@ -172,7 +132,14 @@ public class CosmeticsManager {
         return this.loadedTextures.get(cosmetic.getName());
     }
 
+    public Optional<CosmeticType> getType(String name) {
+        return CosmeticsRegistry.getTypes().values().stream().filter(type -> type.belongsToType().apply(name)).findFirst();
+    }
+
+    @FunctionalInterface
     public interface DataAvailableCallback {
+        DataAvailableCallback EMPTY = () -> {};
+
         void onDataAvailable();
     }
 }
