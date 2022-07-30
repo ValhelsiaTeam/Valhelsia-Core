@@ -1,12 +1,14 @@
 package net.valhelsia.valhelsia_core.client.cosmetics.source;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.StringRepresentable;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticKey;
-import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsBundle;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -67,16 +69,45 @@ public class ValhelsiaCosmeticsSource extends CosmeticsSource {
             String name = purchase.getAsJsonObject().get("name").getAsString().toLowerCase(Locale.ROOT).replace(" ", "_").replace("'", "");
 
             if (name.contains("bundle")) {
-                CosmeticsBundle.getCosmeticsFromBundle(name).forEach(cosmetic -> {
-                    //list.add(new Cosmetic(cosmetic, CosmeticsCategory.getForCosmetic(cosmetic)));
+                Bundle.getCosmeticsFromBundle(name).forEach(cosmetic -> {
                     list.add(new CosmeticKey(this, cosmetic));
                 });
             } else {
                 list.add(new CosmeticKey(this, name));
-                //list.add(new Cosmetic(name, CosmeticsCategory.getForCosmetic(name)));
             }
         }
 
         return list;
+    }
+
+    private enum Bundle implements StringRepresentable {
+        HALLOWEEN_2021("halloween_2021_collection_bundle", "witchs_broom", "cauldron_backpack", "green_witchs_wand", "purple_witchs_wand", "green_witch_hat", "purple_witch_hat");
+
+        private final String name;
+        private final List<String> cosmetics;
+
+        Bundle(String name, String... cosmetics) {
+            this.name = name;
+            this.cosmetics = ImmutableList.copyOf(cosmetics);
+        }
+
+        @Nonnull
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
+
+        public List<String> getCosmetics() {
+            return this.cosmetics;
+        }
+
+        public static List<String> getCosmeticsFromBundle(String bundleName) {
+            for (Bundle bundle : Bundle.values()) {
+                if (bundle.getSerializedName().equals(bundleName)) {
+                    return bundle.getCosmetics();
+                }
+            }
+            return List.of();
+        }
     }
 }
