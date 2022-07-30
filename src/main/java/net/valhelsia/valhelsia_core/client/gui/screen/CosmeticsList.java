@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.util.Mth;
-import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticKey;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.gui.component.CosmeticsEntry;
@@ -74,7 +74,7 @@ public class CosmeticsList extends ContainerObjectSelectionList<CosmeticsListEnt
         CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
         UUID uuid = this.minecraft.getUser().getGameProfile().getId();
-        List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, category);
+        List<CosmeticKey> cosmetics = cosmeticsManager.getCosmetics(uuid, category);
 
         this.entries.clear();
 

@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticKey;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,11 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Elytra Layer Mixin <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.core.mixin.client.ElytraLayerMixin
- *
  * @author Valhelsia Team
- * @version 0.1.0
  * @since 2021-09-12
  */
 @Mixin(ElytraLayer.class)
@@ -31,15 +27,16 @@ public class ElytraLayerMixin<T extends LivingEntity> {
         CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
         UUID uuid = entity.getUUID();
-        List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.BACK);
-        Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.BACK);
+        List<CosmeticKey> cosmetics = cosmeticsManager.getCosmetics(uuid, CosmeticsCategory.BACK);
 
-        if (activeCosmetic != null && activeCosmetic.getName().contains("cape") && cosmetics.contains(activeCosmetic)) {
-            ResourceLocation texture = cosmeticsManager.getCosmeticTexture(new Cosmetic(activeCosmetic.getName().substring(0, activeCosmetic.getName().length() - 4).concat("elytra"), CosmeticsCategory.BACK));
+        cosmeticsManager.getActiveCosmetic(uuid, CosmeticsCategory.BACK).ifPresent(key -> {
+            if (key.name().contains("cape") && cosmetics.contains(key)) {
+                ResourceLocation texture = cosmeticsManager.getCosmeticTexture(key);
 
-            if (texture != null) {
-                cir.setReturnValue(texture);
+                if (texture != null) {
+                    cir.setReturnValue(texture);
+                }
             }
-        }
+        });
     }
 }

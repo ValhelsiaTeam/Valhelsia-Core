@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticKey;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,11 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Humanoid Armor Layer Mixin <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.core.mixin.client.HumanoidArmorLayerMixin
- *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.2.0
  * @since 2021-10-27
  */
 @Mixin(HumanoidArmorLayer.class)
@@ -35,12 +31,13 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, A extends 
             CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
             UUID uuid = player.getUUID();
-            List<Cosmetic> cosmetics = cosmeticsManager.getCosmeticsForPlayer(uuid, CosmeticsCategory.HAT);
-            Cosmetic activeCosmetic = cosmeticsManager.getActiveCosmeticForPlayer(uuid, CosmeticsCategory.HAT);
+            cosmeticsManager.getActiveCosmetic(uuid, CosmeticsCategory.HAT).ifPresent(key -> {
+                List<CosmeticKey> cosmetics = cosmeticsManager.getCosmetics(uuid, CosmeticsCategory.HAT);
 
-            if (activeCosmetic != null && cosmetics.contains(activeCosmetic)) {
-                ci.cancel();
-            }
+                if (cosmetics.contains(key)) {
+                    ci.cancel();
+                }
+            });
         }
     }
 }

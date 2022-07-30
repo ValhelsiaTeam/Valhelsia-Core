@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.common.event;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -24,11 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Player Events <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.common.event.PlayerEvents
- *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-09-25
  */
 @Mod.EventBusSubscriber
@@ -77,7 +74,9 @@ public class PlayerEvents {
         UUID uuid = player.getUUID();
 
         if (event.getTarget() instanceof Player target) {
-            NetworkHandler.sendTo(target, new UpdateCosmeticsPacket(uuid, CosmeticsManager.getInstance().getActiveCosmeticsForPlayer(uuid)));
+            CompoundTag tag = CosmeticsManager.getInstance().getActiveCosmetics(uuid, false).writeToTag(new CompoundTag());
+
+            NetworkHandler.sendTo(target, new UpdateCosmeticsPacket(uuid, tag));
         }
     }
 }

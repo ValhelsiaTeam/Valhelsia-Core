@@ -10,4 +10,8 @@ import java.util.function.Supplier;
  * @since 2022-07-15
  */
 public record CosmeticType(CosmeticsCategory category, Supplier<CosmeticsModel<?>> model, Function<String, Boolean> belongsToType) {
+
+    public CosmeticsModel<?> getModel() {
+        return this.model.get();
+    }
 }

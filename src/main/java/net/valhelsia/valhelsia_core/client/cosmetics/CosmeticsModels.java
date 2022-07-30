@@ -35,8 +35,8 @@ public enum CosmeticsModels {
         return model;
     }
 
-    public static CosmeticsModel<?> getFromCosmetic(Cosmetic cosmetic) {
-        String name = cosmetic.getName();
+    public static CosmeticsModel<?> getFromCosmetic(CosmeticKey cosmetic) {
+        String name = cosmetic.name();
         if (name.contains("cape")) {
             return CAPE.getModel();
         } else if (name.contains("witch_hat")) {

@@ -10,11 +10,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Update Cosmetics Packet <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.common.network.UpdateCosmeticsPacket
- *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.3.0
  * @since 2021-09-12
  */
 public record UpdateCosmeticsPacket(UUID uuid, CompoundTag activeCosmetics) {
@@ -34,7 +30,7 @@ public record UpdateCosmeticsPacket(UUID uuid, CompoundTag activeCosmetics) {
             context.enqueueWork(() -> {
                 CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
 
-                cosmeticsManager.setActiveCosmeticsForPlayer(packet.uuid, packet.activeCosmetics);
+                cosmeticsManager.getActiveCosmetics(packet.uuid, true).set(packet.activeCosmetics);
                 cosmeticsManager.loadCosmeticsFor(packet.uuid);
             });
             ctx.get().setPacketHandled(true);

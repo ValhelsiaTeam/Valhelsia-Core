@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
-import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticKey;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.gui.screen.CosmeticsWardrobeScreen;
 import net.valhelsia.valhelsia_core.client.util.TextureDownloader;
@@ -28,19 +28,19 @@ public class CosmeticsEntry extends Button implements SelectableComponent {
     public static final int BG_COLOR = FastColor.ARGB32.color(255, 5, 17, 31);
 
     private final CosmeticsCategory category;
-    private final Cosmetic cosmetic;
+    private final CosmeticKey cosmetic;
 
     private ResourceLocation previewTexture = null;
 
     private boolean selected;
 
-    public CosmeticsEntry(CosmeticsCategory category, Cosmetic cosmetic, int x, int y, int width, int height, OnPress onPress, boolean selected) {
-        super(x, y, width, height, Component.translatable("cosmetic.valhelsia_core." + cosmetic.getName()), onPress);
+    public CosmeticsEntry(CosmeticsCategory category, CosmeticKey cosmetic, int x, int y, int width, int height, OnPress onPress, boolean selected) {
+        super(x, y, width, height, Component.translatable("cosmetic.valhelsia_core." + cosmetic.name()), onPress);
         this.category = category;
         this.cosmetic = cosmetic;
         this.selected = selected;
 
-        TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/preview/" + cosmetic.getName() + ".png", "cosmetics/preview/", texture -> this.previewTexture = texture);
+        TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/preview/" + cosmetic.name() + ".png", "cosmetics/preview/", texture -> this.previewTexture = texture);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class CosmeticsEntry extends Button implements SelectableComponent {
         return category;
     }
 
-    public Cosmetic getCosmetic() {
+    public CosmeticKey getCosmetic() {
         return this.cosmetic;
     }
 }

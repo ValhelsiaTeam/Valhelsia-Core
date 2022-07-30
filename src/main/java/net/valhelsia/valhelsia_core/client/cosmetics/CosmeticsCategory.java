@@ -4,14 +4,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
- * Cosmetics Category <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory
- *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-10-15
  */
 public enum CosmeticsCategory {
@@ -39,13 +35,26 @@ public enum CosmeticsCategory {
         return this.component;
     }
 
-    @Nullable
-    public Cosmetic getActiveCosmetic() {
-        return this.activeCosmetic.get().equals("") ? null : new Cosmetic(this.activeCosmetic.get(), this);
+    public Optional<CosmeticKey> getActiveCosmetic() {
+        if (this.activeCosmetic.get().equals("")) {
+            return Optional.empty();
+        }
+
+        Optional<CosmeticKey> optional = CosmeticKey.of(this.activeCosmetic.get());
+
+        if (optional.isEmpty()) {
+            this.clearActiveCosmetic();
+        }
+
+        return optional;
     }
 
-    public void setActiveCosmetic(String name) {
-        this.activeCosmetic.set(name);
+    public void setActiveCosmetic(CosmeticKey key) {
+        this.activeCosmetic.set(key.toString());
+    }
+
+    public void clearActiveCosmetic() {
+        this.activeCosmetic.set("");
     }
 
     public static CosmeticsCategory getForCosmetic(String cosmeticName) {

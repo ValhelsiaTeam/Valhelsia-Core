@@ -8,9 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
-import net.valhelsia.valhelsia_core.client.cosmetics.Cosmetic;
-import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
-import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
+import net.valhelsia.valhelsia_core.client.cosmetics.*;
 import net.valhelsia.valhelsia_core.client.gui.component.CloseCosmeticsWardrobeButton;
 import net.valhelsia.valhelsia_core.client.gui.component.CosmeticsCategoryButton;
 import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
@@ -42,15 +40,14 @@ public class CosmeticsWardrobeScreen extends Screen {
 
     private CosmeticsList cosmeticsList;
 
-    private final Map<CosmeticsCategory, Cosmetic> selectedCosmetics = new HashMap<>();
+    private final Map<CosmeticsCategory, CosmeticKey> selectedCosmetics = new HashMap<>();
 
     public CosmeticsWardrobeScreen(Screen parentScreen) {
         super(Component.translatable("gui.valhelsia_core.cosmeticsWardrobe"));
         this.parentScreen = parentScreen;
+
         for (CosmeticsCategory category : CosmeticsCategory.values()) {
-            if (category.getActiveCosmetic() != null) {
-                this.getSelectedCosmetics().put(category, category.getActiveCosmetic());
-            }
+            category.getActiveCosmetic().ifPresent(key -> this.getSelectedCosmetics().put(category, key));
         }
     }
 
@@ -81,27 +78,26 @@ public class CosmeticsWardrobeScreen extends Screen {
         this.addRenderableWidget(new CloseCosmeticsWardrobeButton(i - 7 - 100, this.height - 50, 100, 35, 100, 0, TEXTURE, Component.translatable("gui.valhelsia_core.cosmeticsWardrobe.save"), button -> {
             CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
             UUID uuid = this.getMinecraft().getUser().getGameProfile().getId();
-            CompoundTag tag = cosmeticsManager.getActiveCosmeticsForPlayer(uuid);
 
-            this.getSelectedCosmetics().forEach((category, cosmetic) -> {
-                cosmeticsManager.loadCosmeticTexture(cosmetic, cosmetic.getCategory());
-
-                cosmetic.save(tag);
-                cosmetic.getCategory().setActiveCosmetic(cosmetic.getName());
-            });
-
-            for (CosmeticsCategory category : CosmeticsCategory.values()) {
-                if (!this.getSelectedCosmetics().containsKey(category)) {
-                    tag.remove(category.getName());
-
-                    category.setActiveCosmetic("");
-                }
+            if (this.getSelectedCosmetics().isEmpty() && cosmeticsManager.getActiveCosmetics(uuid, false).isEmpty()) {
+                return;
             }
 
-            cosmeticsManager.setActiveCosmeticsForPlayer(uuid, tag);
+            ActiveCosmeticsStorage storage = cosmeticsManager.getActiveCosmetics(uuid, true);
+
+            for (CosmeticsCategory category : CosmeticsCategory.values()) {
+                storage.remove(category);
+                category.clearActiveCosmetic();
+            }
+
+            this.getSelectedCosmetics().forEach((category, key) -> {
+                storage.set(category, key);
+
+                category.setActiveCosmetic(key);
+            });
 
             if (this.getMinecraft().getConnection() != null) {
-                NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, tag));
+                NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, storage.writeToTag(new CompoundTag())));
             }
 
             this.getMinecraft().setScreen(this.parentScreen);
@@ -158,8 +154,8 @@ public class CosmeticsWardrobeScreen extends Screen {
         return super.mouseClicked(mouseX, mouseY, button) || this.cosmeticsList.mouseClicked(mouseX, mouseY, button);
     }
 
-    public Map<CosmeticsCategory, Cosmetic> getSelectedCosmetics() {
-        return selectedCosmetics;
+    public Map<CosmeticsCategory, CosmeticKey> getSelectedCosmetics() {
+        return this.selectedCosmetics;
     }
 
     @Override

@@ -44,7 +44,7 @@ public class NoCosmeticsScreen extends Screen {
 
     @Override
     public void tick() {
-        if (this.dataAvailable && !CosmeticsManager.getInstance().getCosmeticsForPlayer(this.getMinecraft().getUser().getGameProfile().getId()).isEmpty()) {
+        if (this.dataAvailable && !CosmeticsManager.getInstance().getCosmetics(this.getMinecraft().getUser().getGameProfile().getId()).isEmpty()) {
             this.getMinecraft().setScreen(new CosmeticsWardrobeScreen(this.parentScreen));
         }
     }

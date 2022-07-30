@@ -43,7 +43,7 @@ public class SkinCustomizationScreenMixin extends OptionsSubScreen {
         this.addRenderableWidget(new Button(this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), 150, 20,
                 Component.translatable("gui." + ValhelsiaCore.MOD_ID + ".cosmeticsSettings").append("..."),
                 (button) -> {
-                    if (!cosmeticsManager.getLoadedPlayers().contains(uuid) || cosmeticsManager.getCosmeticsForPlayer(uuid).isEmpty()) {
+                    if (!cosmeticsManager.getLoadedPlayers().contains(uuid) || cosmeticsManager.getCosmetics(uuid).isEmpty()) {
                         minecraft.setScreen(new NoCosmeticsScreen(this));
                     } else {
                         minecraft.setScreen(new CosmeticsWardrobeScreen(this));
