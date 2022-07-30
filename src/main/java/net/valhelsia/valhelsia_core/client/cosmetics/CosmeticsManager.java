@@ -60,8 +60,6 @@ public class CosmeticsManager {
         CompletableFuture.runAsync(() -> {
             for (CosmeticsSource source : CosmeticsRegistry.getSources()) {
                 for (CosmeticKey key : source.loadCosmeticsFor(uuid)) {
-                    System.out.println(key.name());
-
                     if (this.getType(key).isEmpty()) {
                         continue;
                     }

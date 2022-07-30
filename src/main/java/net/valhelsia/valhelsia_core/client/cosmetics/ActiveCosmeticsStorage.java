@@ -74,10 +74,6 @@ public class ActiveCosmeticsStorage {
     public CompoundTag writeToTag(CompoundTag tag) {
         for (CosmeticsCategory category : CosmeticsCategory.values()) {
             this.get(category).ifPresent(key -> {
-
-                //TODO is this needed here?
-                //cosmeticsManager.loadCosmeticTexture(key, category);
-
                 tag.put(category.getName(), key.writeToTag(new CompoundTag()));
             });
         }
