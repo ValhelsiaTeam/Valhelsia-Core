@@ -3,7 +3,6 @@ package net.valhelsia.valhelsia_core.client.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -25,12 +24,12 @@ import java.util.UUID;
  * @author Valhelsia Team
  * @since 2021-10-24
  */
-public class CosmeticsBackLayer<T extends AbstractClientPlayer, M extends PlayerModel<T>> extends RenderLayer<T, M> implements CosmeticsLayer<T> {
+public class CosmeticsBackLayer<T extends AbstractClientPlayer, M extends PlayerModel<T>> extends RenderLayer<T, M> {
 
     private final CosmeticsManager cosmeticsManager;
     private CosmeticsModel<T> model;
 
-    public CosmeticsBackLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
+    public CosmeticsBackLayer(RenderLayerParent<T, M> renderLayerParent) {
         super(renderLayerParent);
         this.model = new CauldronBackpackModel<>();
         this.cosmeticsManager = CosmeticsManager.getInstance();
@@ -68,10 +67,5 @@ public class CosmeticsBackLayer<T extends AbstractClientPlayer, M extends Player
 
             poseStack.popPose();
         });
-    }
-
-    @Override
-    public void setModel(CosmeticsModel<T> model) {
-        this.model = model;
     }
 }

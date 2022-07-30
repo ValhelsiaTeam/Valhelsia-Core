@@ -3,7 +3,6 @@ package net.valhelsia.valhelsia_core.client.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -11,7 +10,9 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.valhelsia.valhelsia_core.client.cosmetics.*;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticKey;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.model.CosmeticsModel;
 
 import javax.annotation.Nonnull;
@@ -22,12 +23,12 @@ import java.util.UUID;
  * @author Valhelsia Team
  * @since 2021-12-30
  */
-public class CosmeticsFaceLayer<T extends AbstractClientPlayer, M extends PlayerModel<T>> extends RenderLayer<T, M> implements CosmeticsLayer<T> {
+public class CosmeticsFaceLayer<T extends AbstractClientPlayer, M extends PlayerModel<T>> extends RenderLayer<T, M> {
 
     private final CosmeticsManager cosmeticsManager;
     private CosmeticsModel<T> model;
 
-    public CosmeticsFaceLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
+    public CosmeticsFaceLayer(RenderLayerParent<T, M> renderLayerParent) {
         super(renderLayerParent);
         this.cosmeticsManager = CosmeticsManager.getInstance();
     }
@@ -66,10 +67,5 @@ public class CosmeticsFaceLayer<T extends AbstractClientPlayer, M extends Player
 
             poseStack.popPose();
         });
-    }
-
-    @Override
-    public void setModel(CosmeticsModel<T> model) {
-        this.model = model;
     }
 }

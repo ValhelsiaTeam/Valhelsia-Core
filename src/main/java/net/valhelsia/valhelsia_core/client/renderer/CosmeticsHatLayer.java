@@ -3,7 +3,6 @@ package net.valhelsia.valhelsia_core.client.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -27,14 +26,14 @@ import java.util.UUID;
  * @author Valhelsia Team
  * @since 2021-10-24
  */
-public class CosmeticsHatLayer<T extends AbstractClientPlayer, M extends PlayerModel<T>> extends RenderLayer<T, M> implements CosmeticsLayer<T> {
+public class CosmeticsHatLayer<T extends AbstractClientPlayer, M extends PlayerModel<T>> extends RenderLayer<T, M> {
 
     private final CosmeticsManager cosmeticsManager;
     private CosmeticsModel<T> model;
 
     private static int TICK_COUNT = 0;
 
-    public CosmeticsHatLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
+    public CosmeticsHatLayer(RenderLayerParent<T, M> renderLayerParent) {
         super(renderLayerParent);
         this.model = new WitchHatModel<T>();
         this.cosmeticsManager = CosmeticsManager.getInstance();
@@ -82,10 +81,5 @@ public class CosmeticsHatLayer<T extends AbstractClientPlayer, M extends PlayerM
 
             poseStack.popPose();
         });
-    }
-
-    @Override
-    public void setModel(CosmeticsModel<T> model) {
-        this.model = model;
     }
 }
