@@ -7,9 +7,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import net.valhelsia.valhelsia_core.client.cosmetics.*;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticType;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
+import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsRegistry;
 import net.valhelsia.valhelsia_core.client.cosmetics.source.ValhelsiaCosmeticsSource;
-import net.valhelsia.valhelsia_core.client.model.ValhelsiaCapeModel;
+import net.valhelsia.valhelsia_core.client.model.*;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryHelper;
 import net.valhelsia.valhelsia_core.core.registry.helper.block.RenderType;
@@ -36,12 +38,7 @@ public class ClientSetup {
     }
 
     public void onClientSetup(FMLClientSetupEvent event) {
-        var source = new ValhelsiaCosmeticsSource(ValhelsiaCore.MOD_ID);
-
-        CosmeticsRegistry.addSource(source);
-
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.BACK, ValhelsiaCapeModel::new, s -> s.contains("valhelsia_cape")));
+        this.registerCosmetics();
 
         ValhelsiaCore.REGISTRY_MANAGERS.forEach(registryManager -> {
             if (!registryManager.hasHelper(ForgeRegistries.Keys.BLOCKS)) {
@@ -94,6 +91,33 @@ public class ClientSetup {
                 }
             });
         });
+    }
+
+    private void registerCosmetics() {
+        var source = new ValhelsiaCosmeticsSource(ValhelsiaCore.MOD_ID);
+
+        CosmeticsRegistry.addSource(source);
+
+        CosmeticsRegistry.registerType(source,
+                new CosmeticType(CosmeticsCategory.BACK, ValhelsiaCapeModel::new, s -> s.contains("valhelsia_cape")));
+        CosmeticsRegistry.registerType(source,
+                new CosmeticType(CosmeticsCategory.HAT, WitchHatModel::new, s -> s.contains("witch_hat")));
+        CosmeticsRegistry.registerType(source,
+                new CosmeticType(CosmeticsCategory.SPECIAL, WitchsBroomModel::new, s -> s.equals("witchs_broom")));
+        CosmeticsRegistry.registerType(source,
+                new CosmeticType(CosmeticsCategory.HAND, WitchsWandModel::new, s -> s.contains("witchs_wand")));
+        CosmeticsRegistry.registerType(source,
+                new CosmeticType(CosmeticsCategory.BACK, CauldronBackpackModel::new, s -> s.equals("cauldron_backpack")));
+        CosmeticsRegistry.registerType(source,
+                new CosmeticType(CosmeticsCategory.HAT, BeanieModel::new, s -> s.contains("beanie")));
+        CosmeticsRegistry.registerType(source,
+                new CosmeticType(CosmeticsCategory.FACE, ScarfModel::new, s -> s.contains("scarf")));
+        CosmeticsRegistry.registerType(source,
+                new CosmeticType(CosmeticsCategory.HAT, PropellerCapModel::new, s -> s.equals("propeller_cap")));
+        CosmeticsRegistry.registerType(source,
+                new CosmeticType(CosmeticsCategory.HAT, CapModel::new, s -> s.contains("cap")));
+        CosmeticsRegistry.registerType(source,
+                new CosmeticType(CosmeticsCategory.SPECIAL, FlamingoFloatModel::new, s -> s.equals("flamingo_float")));
     }
 
     private void setRenderLayer(RegistryObject<Block> block, RenderType renderType) {

@@ -26,8 +26,10 @@ public class WitchsWandModel<T extends Player> extends ListModel<T> implements C
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(ValhelsiaCore.MOD_ID, "wand"), "main");
     private final ModelPart wand;
 
-    public WitchsWandModel(ModelPart root) {
-        this.wand = root.getChild("wand");
+    public WitchsWandModel() {
+        ModelPart modelPart = this.getModelSet().bakeLayer(LAYER_LOCATION);
+
+        this.wand = modelPart.getChild("wand");
     }
 
     @Nonnull

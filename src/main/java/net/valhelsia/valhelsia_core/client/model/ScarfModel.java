@@ -14,11 +14,7 @@ import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import javax.annotation.Nonnull;
 
 /**
- * Scarf Model <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.client.model.ScarfModel
- *
  * @author Valhelsia Team
- * @version 1.18.1 - 0.3.0
  * @since 2021-12-30
  */
 public class ScarfModel<T extends Player> extends ListModel<T> implements CosmeticsModel<T> {
@@ -26,8 +22,10 @@ public class ScarfModel<T extends Player> extends ListModel<T> implements Cosmet
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(ValhelsiaCore.MOD_ID, "scarf"), "main");
     private final ModelPart scarf;
 
-    public ScarfModel(ModelPart root) {
-        this.scarf = root.getChild("scarf");
+    public ScarfModel() {
+        ModelPart modelPart = this.getModelSet().bakeLayer(LAYER_LOCATION);
+
+        this.scarf = modelPart.getChild("scarf");
     }
 
     public static LayerDefinition createBodyLayer() {

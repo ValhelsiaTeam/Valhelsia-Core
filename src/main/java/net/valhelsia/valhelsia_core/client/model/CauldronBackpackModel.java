@@ -15,11 +15,7 @@ import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import javax.annotation.Nonnull;
 
 /**
- * Cauldron Backpack Model <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.client.model.CauldronBackpackModel
- *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.1.2
  * @since 2021-10-25
  */
 public class CauldronBackpackModel<T extends Player> extends ListModel<T> implements CosmeticsModel<T> {
@@ -27,8 +23,10 @@ public class CauldronBackpackModel<T extends Player> extends ListModel<T> implem
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(ValhelsiaCore.MOD_ID, "cauldron"), "main");
     private final ModelPart cauldron;
 
-    public CauldronBackpackModel(ModelPart root) {
-        this.cauldron = root.getChild("cauldron");
+    public CauldronBackpackModel() {
+        ModelPart modelPart = this.getModelSet().bakeLayer(LAYER_LOCATION);
+
+        this.cauldron = modelPart.getChild("cauldron");
     }
 
     public static LayerDefinition createBodyLayer() {

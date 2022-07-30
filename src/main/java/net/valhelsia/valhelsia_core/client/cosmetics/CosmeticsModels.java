@@ -1,6 +1,5 @@
 package net.valhelsia.valhelsia_core.client.cosmetics;
 
-import net.valhelsia.valhelsia_core.client.event.EntityRendererEvents;
 import net.valhelsia.valhelsia_core.client.model.*;
 
 import java.util.Locale;
@@ -15,15 +14,15 @@ import java.util.Locale;
  */
 public enum CosmeticsModels {
     CAPE(new ValhelsiaCapeModel<>()),
-    WITCH_HAT(new WitchHatModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchHatModel.LAYER_LOCATION))),
-    WITCHS_BROOM(new WitchsBroomModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchsBroomModel.LAYER_LOCATION))),
-    WITCHS_WAND(new WitchsWandModel<>(EntityRendererEvents.modelSet.bakeLayer(WitchsWandModel.LAYER_LOCATION))),
-    CAULDRON_BACKPACK(new CauldronBackpackModel<>(EntityRendererEvents.modelSet.bakeLayer(CauldronBackpackModel.LAYER_LOCATION))),
-    BEANIE(new BeanieModel<>(EntityRendererEvents.modelSet.bakeLayer(BeanieModel.LAYER_LOCATION))),
-    SCARF(new ScarfModel<>(EntityRendererEvents.modelSet.bakeLayer(ScarfModel.LAYER_LOCATION))),
-    PROPELLER_CAP(new PropellerCapModel<>(EntityRendererEvents.modelSet.bakeLayer(PropellerCapModel.LAYER_LOCATION), EntityRendererEvents.modelSet.bakeLayer(PropellerCapModel.PROPELLER_LAYER_LOCATION))),
-    CAP(new CapModel<>(EntityRendererEvents.modelSet.bakeLayer(CapModel.LAYER_LOCATION))),
-    FLAMINGO_FLOAT(new FlamingoFloatModel<>(EntityRendererEvents.modelSet.bakeLayer(FlamingoFloatModel.LAYER_LOCATION)));
+    WITCH_HAT(new WitchHatModel<>()),
+    WITCHS_BROOM(new WitchsBroomModel<>()),
+    WITCHS_WAND(new WitchsWandModel<>()),
+    CAULDRON_BACKPACK(new CauldronBackpackModel<>()),
+    BEANIE(new BeanieModel<>()),
+    SCARF(new ScarfModel<>()),
+    PROPELLER_CAP(new PropellerCapModel<>()),
+    CAP(new CapModel<>()),
+    FLAMINGO_FLOAT(new FlamingoFloatModel<>());
 
     private final CosmeticsModel<?> model;
 

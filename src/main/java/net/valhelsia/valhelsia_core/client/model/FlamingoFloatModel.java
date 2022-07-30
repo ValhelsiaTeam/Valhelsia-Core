@@ -24,8 +24,10 @@ public class FlamingoFloatModel<T extends Player> extends ListModel<T> implement
 
     private final ModelPart flamingoFloat;
 
-    public FlamingoFloatModel(ModelPart root) {
-        this.flamingoFloat = root.getChild("flamingo_float");
+    public FlamingoFloatModel() {
+        ModelPart modelPart = this.getModelSet().bakeLayer(LAYER_LOCATION);
+
+        this.flamingoFloat = modelPart.getChild("flamingo_float");
     }
 
     public static LayerDefinition createBodyLayer() {

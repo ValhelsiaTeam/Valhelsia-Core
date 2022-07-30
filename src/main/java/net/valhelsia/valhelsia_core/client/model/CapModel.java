@@ -23,8 +23,10 @@ public class CapModel<T extends Player> extends ListModel<T> implements Cosmetic
 
     private final ModelPart cap;
 
-    public CapModel(ModelPart root) {
-        this.cap = root.getChild("cap");
+    public CapModel() {
+        ModelPart modelPart = this.getModelSet().bakeLayer(LAYER_LOCATION);
+
+        this.cap = modelPart.getChild("cap");
     }
 
     public static LayerDefinition createBodyLayer() {

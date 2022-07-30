@@ -15,11 +15,7 @@ import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import javax.annotation.Nonnull;
 
 /**
- * Witchs Broom Model <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.client.model.WitchsBroomModel
- *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.1.2
  * @since 2021-10-24
  */
 public class WitchsBroomModel<T extends Player> extends ListModel<T> implements CosmeticsModel<T> {
@@ -27,8 +23,10 @@ public class WitchsBroomModel<T extends Player> extends ListModel<T> implements 
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(ValhelsiaCore.MOD_ID, "broom"), "main");
     private final ModelPart broom;
 
-    public WitchsBroomModel(ModelPart root) {
-        this.broom = root.getChild("broom");
+    public WitchsBroomModel() {
+        ModelPart modelPart = this.getModelSet().bakeLayer(LAYER_LOCATION);
+
+        this.broom = modelPart.getChild("broom");
     }
 
     public static LayerDefinition createBodyLayer() {

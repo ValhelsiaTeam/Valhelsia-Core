@@ -32,7 +32,7 @@ public class CosmeticsHandLayer<T extends AbstractClientPlayer, M extends Player
 
     public CosmeticsHandLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
         super(renderLayerParent);
-        this.model = new WitchsWandModel<>(modelSet.bakeLayer(WitchsWandModel.LAYER_LOCATION));
+        this.model = new WitchsWandModel<>();
         this.cosmeticsManager = CosmeticsManager.getInstance();
     }
 

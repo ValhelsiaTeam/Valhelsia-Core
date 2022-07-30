@@ -36,7 +36,7 @@ public class CosmeticsHatLayer<T extends AbstractClientPlayer, M extends PlayerM
 
     public CosmeticsHatLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
         super(renderLayerParent);
-        this.model = new WitchHatModel<T>(modelSet.bakeLayer(WitchHatModel.LAYER_LOCATION));
+        this.model = new WitchHatModel<T>();
         this.cosmeticsManager = CosmeticsManager.getInstance();
     }
 

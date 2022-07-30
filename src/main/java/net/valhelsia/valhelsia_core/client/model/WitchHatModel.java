@@ -17,11 +17,7 @@ import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import javax.annotation.Nonnull;
 
 /**
- * Witch Hat Model <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.client.model.WitchHatModel
- *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.1.2
  * @since 2021-10-24
  */
 public class WitchHatModel<T extends Player> extends ListModel<T> implements CosmeticsModel<T> {
@@ -29,8 +25,10 @@ public class WitchHatModel<T extends Player> extends ListModel<T> implements Cos
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(ValhelsiaCore.MOD_ID, "hat"), "main");
     private final ModelPart hat;
 
-    public WitchHatModel(ModelPart root) {
-        this.hat = root.getChild("hat");
+    public WitchHatModel() {
+        ModelPart modelPart = this.getModelSet().bakeLayer(LAYER_LOCATION);
+
+        this.hat = modelPart.getChild("hat");
     }
 
     public static LayerDefinition createBodyLayer() {

@@ -26,8 +26,11 @@ public class PropellerCapModel<T extends Player> extends ListModel<T> implements
     private final ModelPart cap;
     private final ModelPart propeller;
 
-    public PropellerCapModel(ModelPart root, ModelPart propeller) {
-        this.cap = root.getChild("cap");
+    public PropellerCapModel() {
+        ModelPart modelPart = this.getModelSet().bakeLayer(LAYER_LOCATION);
+        ModelPart propeller = this.getModelSet().bakeLayer(PROPELLER_LAYER_LOCATION);
+
+        this.cap = modelPart.getChild("cap");
         this.propeller = propeller.getChild("propeller");
     }
 

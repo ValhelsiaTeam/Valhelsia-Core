@@ -32,7 +32,7 @@ public class CosmeticsBackLayer<T extends AbstractClientPlayer, M extends Player
 
     public CosmeticsBackLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
         super(renderLayerParent);
-        this.model = new CauldronBackpackModel<>(modelSet.bakeLayer(CauldronBackpackModel.LAYER_LOCATION));
+        this.model = new CauldronBackpackModel<>();
         this.cosmeticsManager = CosmeticsManager.getInstance();
     }
 

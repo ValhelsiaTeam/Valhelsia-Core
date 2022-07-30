@@ -14,11 +14,7 @@ import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import javax.annotation.Nonnull;
 
 /**
- * Beanie Model <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.client.model.BeanieModel
- *
  * @author Valhelsia Team
- * @version 1.18.1 - 0.3.0
  * @since 2021-12-30
  */
 public class BeanieModel<T extends Player> extends ListModel<T> implements CosmeticsModel<T> {
@@ -26,8 +22,10 @@ public class BeanieModel<T extends Player> extends ListModel<T> implements Cosme
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(ValhelsiaCore.MOD_ID, "beanie"), "main");
     private final ModelPart beanie;
 
-    public BeanieModel(ModelPart root) {
-        this.beanie = root.getChild("beanie");
+    public BeanieModel() {
+        ModelPart modelPart = this.getModelSet().bakeLayer(LAYER_LOCATION);
+
+        this.beanie = modelPart.getChild("beanie");
     }
 
     public static LayerDefinition createBodyLayer() {

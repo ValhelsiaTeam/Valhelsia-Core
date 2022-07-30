@@ -32,7 +32,7 @@ public class CosmeticsSpecialLayer<T extends AbstractClientPlayer, M extends Pla
 
     public CosmeticsSpecialLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
         super(renderLayerParent);
-        this.model = new WitchsBroomModel<>(modelSet.bakeLayer(WitchsBroomModel.LAYER_LOCATION));
+        this.model = new WitchsBroomModel<>();
         this.cosmeticsManager = CosmeticsManager.getInstance();
     }
 
