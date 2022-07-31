@@ -26,6 +26,8 @@ public class CosmeticsManager {
     private final Map<UUID, ActiveCosmeticsStorage> activeCosmetics = new HashMap<>();
     private final Map<String, ResourceLocation> loadedTextures = new HashMap<>();
 
+    private final Map<CosmeticKey, CosmeticType> cachedTypes = new HashMap<>();
+
     private CosmeticsManager() {
     }
 
@@ -165,7 +167,15 @@ public class CosmeticsManager {
      * @return an {@code Optional} with the type, or an empty {@code Optional} if no type was found.
      */
     public Optional<CosmeticType> getType(CosmeticKey key) {
-        return this.getType(key.source(), key.name());
+        if (this.cachedTypes.containsKey(key)) {
+            return Optional.of(this.cachedTypes.get(key));
+        }
+
+        Optional<CosmeticType> optional = key.source().getTypes().stream().filter(type -> type.belongsToType().apply(key.name())).findFirst();
+
+        optional.ifPresent(type -> this.cachedTypes.put(key, type));
+
+        return optional;
     }
 
     /**
@@ -179,17 +189,6 @@ public class CosmeticsManager {
         return this.getType(key).orElseThrow(() -> {
             return new IllegalArgumentException("Source doesn't contain a type for the cosmetic: " + key.name());
         });
-    }
-
-    /**
-     * Gets the {@link CosmeticType} using the given {@link CosmeticsSource} and name of the cosmetic.
-     *
-     * @param source the {@link CosmeticsSource} the cosmetic has been registered on
-     * @param name   the name of the cosmetic
-     * @return an {@code Optional} with the type, or an empty {@code Optional} if no type was found.
-     */
-    public Optional<CosmeticType> getType(CosmeticsSource source, String name) {
-        return source.getTypes().stream().filter(type -> type.belongsToType().apply(name)).findFirst();
     }
 
     @FunctionalInterface
