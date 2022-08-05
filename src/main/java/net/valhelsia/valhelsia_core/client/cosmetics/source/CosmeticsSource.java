@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticKey;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticType;
-import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsManager;
 import net.valhelsia.valhelsia_core.client.util.TextureDownloader;
 
 import java.util.HashMap;
@@ -121,13 +120,6 @@ public abstract class CosmeticsSource {
 
     public final Map<String, ResourceLocation> getTextures(CosmeticKey key) {
         return this.loadedTextures.get(key.name());
-    }
-
-    /**
-     * Used to easily get the {@link CosmeticsManager}.
-     */
-    public CosmeticsManager getManager() {
-        return CosmeticsManager.getInstance();
     }
 
     public final String getName() {
