@@ -51,7 +51,7 @@ public record CosmeticKey(CosmeticsSource source, String name) {
      * @param tag the tag the data gets written on
      * @return the tag containing the written data
      */
-    CompoundTag writeToTag(CompoundTag tag) {
+    public CompoundTag writeToTag(CompoundTag tag) {
         tag.putString(TAG_SOURCE, this.source.getName());
         tag.putString(TAG_COSMETIC, this.name);
 
