@@ -46,7 +46,7 @@ public class CosmeticsHandLayer<T extends AbstractClientPlayer, M extends Player
                 return;
             }
 
-            ResourceLocation texture = this.cosmeticsManager.getCosmeticTexture(key);
+            ResourceLocation texture = this.cosmeticsManager.getMainTexture(key);
             this.model = (CosmeticsModel<T>) this.cosmeticsManager.getTypeOrThrow(key).getModel();
 
             if (texture == null) {

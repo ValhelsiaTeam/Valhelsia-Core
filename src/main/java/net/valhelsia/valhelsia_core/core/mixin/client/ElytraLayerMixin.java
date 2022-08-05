@@ -31,7 +31,7 @@ public class ElytraLayerMixin<T extends LivingEntity> {
 
         cosmeticsManager.getActiveCosmetic(uuid, CosmeticsCategory.BACK).ifPresent(key -> {
             if (key.name().contains("cape") && cosmetics.contains(key)) {
-                ResourceLocation texture = cosmeticsManager.getCosmeticTexture(key);
+                ResourceLocation texture = cosmeticsManager.getMainTexture(key);
 
                 if (texture != null) {
                     cir.setReturnValue(texture);

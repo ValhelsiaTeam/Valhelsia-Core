@@ -1,11 +1,11 @@
 package net.valhelsia.valhelsia_core.client.cosmetics;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.client.cosmetics.source.CosmeticsSource;
-import net.valhelsia.valhelsia_core.client.util.TextureDownloader;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -105,28 +105,6 @@ public final class CosmeticsManager {
         return this.loadedPlayers;
     }
 
-    public void loadCosmeticTexture(CosmeticKey key, @Nullable CosmeticsCategory category) {
-        String cosmeticName = key.name();
-
-        if (TextureDownloader.isTextureLoaded(key.toString())) {
-            return;
-        }
-
-        synchronized (this) {
-            TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png", "cosmetics/", key.toString(), null);
-
-            if (category == CosmeticsCategory.BACK && cosmeticName.contains("cape")) {
-                String name = cosmeticName.substring(0, cosmeticName.length() - 4).concat("elytra");
-
-                TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/" + name + ".png", "cosmetics/", key.toString(), null);
-            } else if (cosmeticName.equalsIgnoreCase("propeller_cap")) {
-                for (int i = 0; i < 10; i++) {
-                    TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/propeller_animation_" + i + ".png", "cosmetics/", "propeller_animation_" + i, null);
-                }
-            }
-        }
-    }
-
     /**
      * Gets the {@link ActiveCosmeticsStorage} that contains all currently equipped cosmetics for the given player.
      *
@@ -154,11 +132,29 @@ public final class CosmeticsManager {
         return this.getActiveCosmetics(uuid, false).get(category);
     }
 
-    public ResourceLocation getCosmeticTexture(CosmeticKey key) {
-        if (!TextureDownloader.isTextureLoaded(key.toString())) {
-            this.loadCosmeticTexture(key, null);
+    /**
+     * Gets all related textures to the cosmetic, or start the loading process in the {@link CosmeticsSource}.
+     *
+     * @param key the key of the cosmetic
+     * @return a map containing all textures related to the cosmetic, or an empty immutable map if the textures hadn't been loaded yet
+     */
+    public Map<String, ResourceLocation> getTextures(CosmeticKey key) {
+        CosmeticsSource source = key.source();
+
+        synchronized (this) {
+            if (!source.texturesLoaded(key)) {
+                source.loadTexturesInternal(key);
+
+                return ImmutableMap.of();
+            }
+
+            return source.getTextures(key);
         }
-        return TextureDownloader.getTexture(key.toString());
+    }
+
+    @Nullable
+    public ResourceLocation getMainTexture(CosmeticKey key) {
+        return this.getTextures(key).getOrDefault(key.name(), null);
     }
 
     /**

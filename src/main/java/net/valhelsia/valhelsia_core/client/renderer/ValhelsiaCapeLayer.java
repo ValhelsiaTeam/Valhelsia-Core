@@ -52,7 +52,7 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayer, M extends Entity
                 return;
             }
 
-            ResourceLocation texture = cosmeticsManager.getCosmeticTexture(key);
+            ResourceLocation texture = cosmeticsManager.getMainTexture(key);
 
             if (texture == null) {
                 return;

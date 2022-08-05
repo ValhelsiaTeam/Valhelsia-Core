@@ -57,6 +57,23 @@ public class ValhelsiaCosmeticsSource extends CosmeticsSource {
         return List.of();
     }
 
+    @Override
+    public void loadTextures(CosmeticKey key) {
+        String name = key.name();
+
+        this.downloadMainTexture(key, "https://static.valhelsia.net/cosmetics/" + name + ".png");
+
+        if (name.contains("cape")) {
+            String elytra = name.substring(0, name.length() - 4).concat("elytra");
+
+            this.downloadTexture(key ,"elytra", "https://static.valhelsia.net/cosmetics/" + elytra + ".png");
+        } else if (name.equalsIgnoreCase("propeller_cap")) {
+            for (int i = 0; i < 10; i++) {
+                this.downloadTexture(key, "propeller_animation_" + i, "https://static.valhelsia.net/cosmetics/propeller_animation_" + i + ".png");
+            }
+        }
+    }
+
     private List<CosmeticKey> loadFromJson(JsonObject jsonObject) {
         if (!jsonObject.has("data")) {
             return List.of();

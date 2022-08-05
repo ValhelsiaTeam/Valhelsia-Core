@@ -38,13 +38,14 @@ public class CosmeticsFaceLayer<T extends AbstractClientPlayer, M extends Player
         UUID uuid = player.getUUID();
 
         this.cosmeticsManager.getActiveCosmetic(uuid, CosmeticsCategory.FACE).ifPresent(key -> {
+            System.out.println(key.name());
             List<CosmeticKey> cosmetics = this.cosmeticsManager.getCosmetics(uuid, CosmeticsCategory.FACE);
 
             if (!cosmetics.contains(key)) {
                 return;
             }
 
-            ResourceLocation texture = this.cosmeticsManager.getCosmeticTexture(key);
+            ResourceLocation texture = this.cosmeticsManager.getMainTexture(key);
             this.model = (CosmeticsModel<T>) this.cosmeticsManager.getTypeOrThrow(key).getModel();
 
             if (texture == null) {
