@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
  * @author Valhelsia Team
  * @since 2021-08-26
  */
-public class CosmeticsManager {
+public final class CosmeticsManager {
 
     private static final CosmeticsManager INSTANCE = new CosmeticsManager();
     private final List<UUID> loadedPlayers = new ArrayList<>();
