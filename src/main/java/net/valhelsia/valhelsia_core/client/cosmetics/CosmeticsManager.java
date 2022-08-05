@@ -24,7 +24,6 @@ public class CosmeticsManager {
     private final List<UUID> loadedPlayers = new ArrayList<>();
     private final ListMultimap<UUID, CosmeticKey> cosmetics = MultimapBuilder.hashKeys().arrayListValues().build();
     private final Map<UUID, ActiveCosmeticsStorage> activeCosmetics = new HashMap<>();
-    private final Map<String, ResourceLocation> loadedTextures = new HashMap<>();
 
     private final Map<CosmeticKey, CosmeticType> cachedTypes = new HashMap<>();
 
@@ -107,20 +106,22 @@ public class CosmeticsManager {
     }
 
     public void loadCosmeticTexture(CosmeticKey key, @Nullable CosmeticsCategory category) {
+        String cosmeticName = key.name();
+
+        if (TextureDownloader.isTextureLoaded(key.toString())) {
+            return;
+        }
+
         synchronized (this) {
-            String cosmeticName = key.name();
+            TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png", "cosmetics/", key.toString(), null);
 
-            if (!this.loadedTextures.containsKey(cosmeticName)) {
-                TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/" + cosmeticName + ".png", "cosmetics/", texture -> this.loadedTextures.put(cosmeticName, texture));
+            if (category == CosmeticsCategory.BACK && cosmeticName.contains("cape")) {
+                String name = cosmeticName.substring(0, cosmeticName.length() - 4).concat("elytra");
 
-                if (category == CosmeticsCategory.BACK && cosmeticName.contains("cape")) {
-                    String name = cosmeticName.substring(0, cosmeticName.length() - 4).concat("elytra");
-
-                    TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/" + name + ".png", "cosmetics/", texture -> this.loadedTextures.put(name, texture));
-                } else if (cosmeticName.equalsIgnoreCase("propeller_cap")) {
-                    for (int i = 0; i < 10; i++) {
-                        TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/propeller_animation_" + i + ".png", "cosmetics/", "propeller_animation_" + i, null);
-                    }
+                TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/" + name + ".png", "cosmetics/", key.toString(), null);
+            } else if (cosmeticName.equalsIgnoreCase("propeller_cap")) {
+                for (int i = 0; i < 10; i++) {
+                    TextureDownloader.downloadTextureNoFallback("https://static.valhelsia.net/cosmetics/propeller_animation_" + i + ".png", "cosmetics/", "propeller_animation_" + i, null);
                 }
             }
         }
@@ -153,11 +154,11 @@ public class CosmeticsManager {
         return this.getActiveCosmetics(uuid, false).get(category);
     }
 
-    public ResourceLocation getCosmeticTexture(CosmeticKey cosmetic) {
-        if (!this.loadedTextures.containsKey(cosmetic.name())) {
-            this.loadCosmeticTexture(cosmetic, null);
+    public ResourceLocation getCosmeticTexture(CosmeticKey key) {
+        if (!TextureDownloader.isTextureLoaded(key.toString())) {
+            this.loadCosmeticTexture(key, null);
         }
-        return this.loadedTextures.get(cosmetic.name());
+        return TextureDownloader.getTexture(key.toString());
     }
 
     /**

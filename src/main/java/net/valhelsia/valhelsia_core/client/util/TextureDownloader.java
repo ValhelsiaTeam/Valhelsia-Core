@@ -76,6 +76,10 @@ public class TextureDownloader {
         return LOADED_TEXTURES.getOrDefault(identifier, null);
     }
 
+    public static boolean isTextureLoaded(String identifier) {
+        return getTexture(identifier) != null;
+    }
+
     public interface TextureAvailableCallback {
         void onTextureAvailable(ResourceLocation texture);
     }
