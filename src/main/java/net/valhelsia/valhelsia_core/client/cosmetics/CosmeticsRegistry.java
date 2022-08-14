@@ -42,10 +42,10 @@ public class CosmeticsRegistry {
      * @param source the source for the cosmetic type
      * @param type the type to register
      */
-    public static void registerType(CosmeticsSource source, CosmeticType type) {
+    public static void registerType(CosmeticsSource source, CosmeticType.Builder type) {
         Preconditions.checkArgument(ClientModLoader.isLoading(), "Cosmetic Types can only be registered during client loading!");
 
-        source.addType(type);
+        source.addType(type.build());
     }
 
     /**

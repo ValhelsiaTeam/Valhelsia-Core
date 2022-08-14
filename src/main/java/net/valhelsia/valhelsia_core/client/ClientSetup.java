@@ -10,6 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticType;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsRegistry;
+import net.valhelsia.valhelsia_core.client.cosmetics.elytra.ModifyTextureModifier;
 import net.valhelsia.valhelsia_core.client.cosmetics.source.ValhelsiaCosmeticsSource;
 import net.valhelsia.valhelsia_core.client.model.*;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
@@ -98,26 +99,27 @@ public class ClientSetup {
 
         CosmeticsRegistry.addSource(source);
 
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.BACK, ValhelsiaCapeModel::new, s -> s.contains("valhelsia_cape")));
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.HAT, WitchHatModel::new, s -> s.contains("witch_hat")));
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.SPECIAL, WitchsBroomModel::new, s -> s.equals("witchs_broom")));
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.HAND, WitchsWandModel::new, s -> s.contains("witchs_wand")));
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.BACK, CauldronBackpackModel::new, s -> s.equals("cauldron_backpack")));
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.HAT, BeanieModel::new, s -> s.contains("beanie")));
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.FACE, ScarfModel::new, s -> s.contains("scarf")));
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.HAT, PropellerCapModel::new, s -> s.equals("propeller_cap")));
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.HAT, CapModel::new, s -> s.contains("cap")));
-        CosmeticsRegistry.registerType(source,
-                new CosmeticType(CosmeticsCategory.SPECIAL, FlamingoFloatModel::new, s -> s.equals("flamingo_float")));
+        CosmeticsRegistry.registerType(source, CosmeticType.builder(CosmeticsCategory.BACK, ValhelsiaCapeModel::new)
+                .nameContains("valhelsia_cape")
+                .elytraModifier(new ModifyTextureModifier(key -> "elytra")));
+        CosmeticsRegistry.registerType(source, CosmeticType.builder(CosmeticsCategory.HAT, WitchHatModel::new)
+                .nameContains("witch_hat"));
+        CosmeticsRegistry.registerType(source, CosmeticType.builder(CosmeticsCategory.SPECIAL, WitchsBroomModel::new)
+                .exactName("witchs_broom"));
+        CosmeticsRegistry.registerType(source, CosmeticType.builder(CosmeticsCategory.HAND, WitchsWandModel::new)
+                .nameContains("witchs_wand"));
+        CosmeticsRegistry.registerType(source, CosmeticType.builder(CosmeticsCategory.BACK, CauldronBackpackModel::new)
+                .exactName("cauldron_backpack"));
+        CosmeticsRegistry.registerType(source, CosmeticType.builder(CosmeticsCategory.HAT, BeanieModel::new)
+                .nameContains("beanie"));
+        CosmeticsRegistry.registerType(source, CosmeticType.builder(CosmeticsCategory.FACE, ScarfModel::new)
+                .nameContains("scarf"));
+        CosmeticsRegistry.registerType(source, CosmeticType.builder(CosmeticsCategory.HAT, PropellerCapModel::new)
+                .exactName("propeller_cap"));
+        CosmeticsRegistry.registerType(source, CosmeticType.builder(CosmeticsCategory.HAT, CapModel::new)
+                .nameContains("cap"));
+        CosmeticsRegistry.registerType(source, CosmeticType.builder(CosmeticsCategory.SPECIAL, FlamingoFloatModel::new)
+                .exactName("flamingo_float"));
     }
 
     private void setRenderLayer(RegistryObject<Block> block, RenderType renderType) {
