@@ -31,8 +31,13 @@ public class ActiveCosmeticsStorage {
             }
 
             CompoundTag tag = activeCosmetics.getCompound(category.getName());
+            CosmeticKey key = CosmeticKey.of(tag);
 
-            this.set(category, CosmeticKey.of(tag));
+            if (key == null) {
+                this.remove(category);
+            } else {
+                this.set(category, CosmeticKey.of(tag));
+            }
         }
     }
 
@@ -72,6 +77,10 @@ public class ActiveCosmeticsStorage {
      * @return the tag containing the written data
      */
     public CompoundTag writeToTag(CompoundTag tag) {
+        if (this.isEmpty()) {
+            return tag;
+        }
+
         for (CosmeticsCategory category : CosmeticsCategory.values()) {
             this.get(category).ifPresent(key -> {
                 tag.put(category.getName(), key.writeToTag(new CompoundTag()));

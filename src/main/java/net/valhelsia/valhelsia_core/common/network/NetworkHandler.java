@@ -31,6 +31,7 @@ public class NetworkHandler {
         INSTANCE.registerMessage(nextID(), UpdateCounterPacket.class, UpdateCounterPacket::encode, UpdateCounterPacket::decode, UpdateCounterPacket::consume);
         INSTANCE.registerMessage(nextID(), UpdateCosmeticsPacket.class, UpdateCosmeticsPacket::encode, UpdateCosmeticsPacket::decode, UpdateCosmeticsPacket::consume);
         INSTANCE.registerMessage(nextID(), UploadCosmeticsPacket.class, UploadCosmeticsPacket::encode, UploadCosmeticsPacket::decode, UploadCosmeticsPacket::consume);
+        INSTANCE.registerMessage(nextID(), RequestCosmeticsPacket.class, RequestCosmeticsPacket::encode, RequestCosmeticsPacket::decode, RequestCosmeticsPacket::consume);
 
     }
 

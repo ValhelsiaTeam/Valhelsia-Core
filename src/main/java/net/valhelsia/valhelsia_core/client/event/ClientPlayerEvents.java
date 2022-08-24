@@ -38,6 +38,6 @@ public class ClientPlayerEvents {
             cosmeticsManager.getActiveCosmetics(uuid, true).set(tag);
         }
 
-        NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, tag));
+        NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, tag, null));
     }
 }

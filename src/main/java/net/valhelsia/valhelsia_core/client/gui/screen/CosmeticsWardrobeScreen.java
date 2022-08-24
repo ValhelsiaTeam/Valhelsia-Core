@@ -97,7 +97,7 @@ public class CosmeticsWardrobeScreen extends Screen {
             });
 
             if (this.getMinecraft().getConnection() != null) {
-                NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, storage.writeToTag(new CompoundTag())));
+                NetworkHandler.sendToServer(new UploadCosmeticsPacket(uuid, storage.writeToTag(new CompoundTag()), null));
             }
 
             this.getMinecraft().setScreen(this.parentScreen);

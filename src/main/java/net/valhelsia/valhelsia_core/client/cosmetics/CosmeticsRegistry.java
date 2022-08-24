@@ -58,13 +58,10 @@ public class CosmeticsRegistry {
     /**
      * Gets a {@link CosmeticsSource} by its name.
      *
-     * @throws IllegalArgumentException if no source with the given name exists
      * @param name the name of the cosmetic source
      * @return an optional that contains the source, or an empty optional if no source with the given name was registered
      */
-    public static CosmeticsSource getSource(String name) {
-        return Optional.of(COSMETICS_SOURCES.get(name)).orElseThrow(() -> {
-            return new IllegalArgumentException("No cosmetic source registered with name: " + name);
-        });
+    public static Optional<CosmeticsSource> getSource(String name) {
+        return Optional.ofNullable(COSMETICS_SOURCES.get(name));
     }
 }

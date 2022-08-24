@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.valhelsia.valhelsia_core.client.cosmetics.source.CosmeticsSource;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -32,17 +33,30 @@ public record CosmeticKey(CosmeticsSource source, String name) {
             return Optional.empty();
         }
 
-        return Optional.of(new CosmeticKey(CosmeticsRegistry.getSource(parts[0]), parts[1]));
+        Optional<CosmeticsSource> optional = CosmeticsRegistry.getSource(parts[0]);
+
+        if (optional.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new CosmeticKey(optional.get(), parts[1]));
     }
 
     /**
-     * Creates a cosmetic key from the given {@code CompoundTag}.
+     * Creates a cosmetic key from the given {@code CompoundTag}. Can be null if the source given in the tag does not exist.
      *
      * @param tag the tag to parse
      * @return the constructed cosmetic key
      */
+    @Nullable
     static CosmeticKey of(CompoundTag tag) {
-        return new CosmeticKey(CosmeticsRegistry.getSource(tag.getString(TAG_SOURCE)), tag.getString(TAG_COSMETIC));
+        Optional<CosmeticsSource> optional = CosmeticsRegistry.getSource(tag.getString(TAG_SOURCE));
+
+        if (optional.isEmpty()) {
+            return null;
+        }
+
+        return new CosmeticKey(optional.get(), tag.getString(TAG_COSMETIC));
     }
 
     /**
