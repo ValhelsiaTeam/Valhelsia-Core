@@ -15,6 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.client.ClientSetup;
 import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.core.config.ModConfig;
+import net.valhelsia.valhelsia_core.core.init.ValhelsiaBiomeModifiers;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaBlockEntities;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootConditions;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootModifiers;
@@ -47,6 +48,7 @@ public class ValhelsiaCore {
             .addHelper(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, new RegistryHelper<>(ValhelsiaBlockEntities::new))
             .addHelper(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, new RegistryHelper<>(ValhelsiaLootModifiers::new))
             .addHelper(Registry.LOOT_ITEM_REGISTRY, new RegistryHelper<>(ValhelsiaLootConditions::new))
+            .addHelper(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, new RegistryHelper<>(ValhelsiaBiomeModifiers::new))
             .create();
 
     public ValhelsiaCore() {

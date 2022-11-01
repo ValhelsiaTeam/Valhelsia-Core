@@ -9,18 +9,17 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers;
+import net.valhelsia.valhelsia_core.common.world.AddNetherSpawnsBiomeModifier;
 import net.valhelsia.valhelsia_core.core.data.DataProviderInfo;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Valhelsia Team
@@ -65,6 +64,14 @@ public abstract class ValhelsiaBiomeModifierProvider {
 
     public void addSpawn(String name, HolderSet<Biome> biomes, MobSpawnSettings.SpawnerData... spawners) {
         this.add(name, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(biomes, List.of(spawners)));
+    }
+
+    public void addNetherSpawn(String name, HolderSet<Biome> biomes, double charge, double energyBudget, MobSpawnSettings.SpawnerData... spawners) {
+        this.add(name, new AddNetherSpawnsBiomeModifier(biomes, Optional.empty(), List.of(spawners), charge, energyBudget));
+    }
+
+    public void addNetherSpawn(String name, HolderSet<Biome> biomes, MobCategory category, double charge, double energyBudget, MobSpawnSettings.SpawnerData... spawners) {
+        this.add(name, new AddNetherSpawnsBiomeModifier(biomes, Optional.of(category), List.of(spawners), charge, energyBudget));
     }
 
     public void add(String name, BiomeModifier modifier) {
