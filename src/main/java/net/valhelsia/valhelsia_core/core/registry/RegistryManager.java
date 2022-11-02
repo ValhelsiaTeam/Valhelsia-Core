@@ -3,6 +3,7 @@ package net.valhelsia.valhelsia_core.core.registry;
 import com.google.common.collect.ImmutableBiMap;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -76,8 +77,18 @@ public record RegistryManager(String modId, ImmutableBiMap<ResourceKey<? extends
             this.modId = modId;
         }
 
+        public <T> Builder addHelper(ResourceKey<? extends Registry<T>> key, Supplier<RegistryClass>... classes) {
+            return this.addHelper(key, new RegistryHelper<>(classes));
+        }
+
         public <T> Builder addHelper(ResourceKey<? extends Registry<T>> key, RegistryHelper<T> helper) {
             this.registryHelpers.put(key, helper);
+
+            return this;
+        }
+
+        public <T> Builder addBlockHelper(ResourceKey<? extends Registry<T>> key, CreativeModeTab creativeModeTab, Supplier<RegistryClass>... classes) {
+            registryHelpers.put(key, new BlockRegistryHelper(creativeModeTab, classes));
 
             return this;
         }
