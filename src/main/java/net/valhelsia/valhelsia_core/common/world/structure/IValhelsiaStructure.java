@@ -1,10 +1,10 @@
-package net.valhelsia.valhelsia_core.common.world;
+package net.valhelsia.valhelsia_core.common.world.structure;
 
 import net.minecraft.world.level.levelgen.structure.Structure;
 
 /**
  * Valhelsia Structure Interface <br>
- * Valhelsia Core - net.valhelsia.valhelsia_core.common.world.IValhelsiaStructure
+ * Valhelsia Core - net.valhelsia.valhelsia_core.common.world.structure.IValhelsiaStructure
  *
  * @author Valhelsia Team
  * @version 1.19 - 0.3.0

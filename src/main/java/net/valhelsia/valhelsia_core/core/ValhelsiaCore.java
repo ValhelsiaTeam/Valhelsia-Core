@@ -10,10 +10,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.client.ClientSetup;
 import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.core.config.ModConfig;
-import net.valhelsia.valhelsia_core.core.init.ValhelsiaBiomeModifiers;
-import net.valhelsia.valhelsia_core.core.init.ValhelsiaBlockEntities;
-import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootConditions;
-import net.valhelsia.valhelsia_core.core.init.ValhelsiaLootModifiers;
+import net.valhelsia.valhelsia_core.core.init.*;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,6 +40,7 @@ public class ValhelsiaCore extends ValhelsiaMod {
             .addHelper(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, ValhelsiaLootModifiers::new)
             .addHelper(Registry.LOOT_ITEM_REGISTRY, ValhelsiaLootConditions::new)
             .addHelper(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ValhelsiaBiomeModifiers::new)
+            .addHelper(Registry.STRUCTURE_PROCESSOR_REGISTRY, ValhelsiaStructureProcessors::new)
             .create();
 
     public ValhelsiaCore() {

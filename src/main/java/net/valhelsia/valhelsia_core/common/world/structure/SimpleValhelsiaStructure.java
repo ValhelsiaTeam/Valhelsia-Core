@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.common.world;
+package net.valhelsia.valhelsia_core.common.world.structure;
 
 import net.minecraft.world.level.levelgen.structure.Structure;
 
