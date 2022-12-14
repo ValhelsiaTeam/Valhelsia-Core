@@ -31,8 +31,8 @@ public abstract class ValhelsiaBiomeModifierProvider {
     private final RegistryOps<JsonElement> ops;
     private final Map<ResourceLocation, BiomeModifier> modifiers = new HashMap<>();
 
-    private final Registry<Biome> biomeRegistry;
-    private final Registry<PlacedFeature> featureRegistry;
+    public final Registry<Biome> biomeRegistry;
+    public final Registry<PlacedFeature> featureRegistry;
 
     public final HolderSet.Named<Biome> isOverworld;
     public final HolderSet.Named<Biome> isNether;
