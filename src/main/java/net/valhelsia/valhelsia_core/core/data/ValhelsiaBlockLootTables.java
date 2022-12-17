@@ -6,10 +6,10 @@ import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.core.Registry;
-import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -44,10 +44,9 @@ import java.util.function.Predicate;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.data.ValhelsiaBlockLootTables
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2020-11-22
  */
-public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
+public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
 
     public static final LootItemCondition.Builder HAS_SILK_TOUCH = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))));
     public static final LootItemCondition.Builder HAS_NO_SILK_TOUCH = HAS_SILK_TOUCH.invert();
@@ -62,7 +61,8 @@ public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Cons
 
     private final Set<RegistryObject<Block>> remainingBlocks;
 
-    public ValhelsiaBlockLootTables(RegistryManager registryManager) {
+    public ValhelsiaBlockLootTables(Set<Item> explosionResistant, FeatureFlagSet flagSet, RegistryManager registryManager) {
+        super(explosionResistant, flagSet);
         this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getRegistryObjects());
     }
 
@@ -156,10 +156,6 @@ public abstract class ValhelsiaBlockLootTables extends BlockLoot implements Cons
 
     protected static LootTable.Builder dropping(Block block, LootItemCondition.Builder conditionBuilder, LootPoolEntryContainer.Builder<?> lootEntryBuilder) {
         return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(conditionBuilder).otherwise(lootEntryBuilder)));
-    }
-
-    protected Iterable<Block> getKnownBlocks() {
-        return Registry.BLOCK;
     }
 
     protected void registerFlowerPot(Block flowerPot) {

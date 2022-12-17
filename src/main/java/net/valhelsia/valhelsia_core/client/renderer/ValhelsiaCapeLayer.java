@@ -2,7 +2,7 @@ package net.valhelsia.valhelsia_core.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -94,7 +94,7 @@ public class ValhelsiaCapeLayer<T extends AbstractClientPlayer, M extends Entity
             poseStack.translate(0.0D, 0.075D, 0.0D);
             this.capeModel.renderPinToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY);
 
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(Math.min(70.0F, 6.0F + Math.max(f2, 0.0F) / 2.0F + f1)));
+            poseStack.mulPose(Axis.XP.rotationDegrees(Math.min(70.0F, 6.0F + Math.max(f2, 0.0F) / 2.0F + f1)));
             poseStack.translate(0.0D, -0.115D, -0.045D);
 
             this.capeModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);

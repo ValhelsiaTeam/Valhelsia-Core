@@ -1,8 +1,10 @@
 package net.valhelsia.valhelsia_core.common.world.structure.jigsaw;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.core.Holder;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.Pools;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
@@ -32,27 +34,29 @@ public class JigsawBuilder {
     private final String path;
     private final List<ElementInfo> elements = new ArrayList<>();
     private final List<StructureProcessor> processors = new ArrayList<>();
+    private final BootstapContext<StructureTemplatePool> context;
 
     private final ElementFunction elementFunction;
 
     private StructureTemplatePool.Projection projection = StructureTemplatePool.Projection.RIGID;
 
-    private JigsawBuilder(@NotNull String modId, @Nullable String folder, String name, Supplier<List<StructureProcessor>> defaultProcessors, @Nullable ElementFunction elementFunction) {
+    private JigsawBuilder(@NotNull String modId, @Nullable String folder, String name, Supplier<List<StructureProcessor>> defaultProcessors, BootstapContext<StructureTemplatePool> context, @Nullable ElementFunction elementFunction) {
         this.modId = modId;
         this.folder = folder;
         this.path = name;
+        this.context = context;
 
         defaultProcessors.get().forEach(this::processor);
 
-        this.elementFunction = Objects.requireNonNullElseGet(elementFunction, () -> (resourceLocation, processorListHolder, projection, terrainAdjustment) -> StructurePoolElement.single(resourceLocation.toString(), processorListHolder));
+        this.elementFunction = Objects.requireNonNullElseGet(elementFunction, () -> (resourceLocation, resourceKey, projection, terrainAdjustment) -> StructurePoolElement.single(resourceLocation.toString(), context.lookup(Registries.PROCESSOR_LIST).getOrThrow(resourceKey)));
     }
 
-    public static JigsawBuilder builder(String modId, String folder, String name, Supplier<List<StructureProcessor>> defaultProcessors, @Nullable ElementFunction elementFunction) {
-        return new JigsawBuilder(modId, folder, name, defaultProcessors, elementFunction);
+    public static JigsawBuilder builder(String modId, String folder, String name, Supplier<List<StructureProcessor>> defaultProcessors, BootstapContext<StructureTemplatePool> context, @Nullable ElementFunction elementFunction) {
+        return new JigsawBuilder(modId, folder, name, defaultProcessors, context, elementFunction);
     }
 
-    public static JigsawBuilder builder(String modId, String name, Supplier<List<StructureProcessor>> defaultProcessors, @Nullable ElementFunction elementFunction) {
-        return new JigsawBuilder(modId, null, name, defaultProcessors, elementFunction);
+    public static JigsawBuilder builder(String modId, String name, Supplier<List<StructureProcessor>> defaultProcessors, BootstapContext<StructureTemplatePool> context, @Nullable ElementFunction elementFunction) {
+        return new JigsawBuilder(modId, null, name, defaultProcessors, context, elementFunction);
     }
 
     public JigsawBuilder projection(StructureTemplatePool.Projection projection) {
@@ -98,13 +102,13 @@ public class JigsawBuilder {
 
         ResourceLocation location = new ResourceLocation(this.modId, this.path);
 
-        Holder<StructureProcessorList> holder = BuiltinRegistries.register(BuiltinRegistries.PROCESSOR_LIST, location, new StructureProcessorList(this.processors));
+        //Holder<StructureProcessorList> holder = BuiltinRegistries.register(BuiltinRegistries.PROCESSOR_LIST, location, new StructureProcessorList(this.processors));
 
         for (ElementInfo info : this.elements) {
-            list.add(Pair.of(this.elementFunction.apply(new ResourceLocation(this.modId, info.location()), holder, projection, terrainAdjustment), info.weight));
+            list.add(Pair.of(this.elementFunction.apply(new ResourceLocation(this.modId, info.location()), ResourceKey.create(Registries.PROCESSOR_LIST, new ResourceLocation("empty")), projection, terrainAdjustment), info.weight));
         }
 
-        return new StructureTemplatePool(new ResourceLocation(this.modId, this.path), new ResourceLocation("empty"), list, this.projection);
+        return new StructureTemplatePool(context.lookup(Registries.TEMPLATE_POOL).getOrThrow(Pools.EMPTY), list, this.projection);
     }
 
     private record ElementInfo(String location, Integer weight, @Nullable TerrainAdjustment terrainAdjustment) {
@@ -116,6 +120,6 @@ public class JigsawBuilder {
 
     @FunctionalInterface
     public interface ElementFunction {
-        Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> apply(ResourceLocation resourceLocation, Holder<StructureProcessorList> processorListHolder, StructureTemplatePool.Projection projection, @Nullable TerrainAdjustment terrainAdjustment);
+        Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> apply(ResourceLocation resourceLocation, ResourceKey<StructureProcessorList> processorListHolder, StructureTemplatePool.Projection projection, @Nullable TerrainAdjustment terrainAdjustment);
     }
 }

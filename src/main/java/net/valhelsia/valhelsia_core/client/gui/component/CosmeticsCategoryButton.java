@@ -16,7 +16,6 @@ import javax.annotation.Nonnull;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.gui.component.CosmeticsCategoryButton
  *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.1.2
  * @since 2021-10-16
  */
 public class CosmeticsCategoryButton extends Button implements SelectableComponent {
@@ -29,8 +28,8 @@ public class CosmeticsCategoryButton extends Button implements SelectableCompone
 
     private boolean selected;
 
-    public CosmeticsCategoryButton(CosmeticsCategory category, Font font, int x, int y, OnPress pOnPress, boolean selected) {
-        super(x - 2, y, font.width(category.getComponent()) + 4, 14, category.getComponent(), pOnPress);
+    public CosmeticsCategoryButton(CosmeticsCategory category, Font font, int x, int y, OnPress onPress, boolean selected) {
+        super(x - 2, y, font.width(category.getComponent()) + 4, 14, category.getComponent(), onPress, DEFAULT_NARRATION);
         this.category = category;
         this.font = font;
         this.selected = selected;
@@ -38,12 +37,12 @@ public class CosmeticsCategoryButton extends Button implements SelectableCompone
 
     @Override
     public void renderButton(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        this.font.draw(poseStack, category.getComponent(), this.x + 2, this.y + 4, this.isSelected() ? ACTIVATED_COLOR : COLOR);
+        this.font.draw(poseStack, category.getComponent(), this.getX() + 2, this.getY() + 4, this.isSelected() ? ACTIVATED_COLOR : COLOR);
 
         if (this.isSelected()) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, CosmeticsWardrobeScreen.TEXTURE);
-            this.blit(poseStack, this.x - 4, this.y + 5, 208, 0, 3, 5);
+            this.blit(poseStack, this.getX() - 4, this.getY() + 5, 208, 0, 3, 5);
         }
     }
 

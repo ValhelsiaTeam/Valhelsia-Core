@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.data.recipes;
 
 import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -16,12 +17,12 @@ import javax.annotation.Nullable;
  */
 public record ValhelsiaShapedRecipeBuilder(ShapedRecipeBuilder builder) {
 
-    public static ValhelsiaShapedRecipeBuilder shaped(ItemLike result) {
-        return shaped(result, 1);
+    public static ValhelsiaShapedRecipeBuilder shaped(RecipeCategory category, ItemLike result) {
+        return shaped(category, result, 1);
     }
 
-    public static ValhelsiaShapedRecipeBuilder shaped(ItemLike result, int count) {
-        return new ValhelsiaShapedRecipeBuilder(new ShapedRecipeBuilder(result, count));
+    public static ValhelsiaShapedRecipeBuilder shaped(RecipeCategory category, ItemLike result, int count) {
+        return new ValhelsiaShapedRecipeBuilder(new ShapedRecipeBuilder(category, result, count));
     }
 
     public ValhelsiaShapedRecipeBuilder unlockedBy(ValhelsiaRecipeProvider provider, ItemLike itemLike) {

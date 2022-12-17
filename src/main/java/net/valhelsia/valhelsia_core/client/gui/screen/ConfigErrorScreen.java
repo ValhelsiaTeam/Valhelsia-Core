@@ -17,7 +17,6 @@ import java.util.List;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.gui.screen.ConfigErrorScreen
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-02-09
  */
 public class ConfigErrorScreen extends Screen {
@@ -42,19 +41,17 @@ public class ConfigErrorScreen extends Screen {
 
         if (this.minecraft == null) return;
 
-        this.addWidget(new Button(this.width / 2 - 75, this.height / 9 + 160, 150, 20, Component.translatable("menu.quit"),
-                (button) -> this.minecraft.stop()));
+        this.addWidget(Button.builder(Component.translatable("menu.quit"), button -> this.minecraft.stop()).pos(this.width / 2 - 75, this.height / 9 + 160).size(150, 20).build());
 
         if (this.nextErrors.isEmpty()) {
-            this.addWidget(new Button(this.width / 2 - 100, this.height / 9 + 190, 200, 20, Component.translatable("gui.valhelsia_core.config.continue"),
-                    (button) -> this.minecraft.setScreen(null)));
+            this.addWidget(Button.builder(Component.translatable("gui.valhelsia_core.config.continue"), button -> this.minecraft.setScreen(null)).pos(this.width / 2 - 100, this.height / 9 + 190).size(200, 20).build());
         } else {
-            this.addWidget(new Button(this.width / 2 - 100, this.height / 9 + 190, 200, 20, Component.translatable("gui.valhelsia_core.config.next_error"), (button) -> {
+            this.addWidget(Button.builder(Component.translatable("gui.valhelsia_core.config.next_error"), button -> {
                 ConfigError nextError = nextErrors.get(0);
                 nextErrors.remove(nextError);
 
                 this.minecraft.setScreen(nextErrors.isEmpty() ? new ConfigErrorScreen(nextError) : new ConfigErrorScreen(nextError, nextErrors));
-            }));
+            }).pos(this.width / 2 - 100, this.height / 9 + 190).size(200, 20).build());
         }
     }
 

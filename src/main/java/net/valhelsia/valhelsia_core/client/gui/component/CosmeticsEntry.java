@@ -20,7 +20,6 @@ import javax.annotation.Nonnull;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.gui.screen.component.CosmeticsEntry
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-10-16
  */
 public class CosmeticsEntry extends Button implements SelectableComponent {
@@ -35,7 +34,7 @@ public class CosmeticsEntry extends Button implements SelectableComponent {
     private boolean selected;
 
     public CosmeticsEntry(CosmeticsCategory category, CosmeticKey cosmetic, int x, int y, int width, int height, OnPress onPress, boolean selected) {
-        super(x, y, width, height, Component.translatable("cosmetic.valhelsia_core." + cosmetic.name()), onPress);
+        super(x, y, width, height, Component.translatable("cosmetic.valhelsia_core." + cosmetic.name()), onPress, DEFAULT_NARRATION);
         this.category = category;
         this.cosmetic = cosmetic;
         this.selected = selected;
@@ -55,18 +54,18 @@ public class CosmeticsEntry extends Button implements SelectableComponent {
 
     @Override
     public void renderButton(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        GuiComponent.fill(poseStack, this.x, this.y, this.x + this.width, this.y + this.height, BG_COLOR);
+        GuiComponent.fill(poseStack, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, BG_COLOR);
 
         if (this.isSelected()) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, CosmeticsWardrobeScreen.TEXTURE);
-            GuiComponent.blit(poseStack, this.x, this.y, 0, 92, this.width, this.height, 256, 256);
+            GuiComponent.blit(poseStack, this.getX(), this.getY(), 0, 92, this.width, this.height, 256, 256);
         }
 
         if (this.previewTexture != null) {
             RenderSystem.setShaderTexture(0, this.previewTexture);
 
-            GuiComponent.blit(poseStack, this.x, this.y, this.width, this.height, 0, 0, 700, 800, 700, 800);
+            GuiComponent.blit(poseStack, this.getX(), this.getY(), this.width, this.height, 0, 0, 700, 800, 700, 800);
         }
     }
 

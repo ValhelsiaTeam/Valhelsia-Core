@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
@@ -25,7 +25,6 @@ import java.util.Set;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.loot.conditions.EntityTagCondition
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-10-26
  */
 public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemCondition {
@@ -66,8 +65,8 @@ public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemC
         @Nonnull
         public EntityTagCondition deserialize(@Nonnull JsonObject jsonObject, @Nonnull JsonDeserializationContext context) {
             ResourceLocation resourceLocation = new ResourceLocation(GsonHelper.getAsString(jsonObject, "tag"));
-            TagKey<EntityType<?>> tag = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, resourceLocation);
-            return new EntityTagCondition(tag);
+
+            return new EntityTagCondition(TagKey.create(Registries.ENTITY_TYPE, resourceLocation));
         }
     }
 }

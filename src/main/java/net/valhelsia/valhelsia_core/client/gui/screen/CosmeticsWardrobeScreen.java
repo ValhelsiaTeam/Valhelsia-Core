@@ -23,7 +23,6 @@ import java.util.*;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.gui.screen.CosmeticsWardrobeScreen
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-10-14
  */
 public class CosmeticsWardrobeScreen extends Screen {
@@ -53,8 +52,6 @@ public class CosmeticsWardrobeScreen extends Screen {
 
     @Override
     protected void init() {
-        this.getMinecraft().keyboardHandler.setSendRepeatsToGui(true);
-
         this.cosmeticsList = new CosmeticsList(this.getMinecraft(), this, this.width, this.height,75, this.height);
 
         int y = 75;
@@ -156,11 +153,6 @@ public class CosmeticsWardrobeScreen extends Screen {
 
     public Map<CosmeticsCategory, CosmeticKey> getSelectedCosmetics() {
         return this.selectedCosmetics;
-    }
-
-    @Override
-    public void removed() {
-        this.getMinecraft().keyboardHandler.setSendRepeatsToGui(false);
     }
 
     @Override

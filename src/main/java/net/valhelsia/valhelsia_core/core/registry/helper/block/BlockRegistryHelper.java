@@ -3,7 +3,6 @@ package net.valhelsia.valhelsia_core.core.registry.helper.block;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.block.Block;
@@ -30,25 +29,18 @@ import java.util.function.Supplier;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.block.BlockRegistryHelper
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2020-11-18
  */
 public class BlockRegistryHelper extends RegistryHelper<Block> {
 
     public final List<RegistryObject<? extends SignBlock>> signBlocks = new ArrayList<>();
 
-    private final CreativeModeTab defaultCreativeTab;
     private final FlammableHelper flammableHelper = new FlammableHelper();
     private final CompostableHelper compostableHelper = new CompostableHelper();
 
     @SafeVarargs
-    public BlockRegistryHelper(CreativeModeTab defaultCreativeTab, Supplier<RegistryClass>... registryClasses) {
+    public BlockRegistryHelper(Supplier<RegistryClass>... registryClasses) {
         super(registryClasses);
-        this.defaultCreativeTab = defaultCreativeTab;
-    }
-
-    public CreativeModeTab getDefaultCreativeTab() {
-        return this.defaultCreativeTab;
     }
 
     public RegistryHelper<Item> getItemRegistryHelper() {
@@ -65,24 +57,16 @@ public class BlockRegistryHelper extends RegistryHelper<Block> {
 
     @Override
     public<T extends Block> RegistryObject<T> register(String name, Supplier<T> block) {
-        return register(name, block, true, this.getDefaultCreativeTab());
-    }
-
-    public<T extends Block> RegistryObject<T> register(String name, Supplier<T> block, CreativeModeTab itemGroup) {
-        return register(name, block, true, itemGroup);
+        return register(name, block, true);
     }
 
     public<T extends Block> RegistryObject<T> registerNoItem(String name, Supplier<T> block) {
-        return register(name, block, false, this.getDefaultCreativeTab());
+        return register(name, block, false);
     }
 
     public<T extends Block> RegistryObject<T> register(String name, Supplier<T> block, boolean item) {
-        return register(name, block, item, this.getDefaultCreativeTab());
-    }
-
-    public<T extends Block> RegistryObject<T> register(String name, Supplier<T> block, boolean item, CreativeModeTab creativeModeTab) {
         if (item) {
-            return register(name, block, (t) -> new BlockItem(t.get(), new Item.Properties().tab(creativeModeTab)));
+            return register(name, block, (t) -> new BlockItem(t.get(), new Item.Properties()));
         }
         return this.registerInternal(name, block);
     }
@@ -109,7 +93,7 @@ public class BlockRegistryHelper extends RegistryHelper<Block> {
         this.signBlocks.add(standing);
         this.signBlocks.add(wall);
 
-        this.getItemRegistryHelper().register(name + "_sign", () -> new SignItem(new Item.Properties().stacksTo(16).tab(this.getDefaultCreativeTab()), standing.get(), wall.get()));
+        this.getItemRegistryHelper().register(name + "_sign", () -> new SignItem(new Item.Properties().stacksTo(16), standing.get(), wall.get()));
         return Pair.of(standing, wall);
     }
 }

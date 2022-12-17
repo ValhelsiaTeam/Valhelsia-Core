@@ -46,7 +46,7 @@ public class TextureDownloader {
         Runnable runnable = () -> {
             Minecraft.getInstance().execute(() -> {
                 RenderSystem.recordRenderCall(() -> {
-                    String s = Hashing.sha1().hashUnencodedChars(FilenameUtils.getPath(url) + FilenameUtils.getBaseName(url)).toString();
+                    String s = Hashing.sha256().hashUnencodedChars(FilenameUtils.getPath(url) + FilenameUtils.getBaseName(url)).toString();
                     ResourceLocation resourceLocation = new ResourceLocation(ValhelsiaCore.MOD_ID, path + s);
                     TextureManager textureManager = Minecraft.getInstance().getTextureManager();
 
