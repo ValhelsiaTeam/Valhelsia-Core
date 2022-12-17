@@ -17,7 +17,6 @@ import java.util.List;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.gui.screen.CosmeticsListEntry
  *
  * @author Valhelsia Team
- * @version 1.17.1 - 0.1.2
  * @since 2021-10-16
  */
 public class CosmeticsListEntry extends ContainerObjectSelectionList.Entry<CosmeticsListEntry> {
@@ -35,7 +34,7 @@ public class CosmeticsListEntry extends ContainerObjectSelectionList.Entry<Cosme
     @Override
     public void render(@Nonnull PoseStack poseStack, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
         this.children.forEach(cosmeticsEntry -> {
-            cosmeticsEntry.y = top;
+            cosmeticsEntry.setY(top);;
             cosmeticsEntry.render(poseStack, mouseX, mouseY, partialTicks);
         });
     }

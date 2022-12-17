@@ -2,8 +2,8 @@ package net.valhelsia.valhelsia_core.data.worldgen;
 
 import com.google.gson.JsonElement;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -31,19 +31,19 @@ public abstract class ValhelsiaBiomeModifierProvider {
     private final RegistryOps<JsonElement> ops;
     private final Map<ResourceLocation, BiomeModifier> modifiers = new HashMap<>();
 
-    public final Registry<Biome> biomeRegistry;
-    public final Registry<PlacedFeature> featureRegistry;
+    public final HolderLookup.RegistryLookup<Biome> biomeRegistry;
+    public final HolderLookup.RegistryLookup<PlacedFeature> featureRegistry;
 
     public final HolderSet.Named<Biome> isOverworld;
     public final HolderSet.Named<Biome> isNether;
     public final HolderSet.Named<Biome> isEnd;
 
-    public ValhelsiaBiomeModifierProvider(DataProviderInfo info, RegistryOps<JsonElement> ops) {
+    public ValhelsiaBiomeModifierProvider(DataProviderInfo info, RegistryOps<JsonElement> ops, HolderLookup.RegistryLookup<Biome> biomeRegistry, HolderLookup.RegistryLookup<PlacedFeature> featureRegistry) {
         this.info = info;
         this.ops = ops;
 
-        this.biomeRegistry = ops.registry(Registry.BIOME_REGISTRY).orElseThrow();
-        this.featureRegistry = ops.registry(Registry.PLACED_FEATURE_REGISTRY).orElseThrow();
+        this.biomeRegistry = biomeRegistry;
+        this.featureRegistry = featureRegistry;
 
         this.isOverworld = this.namedBiome(BiomeTags.IS_OVERWORLD);
         this.isNether = this.namedBiome(BiomeTags.IS_NETHER);
@@ -78,25 +78,25 @@ public abstract class ValhelsiaBiomeModifierProvider {
         this.modifiers.put(this.info.location(name), modifier);
     }
 
-    public Registry<Biome> getBiomeRegistry() {
+    public HolderLookup.RegistryLookup<Biome> getBiomeRegistry() {
         return this.biomeRegistry;
     }
 
-    public Registry<PlacedFeature> getFeatureRegistry() {
+    public HolderLookup.RegistryLookup<PlacedFeature> getFeatureRegistry() {
         return this.featureRegistry;
     }
 
     @SafeVarargs
     public final HolderSet<Biome> directBiome(ResourceKey<Biome>... biomes) {
-        return HolderSet.direct(Arrays.stream(biomes).map(this.biomeRegistry::getHolderOrThrow).toArray(Holder[]::new));
+        return HolderSet.direct(Arrays.stream(biomes).map(this.biomeRegistry::getOrThrow).toArray(Holder[]::new));
     }
 
     public final HolderSet.Named<Biome> namedBiome(TagKey<Biome> tagKey) {
-        return new HolderSet.Named<>(this.biomeRegistry, tagKey);
+        return this.biomeRegistry.getOrThrow(tagKey);
     }
 
     @SafeVarargs
     public final HolderSet<PlacedFeature> directFeature(ResourceKey<PlacedFeature>... features) {
-        return HolderSet.direct(Arrays.stream(features).map(this.featureRegistry::getHolderOrThrow).toArray(Holder[]::new));
+        return HolderSet.direct(Arrays.stream(features).map(this.featureRegistry::getOrThrow).toArray(Holder[]::new));
     }
 }

@@ -14,7 +14,6 @@ import javax.annotation.Nonnull;
  * Valhelsia Core - net.valhelsia.valhelsia_core.client.gui.screen.NoCosmeticsScreen
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-10-16
  */
 public class NoCosmeticsScreen extends Screen {
@@ -39,7 +38,7 @@ public class NoCosmeticsScreen extends Screen {
                 () -> this.dataAvailable = true
         );
 
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 6 + 60, 200, 20, CommonComponents.GUI_DONE, (button) -> this.getMinecraft().setScreen(this.parentScreen)));
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.getMinecraft().setScreen(this.parentScreen)).pos(this.width / 2 - 100, this.height / 6 + 60).size(200, 20).build());
     }
 
     @Override

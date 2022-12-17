@@ -3,14 +3,13 @@ package net.valhelsia.valhelsia_core.core.registry;
 import com.google.common.collect.ImmutableBiMap;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.config.AbstractConfigValidator;
-import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryHelper;
 import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryHelper;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -87,8 +86,9 @@ public record RegistryManager(String modId, ImmutableBiMap<ResourceKey<? extends
             return this;
         }
 
-        public <T> Builder addBlockHelper(ResourceKey<? extends Registry<T>> key, CreativeModeTab creativeModeTab, Supplier<RegistryClass>... classes) {
-            registryHelpers.put(key, new BlockRegistryHelper(creativeModeTab, classes));
+        @SafeVarargs
+        public final Builder addBlockHelper(Supplier<RegistryClass>... classes) {
+            registryHelpers.put(ForgeRegistries.Keys.BLOCKS, new BlockRegistryHelper(classes));
 
             return this;
         }

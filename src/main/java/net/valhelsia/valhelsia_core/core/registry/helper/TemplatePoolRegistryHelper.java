@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.core.registry.helper;
 
 import net.minecraft.core.Holder;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
@@ -36,22 +37,22 @@ public class TemplatePoolRegistryHelper extends RegistryHelper<StructureTemplate
         this.elementFunction = elementFunction;
     }
 
-    public <T extends StructureTemplatePool> Holder<T> register(@NotNull String folder, String name, UnaryOperator<JigsawBuilder> builder) {
-        return this.register(folder, name, builder, null);
+    public <T extends StructureTemplatePool> Holder<T> register(@NotNull String folder, String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context) {
+        return this.register(folder, name, builder, context, null);
     }
 
-    public <T extends StructureTemplatePool> Holder<T> register(@NotNull String folder, String name, UnaryOperator<JigsawBuilder> builder, @Nullable TerrainAdjustment terrainAdjustment) {
-        RegistryObject<StructureTemplatePool> registryObject = this.register(name, this.createPool(builder, folder, name, terrainAdjustment));
+    public <T extends StructureTemplatePool> Holder<T> register(@NotNull String folder, String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
+        RegistryObject<StructureTemplatePool> registryObject = this.register(name, this.createPool(builder, folder, name, context, terrainAdjustment));
 
         return (Holder<T>) registryObject.getHolder().get();
     }
 
-    public <T extends StructureTemplatePool> Holder<T>  register(String name, UnaryOperator<JigsawBuilder> builder) {
-        return this.register(name, builder, null);
+    public <T extends StructureTemplatePool> Holder<T>  register(String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context) {
+        return this.register(name, builder, context, null);
     }
 
-    public <T extends StructureTemplatePool> Holder<T> register(String name, UnaryOperator<JigsawBuilder> builder, @Nullable TerrainAdjustment terrainAdjustment) {
-        RegistryObject<StructureTemplatePool> registryObject = this.register(name, this.createPool(builder, name, terrainAdjustment));
+    public <T extends StructureTemplatePool> Holder<T> register(String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
+        RegistryObject<StructureTemplatePool> registryObject = this.register(name, this.createPool(builder, name, context, terrainAdjustment));
 
         return (Holder<T>) registryObject.getHolder().get();
     }
@@ -61,11 +62,11 @@ public class TemplatePoolRegistryHelper extends RegistryHelper<StructureTemplate
         return this.registerInternal(name, pool);
     }
 
-    private Supplier<StructureTemplatePool> createPool(UnaryOperator<JigsawBuilder> builder, String folder, String name, @Nullable TerrainAdjustment terrainAdjustment) {
-        return () -> builder.apply(JigsawBuilder.builder(this.getRegistryManager().modId(), folder, name, this.defaultProcessors, this.elementFunction)).build(terrainAdjustment);
+    private Supplier<StructureTemplatePool> createPool(UnaryOperator<JigsawBuilder> builder, String folder, String name, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
+        return () -> builder.apply(JigsawBuilder.builder(this.getRegistryManager().modId(), folder, name, this.defaultProcessors, context, this.elementFunction)).build(terrainAdjustment);
     }
 
-    private Supplier<StructureTemplatePool> createPool(UnaryOperator<JigsawBuilder> builder, String name, @Nullable TerrainAdjustment terrainAdjustment) {
-        return () -> builder.apply(JigsawBuilder.builder(this.getRegistryManager().modId(), name, this.defaultProcessors, this.elementFunction)).build(terrainAdjustment);
+    private Supplier<StructureTemplatePool> createPool(UnaryOperator<JigsawBuilder> builder, String name, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
+        return () -> builder.apply(JigsawBuilder.builder(this.getRegistryManager().modId(), name, this.defaultProcessors, context, this.elementFunction)).build(terrainAdjustment);
     }
 }

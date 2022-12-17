@@ -33,13 +33,13 @@ public abstract class ValhelsiaRecipeProvider extends RecipeProvider implements 
     private final DataProviderInfo info;
 
     public ValhelsiaRecipeProvider(DataProviderInfo info) {
-        super(info.generator());
+        super(info.output());
         this.info = info;
     }
 
     @OverridingMethodsMustInvokeSuper
     @Override
-    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
+    protected void buildRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
         this.finishedRecipeConsumer = consumer;
         this.registerRecipes();
     }
@@ -59,24 +59,24 @@ public abstract class ValhelsiaRecipeProvider extends RecipeProvider implements 
     }
 
     public void storageRecipe(ItemLike item, ItemLike block, @Nullable String groupItem, @Nullable String groupBlock) {
-        this.shaped(block, builder -> builder.group(groupBlock).pattern("###").pattern("###").pattern("###").define('#', item).unlockedBy(this, item), getName(block) + "_from_" + getName(item));
-        this.shapeless(item, 9, builder -> builder.group(groupItem).requires(block).unlockedBy("has_item", has(block)), getName(item) + "_from_" + getName(block));
+        this.shaped(RecipeCategory.MISC, block, builder -> builder.group(groupBlock).pattern("###").pattern("###").pattern("###").define('#', item).unlockedBy(this, item), getName(block) + "_from_" + getName(item));
+        this.shapeless(RecipeCategory.BUILDING_BLOCKS, item, 9, builder -> builder.group(groupItem).requires(block).unlockedBy("has_item", has(block)), getName(item) + "_from_" + getName(block));
     }
 
-    public void simple2x2(ItemLike result, RecipePart<?> item) {
-        this.shaped(result, builder -> builder.pattern("##").pattern("##").define('#', item).unlockedBy(this, item));
+    public void simple2x2(RecipeCategory category, ItemLike result, RecipePart<?> item) {
+        this.shaped(category, result, builder -> builder.pattern("##").pattern("##").define('#', item).unlockedBy(this, item));
     }
 
-    public void singleRow(ItemLike result, RecipePart<?> item) {
-        this.shaped(result, builder -> builder.pattern("###").define('#', item).unlockedBy(this, item));
+    public void singleRow(RecipeCategory category, ItemLike result, RecipePart<?> item) {
+        this.shaped(category, result, builder -> builder.pattern("###").define('#', item).unlockedBy(this, item));
     }
 
-    public void surroundingItem(ItemLike result, RecipePart<?> middle, RecipePart<?> outside, int amount) {
-        this.shaped(result, amount, builder -> builder.pattern("###").pattern("#X#").pattern("###").define('#', outside).define('X', middle).unlockedBy(getHasName(middle), has(middle)).unlockedBy(this, outside));
+    public void surroundingItem(RecipeCategory category, ItemLike result, RecipePart<?> middle, RecipePart<?> outside, int amount) {
+        this.shaped(category, result, amount, builder -> builder.pattern("###").pattern("#X#").pattern("###").define('#', outside).define('X', middle).unlockedBy(getHasName(middle), has(middle)).unlockedBy(this, outside));
     }
 
     public void wood(ItemLike result, RecipePart<?> log) {
-        this.shaped(result, 3, builder -> builder.group("bark").pattern("##").pattern("##").define('#', log).unlockedBy(this, log));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 3, builder -> builder.group("bark").pattern("##").pattern("##").define('#', log).unlockedBy(this, log));
     }
 
     public void planks(ItemLike result, TagKey<Item> log) {
@@ -84,135 +84,135 @@ public abstract class ValhelsiaRecipeProvider extends RecipeProvider implements 
     }
 
     public void planks(ItemLike result, TagKey<Item> log, int count) {
-        this.shapeless(result, count, builder -> builder.requires(log).unlockedBy("has_log", has(log)));
+        this.shapeless(RecipeCategory.BUILDING_BLOCKS, result, count, builder -> builder.requires(log).unlockedBy("has_log", has(log)));
     }
 
     public void slab(ItemLike result, RecipePart<?> planks) {
-        this.shaped(result, 6, builder -> builder.pattern("###").define('#', planks).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 6, builder -> builder.pattern("###").define('#', planks).unlockedBy(this, planks));
     }
 
     public void woodenSlab(ItemLike result, RecipePart<?> planks) {
-        this.shaped(result, 6, builder -> builder.group("wooden_slab").pattern("###").define('#', planks).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 6, builder -> builder.group("wooden_slab").pattern("###").define('#', planks).unlockedBy(this, planks));
     }
 
     public void stairs(ItemLike result, RecipePart<?> planks) {
-        this.shaped(result, 4, builder -> builder.pattern("#  ").pattern("## ").pattern("###").define('#', planks).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 4, builder -> builder.pattern("#  ").pattern("## ").pattern("###").define('#', planks).unlockedBy(this, planks));
     }
 
     public void sword(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, builder -> builder.pattern("#").pattern("#").pattern("X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
+        this.shaped(RecipeCategory.COMBAT, result, builder -> builder.pattern("#").pattern("#").pattern("X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
     }
 
     public void shovel(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, builder -> builder.pattern("#").pattern("X").pattern("X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
+        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("#").pattern("X").pattern("X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
     }
 
     public void pickaxe(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, builder -> builder.pattern("###").pattern(" X ").pattern(" X ").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
+        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("###").pattern(" X ").pattern(" X ").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
     }
 
     public void axe(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, builder -> builder.pattern("##").pattern("#X").pattern(" X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
+        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("##").pattern("#X").pattern(" X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
     }
 
     public void hoe(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, builder -> builder.pattern("##").pattern(" X").pattern(" X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
+        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("##").pattern(" X").pattern(" X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
     }
 
     public void helmet(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, builder -> builder.pattern("###").pattern("# #").define('#', material).unlockedBy(this, material));
+        this.shaped(RecipeCategory.COMBAT, result, builder -> builder.pattern("###").pattern("# #").define('#', material).unlockedBy(this, material));
     }
 
     public void chestplate(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, builder -> builder.pattern("# #").pattern("###").pattern("###").define('#', material).unlockedBy(this, material));
+        this.shaped(RecipeCategory.COMBAT, result, builder -> builder.pattern("# #").pattern("###").pattern("###").define('#', material).unlockedBy(this, material));
     }
 
     public void leggings(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, builder -> builder.pattern("###").pattern("# #").pattern("# #").define('#', material).unlockedBy(this, material));
+        this.shaped(RecipeCategory.COMBAT, result, builder -> builder.pattern("###").pattern("# #").pattern("# #").define('#', material).unlockedBy(this, material));
     }
 
     public void boots(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, builder -> builder.pattern("# #").pattern("# #").define('#', material).unlockedBy(this, material));
+        this.shaped(RecipeCategory.COMBAT, result, builder -> builder.pattern("# #").pattern("# #").define('#', material).unlockedBy(this, material));
     }
 
     public void boat(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, builder -> builder.pattern("# #").pattern("###").define('#', material).unlockedBy(this, material));
+        this.shaped(RecipeCategory.TRANSPORTATION, result, builder -> builder.pattern("# #").pattern("###").define('#', material).unlockedBy(this, material));
     }
 
     public void chestBoat(ItemLike result, ItemLike boat) {
-        this.shapeless(result, builder -> builder.requires(boat).requires(Tags.Items.CHESTS_WOODEN).unlockedBy("has_" + this.getName(boat), has(boat)).unlockedBy("has_chest", has(Tags.Items.CHESTS_WOODEN)));
+        this.shapeless(RecipeCategory.TRANSPORTATION, result, builder -> builder.requires(boat).requires(Tags.Items.CHESTS_WOODEN).unlockedBy("has_" + this.getName(boat), has(boat)).unlockedBy("has_chest", has(Tags.Items.CHESTS_WOODEN)));
     }
 
     public void glassPane(ItemLike result, RecipePart<?> glass) {
-        this.shaped(result, 16, builder -> builder.pattern("###").pattern("###").define('#', glass).unlockedBy(this, glass));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 16, builder -> builder.pattern("###").pattern("###").define('#', glass).unlockedBy(this, glass));
     }
 
     public void woodenStairs(ItemLike result, RecipePart<?> planks) {
-        this.shaped(result, 4, builder -> builder.group("wooden_stairs").pattern("#  ").pattern("## ").pattern("###").define('#', planks).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 4, builder -> builder.group("wooden_stairs").pattern("#  ").pattern("## ").pattern("###").define('#', planks).unlockedBy(this, planks));
     }
 
     public void sign(ItemLike result, RecipePart<?> planks) {
-        this.shaped(result, 3, builder -> builder.pattern("###").pattern("###").pattern(" X ").define('#', planks).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.DECORATIONS, result, 3, builder -> builder.pattern("###").pattern("###").pattern(" X ").define('#', planks).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, planks));
     }
 
     public void door(ItemLike result, RecipePart<?> planks) {
-        this.shaped(result, 3, builder -> builder.pattern("##").pattern("##").pattern("##").define('#', planks).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 3, builder -> builder.pattern("##").pattern("##").pattern("##").define('#', planks).unlockedBy(this, planks));
     }
 
     public void trapdoor(ItemLike result, RecipePart<?> planks) {
-        this.shaped(result, 2, builder -> builder.pattern("###").pattern("###").define('#', planks).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 2, builder -> builder.pattern("###").pattern("###").define('#', planks).unlockedBy(this, planks));
     }
 
     public void fence(ItemLike result, RecipePart<?> planks) {
-        this.shaped(result, 3, builder -> builder.pattern("#X#").pattern("#X#").define('#', planks).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 3, builder -> builder.pattern("#X#").pattern("#X#").define('#', planks).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, planks));
     }
 
     public void fenceGate(ItemLike result, RecipePart<?> planks) {
-        this.shaped(result, builder -> builder.pattern("#X#").pattern("#X#").define('X', planks).define('#', Tags.Items.RODS_WOODEN).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, builder -> builder.pattern("#X#").pattern("#X#").define('X', planks).define('#', Tags.Items.RODS_WOODEN).unlockedBy(this, planks));
     }
 
     public void button(ItemLike result, ItemLike planks) {
-        this.shapeless(result, builder -> builder.requires(planks).unlockedBy("has_planks", has(planks)));
+        this.shapeless(RecipeCategory.REDSTONE, result, builder -> builder.requires(planks).unlockedBy("has_planks", has(planks)));
     }
 
     public void pressurePlate(ItemLike result, RecipePart<?> planks) {
-        this.shaped(result, builder -> builder.pattern("##").define('#', planks).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.REDSTONE, result, builder -> builder.pattern("##").define('#', planks).unlockedBy(this, planks));
     }
 
     public void carpet(ItemLike result, RecipePart<?> material) {
-        this.shaped(result, 3, builder -> builder.pattern("##").define('#', material).unlockedBy(this, material));
+        this.shaped(RecipeCategory.DECORATIONS, result, 3, builder -> builder.pattern("##").define('#', material).unlockedBy(this, material));
     }
 
-    public void shaped(ItemLike result, UnaryOperator<ValhelsiaShapedRecipeBuilder> recipe) {
-        this.add(recipe.apply(ValhelsiaShapedRecipeBuilder.shaped(result)).builder());
+    public void shaped(RecipeCategory category, ItemLike result, UnaryOperator<ValhelsiaShapedRecipeBuilder> recipe) {
+        this.add(recipe.apply(ValhelsiaShapedRecipeBuilder.shaped(category, result)).builder());
     }
 
-    public void shaped(ItemLike result, UnaryOperator<ValhelsiaShapedRecipeBuilder> recipe, String path) {
-        this.add(recipe.apply(ValhelsiaShapedRecipeBuilder.shaped(result)).builder(), path);
+    public void shaped(RecipeCategory category, ItemLike result, UnaryOperator<ValhelsiaShapedRecipeBuilder> recipe, String path) {
+        this.add(recipe.apply(ValhelsiaShapedRecipeBuilder.shaped(category, result)).builder(), path);
     }
 
-    public void shaped(ItemLike result, int count, UnaryOperator<ValhelsiaShapedRecipeBuilder> recipe) {
-        this.add(recipe.apply(ValhelsiaShapedRecipeBuilder.shaped(result, count)).builder());
+    public void shaped(RecipeCategory category, ItemLike result, int count, UnaryOperator<ValhelsiaShapedRecipeBuilder> recipe) {
+        this.add(recipe.apply(ValhelsiaShapedRecipeBuilder.shaped(category, result, count)).builder());
     }
 
-    public void shaped(ItemLike result, int count, UnaryOperator<ValhelsiaShapedRecipeBuilder> recipe, String path) {
-        this.add(recipe.apply(ValhelsiaShapedRecipeBuilder.shaped(result, count)).builder(), path);
+    public void shaped(RecipeCategory category, ItemLike result, int count, UnaryOperator<ValhelsiaShapedRecipeBuilder> recipe, String path) {
+        this.add(recipe.apply(ValhelsiaShapedRecipeBuilder.shaped(category, result, count)).builder(), path);
     }
 
-    public void shapeless(ItemLike result, UnaryOperator<ShapelessRecipeBuilder> recipe) {
-        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(result)));
+    public void shapeless(RecipeCategory category, ItemLike result, UnaryOperator<ShapelessRecipeBuilder> recipe) {
+        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(category, result)));
     }
 
-    public void shapeless(ItemLike result, UnaryOperator<ShapelessRecipeBuilder> recipe, String path) {
-        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(result)), path);
+    public void shapeless(RecipeCategory category, ItemLike result, UnaryOperator<ShapelessRecipeBuilder> recipe, String path) {
+        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(category, result)), path);
     }
 
-    public void shapeless(ItemLike result, int count, UnaryOperator<ShapelessRecipeBuilder> recipe) {
-        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(result, count)));
+    public void shapeless(RecipeCategory category, ItemLike result, int count, UnaryOperator<ShapelessRecipeBuilder> recipe) {
+        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(category, result, count)));
     }
 
-    public void shapeless(ItemLike result, int count, UnaryOperator<ShapelessRecipeBuilder> recipe, String path) {
-        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(result, count)), path);
+    public void shapeless(RecipeCategory category, ItemLike result, int count, UnaryOperator<ShapelessRecipeBuilder> recipe, String path) {
+        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(category, result, count)), path);
     }
 
     public String getName(ItemLike item) {

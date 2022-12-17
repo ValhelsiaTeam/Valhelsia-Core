@@ -32,23 +32,21 @@ public class SkinCustomizationScreenMixin extends OptionsSubScreen {
         super(previousScreen, options, textComponent);
     }
 
-    @ModifyVariable(method = "init", ordinal = 0, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/SkinCustomizationScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;", ordinal = 1, shift = At.Shift.AFTER))
-    public int init(int i) {
+    @ModifyVariable(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/SkinCustomizationScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;", ordinal = 1), index = 1)
+    public int valhelsia_init(int i) {
         Minecraft minecraft = this.getMinecraft();
         i++;
 
         CosmeticsManager cosmeticsManager = CosmeticsManager.getInstance();
         UUID uuid = this.getMinecraft().getUser().getGameProfile().getId();
 
-        this.addRenderableWidget(new Button(this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), 150, 20,
-                Component.translatable("gui." + ValhelsiaCore.MOD_ID + ".cosmeticsSettings").append("..."),
-                (button) -> {
-                    if (!cosmeticsManager.getLoadedPlayers().contains(uuid) || cosmeticsManager.getCosmetics(uuid).isEmpty()) {
-                        minecraft.setScreen(new NoCosmeticsScreen(this));
-                    } else {
-                        minecraft.setScreen(new CosmeticsWardrobeScreen(this));
-                    }
-                }));
+        this.addRenderableWidget(Button.builder(Component.translatable("gui." + ValhelsiaCore.MOD_ID + ".cosmeticsSettings").append("..."), button -> {
+            if (!cosmeticsManager.getLoadedPlayers().contains(uuid) || cosmeticsManager.getCosmetics(uuid).isEmpty()) {
+                minecraft.setScreen(new NoCosmeticsScreen(this));
+            } else {
+                minecraft.setScreen(new CosmeticsWardrobeScreen(this));
+            }
+        }).pos(this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1)).size(150, 20).build());
 
         return i;
     }

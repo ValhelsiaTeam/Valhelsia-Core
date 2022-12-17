@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
@@ -32,7 +32,6 @@ import java.util.Set;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.loot.conditions.MatchBlockCondition
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-05-03
  */
 public record MatchBlockCondition(@Nullable List<Block> blocks,
@@ -107,7 +106,7 @@ public record MatchBlockCondition(@Nullable List<Block> blocks,
             if (jsonObject.has("tag")) {
                 ResourceLocation tag = new ResourceLocation(GsonHelper.getAsString(jsonObject, "tag"));
 
-                return new MatchBlockCondition(null, TagKey.create(Registry.BLOCK_REGISTRY, tag), deserializeProperties(jsonObject));
+                return new MatchBlockCondition(null, TagKey.create(Registries.BLOCK, tag), deserializeProperties(jsonObject));
             } else if (jsonObject.has("blocks")) {
                 List<Block> blocks = new ArrayList<>();
 

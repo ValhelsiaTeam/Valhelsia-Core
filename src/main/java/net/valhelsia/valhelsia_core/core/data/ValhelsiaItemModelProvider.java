@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.core.data;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.data.ValhelsiaItemModelProvider
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-01-07
  */
 public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
@@ -30,8 +29,8 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
     private final Set<RegistryObject<Item>> remainingItems;
     private final Set<RegistryObject<Item>> remainingBlockItems;
 
-    public ValhelsiaItemModelProvider(DataGenerator generator, RegistryManager registryManager, ExistingFileHelper existingFileHelper) {
-        super(generator, registryManager.modId(), existingFileHelper);
+    public ValhelsiaItemModelProvider(PackOutput output, RegistryManager registryManager, ExistingFileHelper existingFileHelper) {
+        super(output, registryManager.modId(), existingFileHelper);
         this.remainingItems = registryManager.getItemHelper().getRegistryObjects().stream().filter(item -> !(item.get() instanceof BlockItem)).collect(Collectors.toSet());
         this.remainingBlockItems = registryManager.getItemHelper().getRegistryObjects().stream().filter(item -> item.get() instanceof BlockItem).collect(Collectors.toSet());
     }

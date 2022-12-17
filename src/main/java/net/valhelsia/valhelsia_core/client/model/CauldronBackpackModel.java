@@ -2,7 +2,7 @@ package net.valhelsia.valhelsia_core.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.ListModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -72,7 +72,7 @@ public class CauldronBackpackModel<T extends Player> extends ListModel<T> implem
 
     @Override
     public void setPosition(PoseStack poseStack) {
-        poseStack.mulPose(Vector3f.XN.rotationDegrees(10));
+        poseStack.mulPose(Axis.XN.rotationDegrees(10));
         poseStack.translate(0.D, -0.85D, 0.5D);
     }
 }

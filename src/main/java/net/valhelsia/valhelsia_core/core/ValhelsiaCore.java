@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.core;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -38,9 +38,9 @@ public class ValhelsiaCore extends ValhelsiaMod {
     public static final RegistryManager REGISTRY_MANAGER = RegistryManager.builder(MOD_ID)
             .addHelper(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, ValhelsiaBlockEntities::new)
             .addHelper(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, ValhelsiaLootModifiers::new)
-            .addHelper(Registry.LOOT_ITEM_REGISTRY, ValhelsiaLootConditions::new)
+            .addHelper(Registries.LOOT_CONDITION_TYPE, ValhelsiaLootConditions::new)
             .addHelper(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ValhelsiaBiomeModifiers::new)
-            .addHelper(Registry.STRUCTURE_PROCESSOR_REGISTRY, ValhelsiaStructureProcessors::new)
+            .addHelper(Registries.STRUCTURE_PROCESSOR, ValhelsiaStructureProcessors::new)
             .create();
 
     public ValhelsiaCore() {

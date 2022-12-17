@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.core.data;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -23,15 +23,14 @@ import java.util.function.Predicate;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.data.ValhelsiaBlockStateProvider
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2021-01-07
  */
 public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
 
     private final Set<RegistryObject<Block>> remainingBlocks;
 
-    public ValhelsiaBlockStateProvider(DataGenerator gen, RegistryManager registryManager, ExistingFileHelper exFileHelper) {
-        super(gen, registryManager.modId(), exFileHelper);
+    public ValhelsiaBlockStateProvider(PackOutput output, RegistryManager registryManager, ExistingFileHelper exFileHelper) {
+        super(output, registryManager.modId(), exFileHelper);
         this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getRegistryObjects());
     }
 

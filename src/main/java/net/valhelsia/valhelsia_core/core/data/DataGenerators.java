@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.core.data;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,7 +14,6 @@ import net.valhelsia.valhelsia_core.core.data.tags.ValhelsiaBlockTagsProvider;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.data.DataGenerators
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2022-04-14
  */
 @Mod.EventBusSubscriber(modid = ValhelsiaCore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -22,9 +22,9 @@ public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
+        PackOutput output = generator.getPackOutput();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
-        ValhelsiaBlockTagsProvider blockTagsProvider = new ValhelsiaBlockTagsProvider(generator, existingFileHelper);
-        generator.addProvider(event.includeServer(), blockTagsProvider);
+        generator.addProvider(event.includeServer(), new ValhelsiaBlockTagsProvider(output, event.getLookupProvider(), existingFileHelper));
     }
 }
