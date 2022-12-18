@@ -39,7 +39,7 @@ public abstract class RegistryCollector {
     }
 
     @SafeVarargs
-    public final <T> void add(ResourceKey<? extends Registry<?>> key, BiFunction<DeferredRegister<T>, ImmutableList<Supplier<RegistryClass>>, RegistryHelper<T>> registryHelper, Supplier<RegistryClass>... registryClasses) {
+    public final <T> void add(ResourceKey<? extends Registry<T>> key, BiFunction<DeferredRegister<T>, ImmutableList<Supplier<RegistryClass>>, RegistryHelper<T>> registryHelper, Supplier<RegistryClass>... registryClasses) {
         this.registryHelpers.put(key, registryHelper.apply(this.createDeferredRegister(key), ImmutableList.copyOf(registryClasses)));
     }
 
