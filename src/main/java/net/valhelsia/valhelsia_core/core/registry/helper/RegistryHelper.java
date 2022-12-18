@@ -5,11 +5,10 @@ import com.google.common.collect.ImmutableSet;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import net.valhelsia.valhelsia_core.core.mixin.DeferredRegisterAccessor;
 import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
-import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -18,27 +17,16 @@ import java.util.function.Supplier;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2020-11-18
  */
 public class RegistryHelper<T> {
 
-    private RegistryManager registryManager = null;
-    private DeferredRegister<T> deferredRegister = null;
+    private final DeferredRegister<T> deferredRegister;
     private final List<Supplier<RegistryClass>> registryClasses;
 
-    @SafeVarargs
-    public RegistryHelper(Supplier<RegistryClass>... registryClasses) {
+    public RegistryHelper(DeferredRegister<T> deferredRegister, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+        this.deferredRegister = deferredRegister;
         this.registryClasses = ImmutableList.copyOf(registryClasses);
-    }
-
-    public RegistryManager getRegistryManager() {
-        return this.registryManager;
-    }
-
-    public void setup(RegistryManager registryManager) {
-        this.registryManager = registryManager;
-        this.deferredRegister = DeferredRegister.create(Objects.requireNonNull(this.getRegistryManager().registryHelpers().inverse().get(this)).location(), this.getRegistryManager().modId());
     }
 
     public Set<RegistryObject<T>> getRegistryObjects() {
@@ -59,5 +47,9 @@ public class RegistryHelper<T> {
 
     public <O extends T> RegistryObject<O> registerInternal(String name, Supplier<O> object) {
         return this.deferredRegister.register(name, object);
+    }
+
+    public String getModId() {
+        return ((DeferredRegisterAccessor) this.deferredRegister).getModid();
     }
 }

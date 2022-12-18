@@ -41,7 +41,7 @@ public class ClientSetup {
     public void onClientSetup(FMLClientSetupEvent event) {
         this.registerCosmetics();
 
-        ValhelsiaCore.REGISTRY_MANAGERS.forEach(registryManager -> {
+        ValhelsiaCore.REGISTRY_MANAGERS.values().forEach(registryManager -> {
             if (!registryManager.hasHelper(ForgeRegistries.Keys.BLOCKS)) {
                 return;
             }

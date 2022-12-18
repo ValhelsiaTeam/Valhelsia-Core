@@ -12,20 +12,26 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * @author Valhelsia Team
  * @since 2022-11-02
  */
-public abstract class ValhelsiaMod {
+public class ValhelsiaMod {
 
     private final String modId;
     private final EventHandler eventHandler;
 
     public ValhelsiaMod(String modId, IEventBus modEventBus) {
+        this(modId, modEventBus, null);
+    }
+
+    public ValhelsiaMod(String modId, IEventBus modEventBus, @Nullable RegistryManager registryManager) {
         this.modId = modId;
         this.eventHandler = this.buildEventHandler();
 
@@ -33,14 +39,13 @@ public abstract class ValhelsiaMod {
         modEventBus.addListener(this::enqueueIMC);
         modEventBus.addListener(this::processIMC);
 
+        this.registerRegistryManager(registryManager);
         this.registerConfigs();
 
         this.eventHandler.register(this, MinecraftForge.EVENT_BUS, modEventBus);
     }
 
-    public abstract RegistryManager getRegistryManager();
-
-    public String getModId() {
+    public final String getModId() {
         return this.modId;
     }
 
@@ -48,8 +53,16 @@ public abstract class ValhelsiaMod {
         return EventHandler.EMPTY;
     }
 
-    public EventHandler getEventHandler() {
+    public final EventHandler getEventHandler() {
         return this.eventHandler;
+    }
+
+    public final Optional<RegistryManager> getRegistryManager() {
+        return Optional.ofNullable(ValhelsiaCore.REGISTRY_MANAGERS.get(this.modId));
+    }
+
+    private void registerRegistryManager(RegistryManager registryManager) {
+        ValhelsiaCore.REGISTRY_MANAGERS.put(this.modId, registryManager);
     }
 
     protected void setup(final FMLCommonSetupEvent event) {
@@ -105,7 +118,9 @@ public abstract class ValhelsiaMod {
         };
 
         protected void register(ValhelsiaMod mod, IEventBus forgeEventBus, IEventBus modEventsBus) {
-            mod.getRegistryManager().register(modEventsBus);
+            mod.getRegistryManager().ifPresent(registryManager -> {
+                registryManager.register(modEventsBus);
+            });
 
             this.registerModEvents(modEventsBus);
             this.registerForgeEvents(forgeEventBus);

@@ -1,7 +1,9 @@
 package net.valhelsia.valhelsia_core.core.registry.helper;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
 
@@ -13,9 +15,8 @@ import java.util.function.Supplier;
  */
 public class EntityRegistryHelper extends RegistryHelper<EntityType<?>> {
 
-    @SafeVarargs
-    public EntityRegistryHelper(Supplier<RegistryClass>... registryClasses) {
-        super(registryClasses);
+    public EntityRegistryHelper(DeferredRegister<EntityType<?>> deferredRegister, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+        super(deferredRegister, registryClasses);
     }
 
     public <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> builder) {

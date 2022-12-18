@@ -1,22 +1,17 @@
 package net.valhelsia.valhelsia_core.core;
 
-import net.minecraft.core.registries.Registries;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.client.ClientSetup;
 import net.valhelsia.valhelsia_core.common.network.NetworkHandler;
 import net.valhelsia.valhelsia_core.core.config.ModConfig;
-import net.valhelsia.valhelsia_core.core.init.*;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Valhelsia Core Main Class <br>
@@ -34,24 +29,13 @@ public class ValhelsiaCore extends ValhelsiaMod {
 
     public static boolean allConfigsValidated = false;
 
-    public static final List<RegistryManager> REGISTRY_MANAGERS = new ArrayList<>();
-    public static final RegistryManager REGISTRY_MANAGER = RegistryManager.builder(MOD_ID)
-            .addHelper(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, ValhelsiaBlockEntities::new)
-            .addHelper(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, ValhelsiaLootModifiers::new)
-            .addHelper(Registries.LOOT_CONDITION_TYPE, ValhelsiaLootConditions::new)
-            .addHelper(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ValhelsiaBiomeModifiers::new)
-            .addHelper(Registries.STRUCTURE_PROCESSOR, ValhelsiaStructureProcessors::new)
-            .create();
+    public static final Object2ObjectArrayMap<String, RegistryManager> REGISTRY_MANAGERS = new Object2ObjectArrayMap<>();
+    public static final RegistryManager REGISTRY_MANAGER = new RegistryManager(new ModRegistries(ValhelsiaCore.MOD_ID), null);
 
     public ValhelsiaCore() {
-        super(MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
+        super(ValhelsiaCore.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus(), ValhelsiaCore.REGISTRY_MANAGER);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientSetup::new);
-    }
-
-    @Override
-    public RegistryManager getRegistryManager() {
-        return REGISTRY_MANAGER;
     }
 
     @Override

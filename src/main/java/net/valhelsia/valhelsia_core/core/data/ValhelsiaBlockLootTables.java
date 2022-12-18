@@ -1,13 +1,10 @@
 package net.valhelsia.valhelsia_core.core.data;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
@@ -19,7 +16,6 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.SlabType;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -33,8 +29,10 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 
-import java.util.*;
-import java.util.function.BiConsumer;
+import javax.annotation.Nonnull;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -46,7 +44,7 @@ import java.util.function.Predicate;
  * @author Valhelsia Team
  * @since 2020-11-22
  */
-public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
+public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
 
     public static final LootItemCondition.Builder HAS_SILK_TOUCH = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))));
     public static final LootItemCondition.Builder HAS_NO_SILK_TOUCH = HAS_SILK_TOUCH.invert();
@@ -56,41 +54,21 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider impl
     public static final float[] NORMAL_LEAVES_SAPLING_CHANCES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
     public static final float[] JUNGLE_LEAVES_SAPLING_CHANGES = new float[]{0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F};
 
-    private final List<Block> blocks = new ArrayList<>();
-    private final Map<ResourceLocation, LootTable.Builder> lootTables = Maps.newHashMap();
-
+    private final RegistryManager registryManager;
     private final Set<RegistryObject<Block>> remainingBlocks;
 
     public ValhelsiaBlockLootTables(Set<Item> explosionResistant, FeatureFlagSet flagSet, RegistryManager registryManager) {
         super(explosionResistant, flagSet);
+        this.registryManager = registryManager;
         this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getRegistryObjects());
     }
-
-    public abstract void addTables();
 
     public static Set<Item> immuneToExplosion() {
         return new HashSet<>();
     }
 
-    @Override
-    public void accept(BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
-        this.addTables();
-
-        Set<ResourceLocation> set = Sets.newHashSet();
-
-        for(Block block : blocks) {
-            ResourceLocation resourcelocation = block.getLootTable();
-            if (resourcelocation != BuiltInLootTables.EMPTY && set.add(resourcelocation)) {
-                LootTable.Builder loottable$builder = this.lootTables.get(resourcelocation);
-                if (loottable$builder != null) {
-                    consumer.accept(resourcelocation, loottable$builder);
-                }
-            }
-        }
-    }
-
     public Set<RegistryObject<Block>> getRemainingBlocks() {
-        return remainingBlocks;
+        return this.remainingBlocks;
     }
 
     public void forEach(Predicate<Block> predicate, Consumer<Block> consumer) {
@@ -174,15 +152,16 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider impl
         this.add(blockIn, factory.apply(blockIn));
     }
 
-    protected void add(Block block, LootTable.Builder table) {
-        this.blocks.add(block);
-        this.lootTables.put(block.getLootTable(), table);
-    }
-
     public LootPoolEntryContainer.Builder<?> setCountFromIntegerProperty(Block block, LootPoolSingletonContainer.Builder<?> lootEntryBuilder, IntegerProperty intProperty) {
         intProperty.getPossibleValues().forEach(integer -> {
             lootEntryBuilder.apply(SetItemCountFunction.setCount(ConstantValue.exactly(integer)).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(intProperty, integer))));
         });
         return lootEntryBuilder;
+    }
+
+    @Nonnull
+    @Override
+    protected Iterable<Block> getKnownBlocks() {
+        return this.registryManager.getBlockHelper().getRegistryObjects().stream().map(RegistryObject::get).toList();
     }
 }

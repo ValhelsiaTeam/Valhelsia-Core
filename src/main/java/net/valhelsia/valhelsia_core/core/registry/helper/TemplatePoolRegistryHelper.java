@@ -1,10 +1,12 @@
 package net.valhelsia.valhelsia_core.core.registry.helper;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.common.world.structure.jigsaw.JigsawBuilder;
 import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
@@ -25,14 +27,12 @@ public class TemplatePoolRegistryHelper extends RegistryHelper<StructureTemplate
     @Nullable
     private final JigsawBuilder.ElementFunction elementFunction;
 
-    @SafeVarargs
-    public TemplatePoolRegistryHelper(Supplier<List<StructureProcessor>> defaultProcessors, Supplier<RegistryClass>... registryClasses) {
-        this(defaultProcessors, null, registryClasses);
+    public TemplatePoolRegistryHelper(Supplier<List<StructureProcessor>> defaultProcessors, DeferredRegister<StructureTemplatePool> deferredRegister, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+        this(defaultProcessors, null, deferredRegister, registryClasses);
     }
 
-    @SafeVarargs
-    public TemplatePoolRegistryHelper(Supplier<List<StructureProcessor>> defaultProcessors, @Nullable JigsawBuilder.ElementFunction elementFunction, Supplier<RegistryClass>... registryClasses) {
-        super(registryClasses);
+    public TemplatePoolRegistryHelper(Supplier<List<StructureProcessor>> defaultProcessors, @Nullable JigsawBuilder.ElementFunction elementFunction, DeferredRegister<StructureTemplatePool> deferredRegister, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+        super(deferredRegister, registryClasses);
         this.defaultProcessors = defaultProcessors;
         this.elementFunction = elementFunction;
     }
@@ -63,10 +63,10 @@ public class TemplatePoolRegistryHelper extends RegistryHelper<StructureTemplate
     }
 
     private Supplier<StructureTemplatePool> createPool(UnaryOperator<JigsawBuilder> builder, String folder, String name, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
-        return () -> builder.apply(JigsawBuilder.builder(this.getRegistryManager().modId(), folder, name, this.defaultProcessors, context, this.elementFunction)).build(terrainAdjustment);
+        return () -> builder.apply(JigsawBuilder.builder(this.getModId(), folder, name, this.defaultProcessors, context, this.elementFunction)).build(terrainAdjustment);
     }
 
     private Supplier<StructureTemplatePool> createPool(UnaryOperator<JigsawBuilder> builder, String name, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
-        return () -> builder.apply(JigsawBuilder.builder(this.getRegistryManager().modId(), name, this.defaultProcessors, context, this.elementFunction)).build(terrainAdjustment);
+        return () -> builder.apply(JigsawBuilder.builder(this.getModId(), name, this.defaultProcessors, context, this.elementFunction)).build(terrainAdjustment);
     }
 }

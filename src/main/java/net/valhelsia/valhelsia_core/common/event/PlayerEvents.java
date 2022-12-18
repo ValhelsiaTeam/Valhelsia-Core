@@ -40,7 +40,7 @@ public class PlayerEvents {
         Player player = event.getEntity();
         List<ConfigError> errors = new ArrayList<>();
 
-        for (RegistryManager registryManager : ValhelsiaCore.REGISTRY_MANAGERS) {
+        for (RegistryManager registryManager : ValhelsiaCore.REGISTRY_MANAGERS.values()) {
             if (registryManager.configValidator() != null) {
                 AbstractConfigValidator configValidator = registryManager.configValidator();
 

@@ -1,5 +1,6 @@
 package net.valhelsia.valhelsia_core.core.registry.helper.block;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
@@ -12,15 +13,18 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.common.block.StrippableRotatedPillarBlock;
 import net.valhelsia.valhelsia_core.common.block.ValhelsiaStandingSignBlock;
 import net.valhelsia.valhelsia_core.common.block.ValhelsiaWallSignBlock;
+import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -38,13 +42,12 @@ public class BlockRegistryHelper extends RegistryHelper<Block> {
     private final FlammableHelper flammableHelper = new FlammableHelper();
     private final CompostableHelper compostableHelper = new CompostableHelper();
 
-    @SafeVarargs
-    public BlockRegistryHelper(Supplier<RegistryClass>... registryClasses) {
-        super(registryClasses);
+    public BlockRegistryHelper(DeferredRegister<Block> deferredRegister, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+        super(deferredRegister, registryClasses);
     }
 
-    public RegistryHelper<Item> getItemRegistryHelper() {
-        return this.getRegistryManager().getItemHelper();
+    public Optional<RegistryHelper<Item> > getItemRegistryHelper() {
+        return Optional.ofNullable(ValhelsiaCore.REGISTRY_MANAGERS.get(this.getModId()).getItemHelper());
     }
 
     public FlammableHelper getFlammableHelper() {
@@ -74,7 +77,9 @@ public class BlockRegistryHelper extends RegistryHelper<Block> {
     public<T extends Block> RegistryObject<T> register(String name, Supplier<T> block, Function<RegistryObject<T>, BlockItem> blockItemFunction) {
         RegistryObject<T> registryObject = this.registerInternal(name, block);
 
-        this.getItemRegistryHelper().registerInternal(name, () -> blockItemFunction.apply(registryObject));
+        this.getItemRegistryHelper().ifPresent(itemRegistryHelper -> {
+            itemRegistryHelper.registerInternal(name, () -> blockItemFunction.apply(registryObject));
+        });
 
         return registryObject;
     }
@@ -93,7 +98,9 @@ public class BlockRegistryHelper extends RegistryHelper<Block> {
         this.signBlocks.add(standing);
         this.signBlocks.add(wall);
 
-        this.getItemRegistryHelper().register(name + "_sign", () -> new SignItem(new Item.Properties().stacksTo(16), standing.get(), wall.get()));
+        this.getItemRegistryHelper().ifPresent(itemRegistryHelper -> {
+            itemRegistryHelper.register(name + "_sign", () -> new SignItem(new Item.Properties().stacksTo(16), standing.get(), wall.get()));
+        });
         return Pair.of(standing, wall);
     }
 }

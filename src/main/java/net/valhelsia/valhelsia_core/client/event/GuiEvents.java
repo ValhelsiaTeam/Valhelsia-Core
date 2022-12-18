@@ -32,7 +32,7 @@ public class GuiEvents {
         if (event.getScreen() instanceof TitleScreen && !ValhelsiaCore.allConfigsValidated) {
             List<ConfigError> errors = new ArrayList<>();
 
-            for (RegistryManager registryManager : ValhelsiaCore.REGISTRY_MANAGERS) {
+            for (RegistryManager registryManager : ValhelsiaCore.REGISTRY_MANAGERS.values()) {
                 if (registryManager.configValidator() != null) {
                     AbstractConfigValidator configValidator = registryManager.configValidator();
 

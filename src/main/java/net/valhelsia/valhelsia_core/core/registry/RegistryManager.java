@@ -1,19 +1,16 @@
 package net.valhelsia.valhelsia_core.core.registry;
 
-import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.config.AbstractConfigValidator;
 import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryHelper;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -21,21 +18,12 @@ import java.util.function.Supplier;
  * Valhelsia Core - net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper
  *
  * @author Valhelsia Team
- * @version 1.19 - 0.3.0
  * @since 2020-11-18
  */
-public record RegistryManager(String modId, ImmutableBiMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers, @Nullable AbstractConfigValidator configValidator) {
+public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers, @Nullable AbstractConfigValidator configValidator) {
 
-    public RegistryManager(String modId, ImmutableBiMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers, @Nullable AbstractConfigValidator configValidator) {
-        this.modId = modId;
-        this.registryHelpers = registryHelpers;
-        this.configValidator = configValidator;
-
-        this.registryHelpers.forEach((key, helper) -> helper.setup(this));
-    }
-
-    public static RegistryManager.Builder builder(String modId) {
-        return new RegistryManager.Builder(modId);
+    public RegistryManager(RegistryCollector collector, @Nullable AbstractConfigValidator configValidator) {
+        this(collector.getModId(), collector.getHelpers(), configValidator);
     }
 
     public <T> boolean hasHelper(ResourceKey<Registry<T>> registryResourceKey) {
@@ -64,49 +52,5 @@ public record RegistryManager(String modId, ImmutableBiMap<ResourceKey<? extends
         }
 
         this.registryHelpers.values().forEach(registryHelper -> registryHelper.registerDeferredRegister(eventBus));
-    }
-
-    public static class Builder {
-
-        private final String modId;
-        private final Map<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers = new HashMap<>();
-        private AbstractConfigValidator configValidator = null;
-
-        private Builder(String modId) {
-            this.modId = modId;
-        }
-
-        public <T> Builder addHelper(ResourceKey<? extends Registry<T>> key, Supplier<RegistryClass>... classes) {
-            return this.addHelper(key, new RegistryHelper<>(classes));
-        }
-
-        public <T> Builder addHelper(ResourceKey<? extends Registry<T>> key, RegistryHelper<T> helper) {
-            this.registryHelpers.put(key, helper);
-
-            return this;
-        }
-
-        @SafeVarargs
-        public final Builder addBlockHelper(Supplier<RegistryClass>... classes) {
-            registryHelpers.put(ForgeRegistries.Keys.BLOCKS, new BlockRegistryHelper(classes));
-
-            return this;
-        }
-
-        public Builder setConfigValidator(AbstractConfigValidator configValidator) {
-            this.configValidator = configValidator;
-
-            return this;
-        }
-
-        public RegistryManager create() {
-            RegistryManager registryManager = new RegistryManager(this.modId, ImmutableBiMap.copyOf(this.registryHelpers), this.configValidator);
-
-            ValhelsiaCore.REGISTRY_MANAGERS.add(registryManager);
-
-            System.out.println(this.registryHelpers.values());
-
-            return registryManager;
-        }
     }
 }
