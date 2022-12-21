@@ -3,7 +3,8 @@ package net.valhelsia.valhelsia_core.core.registry.helper.block;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.block.Block;
@@ -13,19 +14,16 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.common.block.StrippableRotatedPillarBlock;
 import net.valhelsia.valhelsia_core.common.block.ValhelsiaStandingSignBlock;
 import net.valhelsia.valhelsia_core.common.block.ValhelsiaWallSignBlock;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
-import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.MappedRegistryHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -35,18 +33,20 @@ import java.util.function.Supplier;
  * @author Valhelsia Team
  * @since 2020-11-18
  */
-public class BlockRegistryHelper extends RegistryHelper<Block> {
+public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
 
-    public final List<RegistryObject<? extends SignBlock>> signBlocks = new ArrayList<>();
+    private final List<BlockRegistryObject<?>> blockRegistryObjects = new ArrayList<>();
+
+    public final List<BlockRegistryObject<? extends SignBlock>> signBlocks = new ArrayList<>();
 
     private final FlammableHelper flammableHelper = new FlammableHelper();
     private final CompostableHelper compostableHelper = new CompostableHelper();
 
-    public BlockRegistryHelper(DeferredRegister<Block> deferredRegister, ImmutableList<Supplier<RegistryClass>> registryClasses) {
-        super(deferredRegister, registryClasses);
+    public BlockRegistryHelper(ResourceKey<? extends Registry<Block>> registry, String modId, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+        super(registry, modId, registryClasses);
     }
 
-    public Optional<RegistryHelper<Item> > getItemRegistryHelper() {
+    public Optional<MappedRegistryHelper<Item>> getItemRegistryHelper() {
         return Optional.ofNullable(ValhelsiaCore.REGISTRY_MANAGERS.get(this.getModId()).getItemHelper());
     }
 
@@ -58,49 +58,34 @@ public class BlockRegistryHelper extends RegistryHelper<Block> {
         return this.compostableHelper;
     }
 
-    @Override
-    public<T extends Block> RegistryObject<T> register(String name, Supplier<T> block) {
-        return register(name, block, true);
-    }
+    public <T extends Block> BlockRegistryObject<T> create(String name, Supplier<T> block) {
+        BlockRegistryObject<T> registryObject = BlockRegistryObject.of(name, this.register(name, block));
 
-    public<T extends Block> RegistryObject<T> registerNoItem(String name, Supplier<T> block) {
-        return register(name, block, false);
-    }
-
-    public<T extends Block> RegistryObject<T> register(String name, Supplier<T> block, boolean item) {
-        if (item) {
-            return register(name, block, (t) -> new BlockItem(t.get(), new Item.Properties()));
-        }
-        return this.registerInternal(name, block);
-    }
-
-    public<T extends Block> RegistryObject<T> register(String name, Supplier<T> block, Function<RegistryObject<T>, BlockItem> blockItemFunction) {
-        RegistryObject<T> registryObject = this.registerInternal(name, block);
-
-        this.getItemRegistryHelper().ifPresent(itemRegistryHelper -> {
-            itemRegistryHelper.registerInternal(name, () -> blockItemFunction.apply(registryObject));
-        });
+        this.blockRegistryObjects.add(registryObject);
 
         return registryObject;
     }
 
-    public RegistryObject<RotatedPillarBlock> registerLogBlock(String name, Supplier<RotatedPillarBlock> strippedBlock, MaterialColor topColor, MaterialColor barkColor) {
-        return register(name, () -> new StrippableRotatedPillarBlock(strippedBlock, Block.Properties.of(Material.WOOD, (state) -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor).strength(2.0F).sound(SoundType.WOOD)));
+    public List<BlockRegistryObject<? extends Block>> getBlockRegistryObjects() {
+        return this.blockRegistryObjects;
     }
 
-    public RegistryObject<RotatedPillarBlock> registerStrippedLogBlock(String name, MaterialColor topColor, MaterialColor barkColor) {
-        return register(name, () -> new RotatedPillarBlock(Block.Properties.of(Material.WOOD, (state) -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor).strength(2.0F).sound(SoundType.WOOD)));
+    public BlockRegistryObject<StrippableRotatedPillarBlock> createLogBlock(String name, Supplier<RotatedPillarBlock> strippedBlock, MaterialColor topColor, MaterialColor barkColor) {
+        return this.create(name, () -> new StrippableRotatedPillarBlock(strippedBlock, Block.Properties.of(Material.WOOD, (state) -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor).strength(2.0F).sound(SoundType.WOOD))).withItem();
     }
 
-    public Pair<RegistryObject<ValhelsiaStandingSignBlock>, RegistryObject<ValhelsiaWallSignBlock>> createSignBlock(String name, MaterialColor color, WoodType woodType) {
-        RegistryObject<ValhelsiaStandingSignBlock> standing = this.registerInternal(name + "_sign", () -> new ValhelsiaStandingSignBlock(Block.Properties.of(Material.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), woodType));
-        RegistryObject<ValhelsiaWallSignBlock> wall = this.registerInternal(name + "_wall_sign", () -> new ValhelsiaWallSignBlock(Block.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(standing), woodType));
+    public BlockRegistryObject<RotatedPillarBlock> createStrippedLogBlock(String name, MaterialColor topColor, MaterialColor barkColor) {
+        return this.create(name, () -> new RotatedPillarBlock(Block.Properties.of(Material.WOOD, (state) -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor).strength(2.0F).sound(SoundType.WOOD))).withItem();
+    }
+
+    public Pair<BlockRegistryObject<ValhelsiaStandingSignBlock>, BlockRegistryObject<ValhelsiaWallSignBlock>> createSignBlock(String name, MaterialColor color, WoodType woodType) {
+        BlockRegistryObject<ValhelsiaStandingSignBlock> standing = this.create(name + "_sign", () -> new ValhelsiaStandingSignBlock(Block.Properties.of(Material.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), woodType));
+        BlockRegistryObject<ValhelsiaWallSignBlock> wall = this.create(name + "_wall_sign", () -> new ValhelsiaWallSignBlock(Block.Properties.of(Material.WOOD, color).noCollission().strength(1.0F).sound(SoundType.WOOD).lootFrom(standing), woodType));
         this.signBlocks.add(standing);
         this.signBlocks.add(wall);
 
-        this.getItemRegistryHelper().ifPresent(itemRegistryHelper -> {
-            itemRegistryHelper.register(name + "_sign", () -> new SignItem(new Item.Properties().stacksTo(16), standing.get(), wall.get()));
-        });
+        standing.withItem(registryObject -> new SignItem(new Item.Properties().stacksTo(16), registryObject.get(), wall.get()));
+
         return Pair.of(standing, wall);
     }
 }

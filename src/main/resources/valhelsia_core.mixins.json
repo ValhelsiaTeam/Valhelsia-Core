@@ -6,7 +6,6 @@
   "refmap": "valhelsia_core.refmap.json",
   "mixins": [
     "BlockStateBaseMixin",
-    "DeferredRegisterAccessor",
     "FlintAndSteelItemMixin",
     "ItemStackHandlerMixin",
     "ThrownPotionMixin"

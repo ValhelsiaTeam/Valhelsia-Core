@@ -9,6 +9,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryObject;
 
 import java.util.Iterator;
 import java.util.Objects;
@@ -26,8 +27,8 @@ import java.util.stream.Collectors;
  */
 public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
 
-    private final Set<RegistryObject<Item>> remainingItems;
-    private final Set<RegistryObject<Item>> remainingBlockItems;
+    private final Set<RegistryObject<? extends Item>> remainingItems;
+    private final Set<RegistryObject<? extends Item>> remainingBlockItems;
 
     public ValhelsiaItemModelProvider(PackOutput output, RegistryManager registryManager, ExistingFileHelper existingFileHelper) {
         super(output, registryManager.modId(), existingFileHelper);
@@ -35,16 +36,16 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
         this.remainingBlockItems = registryManager.getItemHelper().getRegistryObjects().stream().filter(item -> item.get() instanceof BlockItem).collect(Collectors.toSet());
     }
 
-    public Set<RegistryObject<Item>> getRemainingItems() {
-        return remainingItems;
+    public Set<RegistryObject<? extends Item>> getRemainingItems() {
+        return this.remainingItems;
     }
 
-    public Set<RegistryObject<Item>> getRemainingBlockItems() {
-        return remainingBlockItems;
+    public Set<RegistryObject<? extends Item>> getRemainingBlockItems() {
+        return this.remainingBlockItems;
     }
 
     public void forEachItem(Predicate<Item> predicate, Consumer<Item> consumer) {
-        Iterator<RegistryObject<Item>> iterator = getRemainingItems().iterator();
+        Iterator<RegistryObject<? extends Item>> iterator = getRemainingItems().iterator();
 
         while(iterator.hasNext()) {
             Item item = iterator.next().get();
@@ -56,7 +57,7 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
     }
 
     public void forEachItem(Consumer<Item> consumer) {
-        Iterator<RegistryObject<Item>> iterator = getRemainingItems().iterator();
+        Iterator<RegistryObject<? extends Item>> iterator = getRemainingItems().iterator();
 
         while(iterator.hasNext()) {
             consumer.accept(iterator.next().get());
@@ -65,7 +66,7 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
     }
 
     public void forEachBlockItem(Predicate<BlockItem> predicate, Consumer<BlockItem> consumer) {
-        Iterator<RegistryObject<Item>> iterator = getRemainingBlockItems().iterator();
+        Iterator<RegistryObject<? extends Item>> iterator = getRemainingBlockItems().iterator();
 
         while(iterator.hasNext()) {
             Item item = iterator.next().get();
@@ -77,7 +78,7 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
     }
 
     public void forEachBlockItem(Consumer<BlockItem> consumer) {
-        Iterator<RegistryObject<Item>> iterator = getRemainingBlockItems().iterator();
+        Iterator<RegistryObject<? extends Item>> iterator = getRemainingBlockItems().iterator();
 
         while(iterator.hasNext()) {
             consumer.accept((BlockItem) iterator.next().get());
@@ -93,18 +94,22 @@ public abstract class ValhelsiaItemModelProvider extends ItemModelProvider {
         }
     }
 
-    public final void takeBlockItem(Consumer<BlockItem> consumer, RegistryObject<?>... registryObjects) {
-        for (RegistryObject<?> registryObject : registryObjects) {
-            BlockItem item;
+    @SafeVarargs
+    public final void takeBlockItem(Consumer<BlockItem> consumer, BlockRegistryObject<? extends Block>... registryObjects) {
+        for (BlockRegistryObject<? extends Block> registryObject : registryObjects) {
 
-            if (registryObject.get() instanceof Block block) {
-                item = (BlockItem) block.asItem();
-            } else {
-                item = (BlockItem) registryObject.get();
+            if (registryObject.get().asItem() instanceof BlockItem blockItem) {
+                consumer.accept(blockItem);
+                getRemainingBlockItems().remove(RegistryObject.create(ForgeRegistries.ITEMS.getKey(blockItem), ForgeRegistries.ITEMS));
             }
+        }
+    }
 
-            consumer.accept(item);
-            getRemainingBlockItems().remove(RegistryObject.create(ForgeRegistries.ITEMS.getKey(item), ForgeRegistries.ITEMS));
+    @SafeVarargs
+    public final void takeBlockItem(Consumer<BlockItem> consumer, RegistryObject<? extends BlockItem>... registryObjects) {
+        for (RegistryObject<? extends Item> registryObject : registryObjects) {
+            consumer.accept((BlockItem) registryObject.get());
+            getRemainingBlockItems().remove(RegistryObject.create(ForgeRegistries.ITEMS.getKey(registryObject.get()), ForgeRegistries.ITEMS));
         }
     }
 

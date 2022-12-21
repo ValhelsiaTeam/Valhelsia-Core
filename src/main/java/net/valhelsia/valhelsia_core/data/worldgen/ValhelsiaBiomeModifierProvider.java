@@ -1,12 +1,11 @@
 package net.valhelsia.valhelsia_core.data.worldgen;
 
-import com.google.gson.JsonElement;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
-import net.minecraft.resources.RegistryOps;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.MobCategory;
@@ -16,46 +15,40 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.common.world.AddNetherSpawnsBiomeModifier;
 import net.valhelsia.valhelsia_core.core.data.DataProviderInfo;
+import net.valhelsia.valhelsia_core.core.registry.helper.DatapackRegistryClass;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Valhelsia Team
  * @since 2022-10-31
  */
-public abstract class ValhelsiaBiomeModifierProvider {
+public abstract class ValhelsiaBiomeModifierProvider extends DatapackRegistryClass<BiomeModifier> {
 
-    private final DataProviderInfo info;
-    private final RegistryOps<JsonElement> ops;
-    private final Map<ResourceLocation, BiomeModifier> modifiers = new HashMap<>();
+    public HolderGetter<Biome> biomeRegistry;
+    public HolderGetter<PlacedFeature> featureRegistry;
 
-    public final HolderLookup.RegistryLookup<Biome> biomeRegistry;
-    public final HolderLookup.RegistryLookup<PlacedFeature> featureRegistry;
+    public HolderSet.Named<Biome> isOverworld;
+    public HolderSet.Named<Biome> isNether;
+    public HolderSet.Named<Biome> isEnd;
 
-    public final HolderSet.Named<Biome> isOverworld;
-    public final HolderSet.Named<Biome> isNether;
-    public final HolderSet.Named<Biome> isEnd;
+    public ValhelsiaBiomeModifierProvider(DataProviderInfo info, BootstapContext<BiomeModifier> context) {
+        super(info, context);
+    }
 
-    public ValhelsiaBiomeModifierProvider(DataProviderInfo info, RegistryOps<JsonElement> ops, HolderLookup.RegistryLookup<Biome> biomeRegistry, HolderLookup.RegistryLookup<PlacedFeature> featureRegistry) {
-        this.info = info;
-        this.ops = ops;
-
-        this.biomeRegistry = biomeRegistry;
-        this.featureRegistry = featureRegistry;
+    @Override
+    public void init(BootstapContext<BiomeModifier> context) {
+        this.biomeRegistry = context.lookup(Registries.BIOME);
+        this.featureRegistry = context.lookup(Registries.PLACED_FEATURE);
 
         this.isOverworld = this.namedBiome(BiomeTags.IS_OVERWORLD);
         this.isNether = this.namedBiome(BiomeTags.IS_NETHER);
         this.isEnd = this.namedBiome(BiomeTags.IS_END);
-
-        this.addModifiers();
-    }
-
-    protected abstract void addModifiers();
-
-    public Map<ResourceLocation, BiomeModifier> getModifiers() {
-        return this.modifiers;
     }
 
     public void addFeature(String name, HolderSet<Biome> biomes, HolderSet<PlacedFeature> features, GenerationStep.Decoration step) {
@@ -75,14 +68,14 @@ public abstract class ValhelsiaBiomeModifierProvider {
     }
 
     public void add(String name, BiomeModifier modifier) {
-        this.modifiers.put(this.info.location(name), modifier);
+        this.getContext().register(ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, this.getInfo().location(name)), modifier);
     }
 
-    public HolderLookup.RegistryLookup<Biome> getBiomeRegistry() {
+    public HolderGetter<Biome> getBiomeRegistry() {
         return this.biomeRegistry;
     }
 
-    public HolderLookup.RegistryLookup<PlacedFeature> getFeatureRegistry() {
+    public HolderGetter<PlacedFeature> getFeatureRegistry() {
         return this.featureRegistry;
     }
 

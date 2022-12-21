@@ -117,12 +117,12 @@ public class ValhelsiaMod {
             }
         };
 
-        protected void register(ValhelsiaMod mod, IEventBus forgeEventBus, IEventBus modEventsBus) {
+        protected void register(ValhelsiaMod mod, IEventBus forgeEventBus, IEventBus modEventBus) {
             mod.getRegistryManager().ifPresent(registryManager -> {
-                registryManager.register(modEventsBus);
+                registryManager.register(modEventBus);
             });
 
-            this.registerModEvents(modEventsBus);
+            this.registerModEvents(modEventBus);
             this.registerForgeEvents(forgeEventBus);
         }
 

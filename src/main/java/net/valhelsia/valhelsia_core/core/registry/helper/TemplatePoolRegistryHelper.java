@@ -1,72 +1,65 @@
 package net.valhelsia.valhelsia_core.core.registry.helper;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.common.world.structure.jigsaw.JigsawBuilder;
-import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
-import org.jetbrains.annotations.NotNull;
+import net.valhelsia.valhelsia_core.core.registry.RegistryCollector;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 /**
  * @author Valhelsia Team
  * @since 2022-11-26
  */
-public class TemplatePoolRegistryHelper extends RegistryHelper<StructureTemplatePool> {
+public class TemplatePoolRegistryHelper extends DatapackRegistryHelper<StructureTemplatePool> {
 
-    private final Supplier<List<StructureProcessor>> defaultProcessors;
     @Nullable
     private final JigsawBuilder.ElementFunction elementFunction;
 
-    public TemplatePoolRegistryHelper(Supplier<List<StructureProcessor>> defaultProcessors, DeferredRegister<StructureTemplatePool> deferredRegister, ImmutableList<Supplier<RegistryClass>> registryClasses) {
-        this(defaultProcessors, null, deferredRegister, registryClasses);
-    }
-
-    public TemplatePoolRegistryHelper(Supplier<List<StructureProcessor>> defaultProcessors, @Nullable JigsawBuilder.ElementFunction elementFunction, DeferredRegister<StructureTemplatePool> deferredRegister, ImmutableList<Supplier<RegistryClass>> registryClasses) {
-        super(deferredRegister, registryClasses);
-        this.defaultProcessors = defaultProcessors;
+    public TemplatePoolRegistryHelper(ResourceKey<? extends Registry<StructureTemplatePool>> registry, String modId, RegistryCollector.DatapackClassCollector classCollector, @Nullable JigsawBuilder.ElementFunction elementFunction) {
+        super(registry, modId, classCollector);
         this.elementFunction = elementFunction;
     }
 
-    public <T extends StructureTemplatePool> Holder<T> register(@NotNull String folder, String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context) {
-        return this.register(folder, name, builder, context, null);
+
+//
+//    public <T extends StructureTemplatePool> Holder<T> register(@NotNull String folder, String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context) {
+//        return this.register(folder, name, builder, context, null);
+//    }
+//
+//    public <T extends StructureTemplatePool> Holder<T> register(@NotNull String folder, String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
+//        RegistryObject<StructureTemplatePool> registryObject = this.register(name, this.createPool(builder, folder, name, context, terrainAdjustment));
+//
+//        return (Holder<T>) registryObject.getHolder().get();
+//    }
+//
+//    public <T extends StructureTemplatePool> Holder<T>  register(String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context) {
+//        return this.register(name, builder, context, null);
+//    }
+//
+//    public <T extends StructureTemplatePool> Holder<T> register(String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
+//        RegistryObject<StructureTemplatePool> registryObject = this.register(name, this.createPool(builder, name, context, terrainAdjustment));
+//
+//        return (Holder<T>) registryObject.getHolder().get();
+//    }
+
+    public void createPool(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, String folder, UnaryOperator<JigsawBuilder> builder) {
+        this.createPool(key, context, folder, builder, null);
     }
 
-    public <T extends StructureTemplatePool> Holder<T> register(@NotNull String folder, String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
-        RegistryObject<StructureTemplatePool> registryObject = this.register(name, this.createPool(builder, folder, name, context, terrainAdjustment));
-
-        return (Holder<T>) registryObject.getHolder().get();
+    public void createPool(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, String folder, UnaryOperator<JigsawBuilder> builder, @Nullable TerrainAdjustment terrainAdjustment) {
+        builder.apply(JigsawBuilder.builder(key, folder, context, this.elementFunction)).build(this.getModId(), terrainAdjustment);
     }
 
-    public <T extends StructureTemplatePool> Holder<T>  register(String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context) {
-        return this.register(name, builder, context, null);
+    public void createPool(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, UnaryOperator<JigsawBuilder> builder) {
+        this.createPool(key, context, builder, null);
     }
 
-    public <T extends StructureTemplatePool> Holder<T> register(String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
-        RegistryObject<StructureTemplatePool> registryObject = this.register(name, this.createPool(builder, name, context, terrainAdjustment));
-
-        return (Holder<T>) registryObject.getHolder().get();
-    }
-
-    @Override
-    public <T extends StructureTemplatePool> RegistryObject<T> register(String name, Supplier<T> pool) {
-        return this.registerInternal(name, pool);
-    }
-
-    private Supplier<StructureTemplatePool> createPool(UnaryOperator<JigsawBuilder> builder, String folder, String name, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
-        return () -> builder.apply(JigsawBuilder.builder(this.getModId(), folder, name, this.defaultProcessors, context, this.elementFunction)).build(terrainAdjustment);
-    }
-
-    private Supplier<StructureTemplatePool> createPool(UnaryOperator<JigsawBuilder> builder, String name, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
-        return () -> builder.apply(JigsawBuilder.builder(this.getModId(), name, this.defaultProcessors, context, this.elementFunction)).build(terrainAdjustment);
+    public void createPool(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, UnaryOperator<JigsawBuilder> builder, @Nullable TerrainAdjustment terrainAdjustment) {
+        builder.apply(JigsawBuilder.builder(key, context, this.elementFunction)).build(this.getModId(), terrainAdjustment);
     }
 }

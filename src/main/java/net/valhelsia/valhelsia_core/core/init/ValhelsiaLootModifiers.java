@@ -8,7 +8,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.common.loot.modifiers.AppendLootTableModifier;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
-import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.MappedRegistryHelper;
 
 /**
  * Valhelsia Loot Modifiers <br>
@@ -20,7 +20,7 @@ import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
 @Mod.EventBusSubscriber
 public class ValhelsiaLootModifiers implements RegistryClass {
 
-    public static final RegistryHelper<Codec<? extends IGlobalLootModifier>> HELPER = ValhelsiaCore.REGISTRY_MANAGER.getHelper(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS);
+    public static final MappedRegistryHelper<Codec<? extends IGlobalLootModifier>> HELPER = ValhelsiaCore.REGISTRY_MANAGER.getMappedHelper(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS);
 
     public static final RegistryObject<Codec<AppendLootTableModifier>> APPEND_LOOT_MODIFIER = HELPER.register("append_loot", AppendLootTableModifier.CODEC);
 

@@ -17,10 +17,10 @@ public class ModRegistries extends RegistryCollector {
 
     @Override
     protected void collect() {
-        this.add(Registries.BLOCK_ENTITY_TYPE, ValhelsiaBlockEntities::new);
-        this.add(Registries.STRUCTURE_PROCESSOR, ValhelsiaStructureProcessors::new);
-        this.add(Registries.LOOT_CONDITION_TYPE, ValhelsiaLootConditions::new);
-        this.add(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, ValhelsiaLootModifiers::new);
-        this.add(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ValhelsiaBiomeModifiers::new);
+        this.addMappedHelper(Registries.BLOCK_ENTITY_TYPE, ValhelsiaBlockEntities::new);
+        this.addMappedHelper(Registries.STRUCTURE_PROCESSOR, ValhelsiaStructureProcessors::new);
+        this.addMappedHelper(Registries.LOOT_CONDITION_TYPE, ValhelsiaLootConditions::new);
+        this.addMappedHelper(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, ValhelsiaLootModifiers::new);
+        this.addMappedHelper(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ValhelsiaBiomeModifiers::new);
     }
 }

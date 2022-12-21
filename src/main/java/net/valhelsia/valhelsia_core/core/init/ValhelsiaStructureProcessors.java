@@ -6,7 +6,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.common.world.structure.processor.RemoveWaterProcessor;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
-import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.MappedRegistryHelper;
 
 /**
  * @author Valhelsia Team
@@ -14,7 +14,7 @@ import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
  */
 public class ValhelsiaStructureProcessors implements RegistryClass {
 
-    public static final RegistryHelper<StructureProcessorType<?>> HELPER = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.STRUCTURE_PROCESSOR);
+    public static final MappedRegistryHelper<StructureProcessorType<?>> HELPER = ValhelsiaCore.REGISTRY_MANAGER.getMappedHelper(Registries.STRUCTURE_PROCESSOR);
 
     public static final RegistryObject<StructureProcessorType<RemoveWaterProcessor>> REMOVE_WATER = HELPER.register("remove_water", () -> () -> RemoveWaterProcessor.CODEC);
 

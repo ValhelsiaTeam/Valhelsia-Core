@@ -8,7 +8,7 @@ import net.valhelsia.valhelsia_core.common.loot.conditions.EntityTagCondition;
 import net.valhelsia.valhelsia_core.common.loot.conditions.MatchBlockCondition;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
-import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.MappedRegistryHelper;
 
 /**
  * Valhelsia Loot Conditions <br>
@@ -19,7 +19,7 @@ import net.valhelsia.valhelsia_core.core.registry.helper.RegistryHelper;
  */
 public class ValhelsiaLootConditions implements RegistryClass {
 
-    public static final RegistryHelper<LootItemConditionType> LOOT_CONDITION_TYPES = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.LOOT_CONDITION_TYPE);
+    public static final MappedRegistryHelper<LootItemConditionType> LOOT_CONDITION_TYPES = ValhelsiaCore.REGISTRY_MANAGER.getMappedHelper(Registries.LOOT_CONDITION_TYPE);
 
     public static final RegistryObject<LootItemConditionType> MATCH_BLOCK = LOOT_CONDITION_TYPES.register("match_block", () -> new LootItemConditionType(new MatchBlockCondition.Serializer()));
     public static final RegistryObject<LootItemConditionType> DATE = LOOT_CONDITION_TYPES.register("date", () -> new LootItemConditionType(new DateCondition.Serializer()));

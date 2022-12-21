@@ -9,8 +9,8 @@ import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryObject;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,19 +27,19 @@ import java.util.function.Predicate;
  */
 public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
 
-    private final Set<RegistryObject<Block>> remainingBlocks;
+    private final Set<BlockRegistryObject<? extends Block>> remainingBlocks;
 
     public ValhelsiaBlockStateProvider(PackOutput output, RegistryManager registryManager, ExistingFileHelper exFileHelper) {
         super(output, registryManager.modId(), exFileHelper);
-        this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getRegistryObjects());
+        this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getBlockRegistryObjects());
     }
 
-    public Set<RegistryObject<Block>> getRemainingBlocks() {
-        return remainingBlocks;
+    public Set<BlockRegistryObject<? extends Block>> getRemainingBlocks() {
+        return this.remainingBlocks;
     }
 
     public void forEach(Predicate<Block> predicate, Consumer<Block> consumer) {
-        Iterator<RegistryObject<Block>> iterator = getRemainingBlocks().iterator();
+        Iterator<BlockRegistryObject<? extends Block>> iterator = getRemainingBlocks().iterator();
 
         while(iterator.hasNext()) {
             Block block = iterator.next().get();
@@ -51,7 +51,7 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
     }
 
     public void forEach(Consumer<Block> consumer) {
-        Iterator<RegistryObject<Block>> iterator = getRemainingBlocks().iterator();
+        Iterator<BlockRegistryObject<? extends Block>> iterator = getRemainingBlocks().iterator();
 
         while(iterator.hasNext()) {
             consumer.accept(iterator.next().get());
@@ -60,8 +60,8 @@ public abstract class ValhelsiaBlockStateProvider extends BlockStateProvider {
     }
 
     @SafeVarargs
-    public final <T extends Block> void take(Consumer<T> consumer, RegistryObject<? extends Block>... blocks) {
-        for (RegistryObject<? extends Block> block : blocks) {
+    public final <T extends Block> void take(Consumer<T> consumer, BlockRegistryObject<? extends Block>... blocks) {
+        for (BlockRegistryObject<? extends Block> block : blocks) {
             consumer.accept((T) block.get());
             getRemainingBlocks().remove(block);
         }

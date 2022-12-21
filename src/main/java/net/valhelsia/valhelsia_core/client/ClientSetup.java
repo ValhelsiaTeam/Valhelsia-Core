@@ -6,7 +6,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticType;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsCategory;
 import net.valhelsia.valhelsia_core.client.cosmetics.CosmeticsRegistry;
@@ -15,6 +14,7 @@ import net.valhelsia.valhelsia_core.client.cosmetics.source.ValhelsiaCosmeticsSo
 import net.valhelsia.valhelsia_core.client.model.*;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryHelper;
+import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryObject;
 import net.valhelsia.valhelsia_core.core.registry.helper.block.RenderType;
 
 import java.lang.reflect.Field;
@@ -61,8 +61,8 @@ public class ClientSetup {
                             try {
                                 Collection<?> collection = (Collection<?>) field.get(null);
                                 collection.forEach(block -> {
-                                    if (block instanceof RegistryObject<?> registryObject) {
-                                        this.setRenderLayer((RegistryObject<Block>) registryObject, renderType);
+                                    if (block instanceof BlockRegistryObject<?> registryObject) {
+                                        this.setRenderLayer((BlockRegistryObject<Block>) registryObject, renderType);
                                     }
                                 });
                             } catch (IllegalAccessException e) {
@@ -72,10 +72,10 @@ public class ClientSetup {
                             try {
                                 Map<?, ?> map = (Map<?, ?>) field.get(null);
                                 map.forEach((o, o2) -> {
-                                    if (o instanceof RegistryObject<?> registryObject) {
-                                        this.setRenderLayer((RegistryObject<Block>) registryObject, renderType);
-                                    } else if (o2 instanceof RegistryObject<?> registryObject) {
-                                        this.setRenderLayer((RegistryObject<Block>) registryObject, renderType);
+                                    if (o instanceof BlockRegistryObject<?> registryObject) {
+                                        this.setRenderLayer((BlockRegistryObject<Block>) registryObject, renderType);
+                                    } else if (o2 instanceof BlockRegistryObject<?> registryObject) {
+                                        this.setRenderLayer((BlockRegistryObject<Block>) registryObject, renderType);
                                     }
                                 });
                             } catch (IllegalAccessException e) {
@@ -83,7 +83,7 @@ public class ClientSetup {
                             }
                         } else {
                             try {
-                                this.setRenderLayer((RegistryObject<Block>) field.get(null), renderType);
+                                this.setRenderLayer((BlockRegistryObject<Block>) field.get(null), renderType);
                             } catch (IllegalAccessException e) {
                                 throw new RuntimeException(e);
                             }
@@ -122,7 +122,7 @@ public class ClientSetup {
                 .exactName("flamingo_float"));
     }
 
-    private void setRenderLayer(RegistryObject<Block> block, RenderType renderType) {
+    private void setRenderLayer(BlockRegistryObject<Block> block, RenderType renderType) {
         ItemBlockRenderTypes.setRenderLayer(block.get(), renderType.value().getRenderType().get());
     }
 }

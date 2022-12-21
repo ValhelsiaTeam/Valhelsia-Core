@@ -1,10 +1,12 @@
 package net.valhelsia.valhelsia_core.core.data;
 
+import com.google.common.collect.Lists;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
@@ -26,10 +28,13 @@ import net.minecraft.world.level.storage.loot.functions.FunctionUserBuilder;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryObject;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -55,27 +60,28 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
     public static final float[] JUNGLE_LEAVES_SAPLING_CHANGES = new float[]{0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F};
 
     private final RegistryManager registryManager;
-    private final Set<RegistryObject<Block>> remainingBlocks;
+    private final ArrayList<Block> remainingBlocks;
 
     public ValhelsiaBlockLootTables(Set<Item> explosionResistant, FeatureFlagSet flagSet, RegistryManager registryManager) {
         super(explosionResistant, flagSet);
         this.registryManager = registryManager;
-        this.remainingBlocks = new HashSet<>(registryManager.getBlockHelper().getRegistryObjects());
+        this.remainingBlocks = Lists.newArrayList(this.getKnownBlocks());
     }
 
     public static Set<Item> immuneToExplosion() {
         return new HashSet<>();
     }
 
-    public Set<RegistryObject<Block>> getRemainingBlocks() {
+    public ArrayList<Block> getRemainingBlocks() {
         return this.remainingBlocks;
     }
 
     public void forEach(Predicate<Block> predicate, Consumer<Block> consumer) {
-        Iterator<RegistryObject<Block>> iterator = getRemainingBlocks().iterator();
+        Iterator<Block> iterator = getRemainingBlocks().iterator();
 
         while(iterator.hasNext()) {
-            Block block = iterator.next().get();
+            Block block = iterator.next();
+
             if (predicate.test(block)) {
                 consumer.accept(block);
                 iterator.remove();
@@ -84,19 +90,19 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
     }
 
     public void forEach(Consumer<Block> consumer) {
-        Iterator<RegistryObject<Block>> iterator = getRemainingBlocks().iterator();
+        Iterator<Block> iterator = getRemainingBlocks().iterator();
 
         while(iterator.hasNext()) {
-            consumer.accept(iterator.next().get());
+            consumer.accept(iterator.next());
             iterator.remove();
         }
     }
 
     @SafeVarargs
-    public final <T extends Block> void take(Consumer<T> consumer, RegistryObject<? extends Block>... blocks) {
-        for (RegistryObject<? extends Block> block : blocks) {
+    public final <T extends Block> void take(Consumer<T> consumer, BlockRegistryObject<? extends Block>... blocks) {
+        for (BlockRegistryObject<? extends Block> block : blocks) {
             consumer.accept((T) block.get());
-            getRemainingBlocks().remove(block);
+            getRemainingBlocks().remove(block.get());
         }
     }
 
@@ -162,6 +168,6 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
     @Nonnull
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return this.registryManager.getBlockHelper().getRegistryObjects().stream().map(RegistryObject::get).toList();
+        return this.registryManager.getBlockHelper().getRegistryObjects().stream().map(RegistryObject::get).filter(block -> block.getLootTable().equals(new ResourceLocation(this.registryManager.modId(), "blocks/" + ForgeRegistries.BLOCKS.getKey(block).getPath()))).toList();
     }
 }
