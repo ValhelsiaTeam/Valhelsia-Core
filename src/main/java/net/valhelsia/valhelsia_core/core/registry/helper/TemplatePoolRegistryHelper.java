@@ -25,41 +25,27 @@ public class TemplatePoolRegistryHelper extends DatapackRegistryHelper<Structure
         this.elementFunction = elementFunction;
     }
 
-
-//
-//    public <T extends StructureTemplatePool> Holder<T> register(@NotNull String folder, String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context) {
-//        return this.register(folder, name, builder, context, null);
-//    }
-//
-//    public <T extends StructureTemplatePool> Holder<T> register(@NotNull String folder, String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
-//        RegistryObject<StructureTemplatePool> registryObject = this.register(name, this.createPool(builder, folder, name, context, terrainAdjustment));
-//
-//        return (Holder<T>) registryObject.getHolder().get();
-//    }
-//
-//    public <T extends StructureTemplatePool> Holder<T>  register(String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context) {
-//        return this.register(name, builder, context, null);
-//    }
-//
-//    public <T extends StructureTemplatePool> Holder<T> register(String name, UnaryOperator<JigsawBuilder> builder, BootstapContext<StructureTemplatePool> context, @Nullable TerrainAdjustment terrainAdjustment) {
-//        RegistryObject<StructureTemplatePool> registryObject = this.register(name, this.createPool(builder, name, context, terrainAdjustment));
-//
-//        return (Holder<T>) registryObject.getHolder().get();
-//    }
-
-    public void createPool(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, String folder, UnaryOperator<JigsawBuilder> builder) {
-        this.createPool(key, context, folder, builder, null);
+    public void create(String name, BootstapContext<StructureTemplatePool> context, String folder, UnaryOperator<JigsawBuilder> builder) {
+        this.create(this.createKey(name), context, folder, builder, null);
     }
 
-    public void createPool(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, String folder, UnaryOperator<JigsawBuilder> builder, @Nullable TerrainAdjustment terrainAdjustment) {
+    public void create(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, String folder, UnaryOperator<JigsawBuilder> builder) {
+        this.create(key, context, folder, builder, null);
+    }
+
+    public void create(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, String folder, UnaryOperator<JigsawBuilder> builder, @Nullable TerrainAdjustment terrainAdjustment) {
         builder.apply(JigsawBuilder.builder(key, folder, context, this.elementFunction)).build(this.getModId(), terrainAdjustment);
     }
 
-    public void createPool(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, UnaryOperator<JigsawBuilder> builder) {
-        this.createPool(key, context, builder, null);
+    public void create(String name, BootstapContext<StructureTemplatePool> context, UnaryOperator<JigsawBuilder> builder) {
+        this.create(this.createKey(name), context, builder, null);
     }
 
-    public void createPool(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, UnaryOperator<JigsawBuilder> builder, @Nullable TerrainAdjustment terrainAdjustment) {
+    public void create(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, UnaryOperator<JigsawBuilder> builder) {
+        this.create(key, context, builder, null);
+    }
+
+    public void create(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, UnaryOperator<JigsawBuilder> builder, @Nullable TerrainAdjustment terrainAdjustment) {
         builder.apply(JigsawBuilder.builder(key, context, this.elementFunction)).build(this.getModId(), terrainAdjustment);
     }
 }
