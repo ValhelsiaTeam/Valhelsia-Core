@@ -1,17 +1,17 @@
 package net.valhelsia.valhelsia_core.core.data.tags;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
 import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
+import net.valhelsia.valhelsia_core.core.data.DataProviderInfo;
 import net.valhelsia.valhelsia_core.core.init.ValhelsiaTags;
+import net.valhelsia.valhelsia_core.core.registry.RegistryManager;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.concurrent.CompletableFuture;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 /**
  * Valhelsia Block Tags Provider <br>
@@ -22,13 +22,31 @@ import java.util.concurrent.CompletableFuture;
  */
 public class ValhelsiaBlockTagsProvider extends BlockTagsProvider {
 
-    public ValhelsiaBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, ValhelsiaCore.MOD_ID, existingFileHelper);
+    private final RegistryManager registryManager;
+
+    public ValhelsiaBlockTagsProvider(DataProviderInfo info) {
+        super(info.output(), info.lookupProvider(), info.registryManager().modId(), info.fileHelper());
+        this.registryManager = info.registryManager();
     }
 
+    @OverridingMethodsMustInvokeSuper
     @Override
     protected void addTags(@Nonnull HolderLookup.Provider provider) {
-        this.empty(ValhelsiaTags.Blocks.OFFSET_RENDERING);
+        if (this.modId.equals(ValhelsiaCore.MOD_ID)) {
+            this.empty(ValhelsiaTags.Blocks.OFFSET_RENDERING);
+        }
+
+        if (this.registryManager.hasHelper(Registries.BLOCK)) {
+            this.registryManager.getBlockHelper().getBlockRegistryObjects().forEach(blockRegistryObject -> {
+                blockRegistryObject.getToolType().ifPresent(toolType -> {
+                    this.tag(toolType.getTag()).add(blockRegistryObject.get());
+                });
+
+                blockRegistryObject.getToolTier().ifPresent(toolTier -> {
+                    this.tag(toolTier.getTag()).add(blockRegistryObject.get());
+                });
+            });
+        }
     }
 
     @SafeVarargs

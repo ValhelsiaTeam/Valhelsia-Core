@@ -18,11 +18,13 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.valhelsia.valhelsia_core.common.block.StrippableRotatedPillarBlock;
 import net.valhelsia.valhelsia_core.common.block.ValhelsiaStandingSignBlock;
 import net.valhelsia.valhelsia_core.common.block.ValhelsiaWallSignBlock;
-import net.valhelsia.valhelsia_core.core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.core.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.core.registry.helper.MappedRegistryHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -46,10 +48,6 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
 
     public BlockRegistryHelper(ResourceKey<? extends Registry<Block>> registry, String modId, ImmutableList<Supplier<RegistryClass>> registryClasses) {
         super(registry, modId, registryClasses);
-    }
-
-    public Optional<MappedRegistryHelper<Item>> getItemRegistryHelper() {
-        return Optional.ofNullable(ValhelsiaCore.REGISTRY_MANAGERS.get(this.getModId()).getItemHelper());
     }
 
     public FlammableHelper getFlammableHelper() {

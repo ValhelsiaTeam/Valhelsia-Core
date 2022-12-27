@@ -7,6 +7,7 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -19,6 +20,11 @@ public class BlockRegistryObject<T extends Block> implements Supplier<T> {
 
     private final String name;
     private final RegistryObject<T> registryObject;
+
+    @Nullable
+    private ToolType toolType = null;
+    @Nullable
+    private ToolTier toolTier = null;
 
     @Nullable
     private ItemFunction itemFunction;
@@ -38,13 +44,23 @@ public class BlockRegistryObject<T extends Block> implements Supplier<T> {
     }
 
     public BlockRegistryObject<T> withItem() {
-        this.itemFunction = BlockRegistryObject.DEFAULT_ITEM_FUNCTION;
-
-        return this;
+        return this.withItem(BlockRegistryObject.DEFAULT_ITEM_FUNCTION);
     }
 
     public BlockRegistryObject<T> withItem(ItemFunction function) {
         this.itemFunction = function;
+
+        return this;
+    }
+
+    public final BlockRegistryObject<T> toolType(ToolType toolType) {
+        this.toolType = toolType;
+
+        return this;
+    }
+
+    public final BlockRegistryObject<T> toolTier(ToolTier toolTier) {
+        this.toolTier = toolTier;
 
         return this;
     }
@@ -60,6 +76,14 @@ public class BlockRegistryObject<T extends Block> implements Supplier<T> {
     @Nullable
     public ItemFunction getItemFunction() {
         return this.itemFunction;
+    }
+
+    public Optional<ToolType> getToolType() {
+        return Optional.ofNullable(this.toolType);
+    }
+
+    public Optional<ToolTier> getToolTier() {
+        return Optional.ofNullable(this.toolTier);
     }
 
     @FunctionalInterface
