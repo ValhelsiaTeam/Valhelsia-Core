@@ -11,9 +11,13 @@ import net.valhelsia.valhelsia_core.core.registry.helper.*;
 import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryHelper;
 import org.apache.commons.lang3.function.TriFunction;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author Valhelsia Team
@@ -56,8 +60,9 @@ public abstract class RegistryCollector {
         this.registryHelpers.put(key, registryHelper.apply(key, this.modId, ImmutableList.copyOf(registryClasses)));
     }
 
-    public final <T> void addDatapackHelper(ResourceKey<Registry<T>> key, DatapackClassCollector classCollector) {
-        this.registryHelpers.put(key, new DatapackRegistryHelper<>(key, this.modId, classCollector));
+    @SafeVarargs
+    public final <T> void addDatapackHelper(ResourceKey<Registry<T>> key, BiFunction<DataProviderInfo, BootstapContext<T>, DatapackRegistryClass<T>>... classCollectors) {
+        this.registryHelpers.put(key, new DatapackRegistryHelper<>(key, this.modId, (info, context) -> Arrays.stream(classCollectors).map(function -> function.apply(info, (BootstapContext<T>) context)).collect(Collectors.toUnmodifiableList())));
     }
 
     public final <T> void addDatapackHelper(ResourceKey<Registry<T>> key, TriFunction<ResourceKey<Registry<T>>, String, DatapackClassCollector, DatapackRegistryHelper<T>> registryHelper, DatapackClassCollector classCollector) {
@@ -74,6 +79,6 @@ public abstract class RegistryCollector {
 
     @FunctionalInterface
     public interface DatapackClassCollector {
-        ImmutableList<DatapackRegistryClass<?>> collect(DataProviderInfo info, BootstapContext<?> context);
+        List<DatapackRegistryClass<?>> collect(DataProviderInfo info, BootstapContext<?> context);
     }
 }

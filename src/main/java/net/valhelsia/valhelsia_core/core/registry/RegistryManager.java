@@ -1,6 +1,5 @@
 package net.valhelsia.valhelsia_core.core.registry;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.core.Registry;
@@ -8,7 +7,6 @@ import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.core.config.AbstractConfigValidator;
@@ -17,6 +15,7 @@ import net.valhelsia.valhelsia_core.core.registry.helper.*;
 import net.valhelsia.valhelsia_core.core.registry.helper.block.BlockRegistryHelper;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -57,7 +56,7 @@ public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends R
         return this.getMappedHelper(ForgeRegistries.Keys.BLOCKS);
     }
 
-    public MappedRegistryHelper<Item> getItemHelper() {
+    public ItemRegistryHelper getItemHelper() {
         return this.getMappedHelper(ForgeRegistries.Keys.ITEMS);
     }
 
@@ -91,7 +90,7 @@ public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends R
 
         for (RegistryHelper<?, ? extends RegistryClass> helper : this.registryHelpers.values()) {
             if (helper instanceof DatapackRegistryHelper<?> datapackRegistryHelper) {
-                Function<BootstapContext<?>, ImmutableList<DatapackRegistryClass<?>>> function = context -> datapackRegistryHelper.getClassCollector().collect(info, context);
+                Function<BootstapContext<?>, List<DatapackRegistryClass<?>>> function = context -> datapackRegistryHelper.getClassCollector().collect(info, context);
 
                 builder.add(datapackRegistryHelper.getRegistry(), function::apply);
             }

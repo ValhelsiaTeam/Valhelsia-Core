@@ -21,7 +21,6 @@ import java.util.function.Supplier;
 public class DatapackRegistryHelper<T> extends RegistryHelper<T, DatapackRegistryClass<T>> {
 
     private final RegistryCollector.DatapackClassCollector classCollector;
-    private ImmutableList<Supplier<DatapackRegistryClass<T>>> registryClasses;
 
     public DatapackRegistryHelper(ResourceKey<? extends Registry<T>> registry, String modId, RegistryCollector.DatapackClassCollector classCollector) {
         super(registry, modId);
