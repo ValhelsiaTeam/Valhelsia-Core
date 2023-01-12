@@ -25,11 +25,11 @@ public record ValhelsiaShapedRecipeBuilder(ShapedRecipeBuilder builder) {
         return new ValhelsiaShapedRecipeBuilder(new ShapedRecipeBuilder(category, result, count));
     }
 
-    public ValhelsiaShapedRecipeBuilder unlockedBy(ValhelsiaRecipeProvider provider, ItemLike itemLike) {
+    public ValhelsiaShapedRecipeBuilder unlockedBy(RecipeSubProvider provider, ItemLike itemLike) {
         return this.unlockedBy(provider, RecipePart.of(itemLike));
     }
 
-    public ValhelsiaShapedRecipeBuilder unlockedBy(ValhelsiaRecipeProvider provider, RecipePart<?> part) {
+    public ValhelsiaShapedRecipeBuilder unlockedBy(RecipeSubProvider provider, RecipePart<?> part) {
         this.builder.unlockedBy(provider.getHasName(part), provider.has(part));
 
         return this;
