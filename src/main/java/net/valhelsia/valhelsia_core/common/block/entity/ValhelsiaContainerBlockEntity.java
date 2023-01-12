@@ -47,6 +47,8 @@ public abstract class ValhelsiaContainerBlockEntity extends BlockEntity implemen
         this.itemStackHandler = new ItemStackHandler(inventorySize) {
             @Override
             protected void onContentsChanged(int slot) {
+                ValhelsiaContainerBlockEntity.this.onSlotChanged(slot);
+
                 ValhelsiaContainerBlockEntity.this.setChanged();
             }
 
@@ -59,6 +61,10 @@ public abstract class ValhelsiaContainerBlockEntity extends BlockEntity implemen
 
     public ItemStackHandler getItemStackHandler() {
         return this.itemStackHandler;
+    }
+
+    protected void onSlotChanged(int slot) {
+
     }
 
     @Override
