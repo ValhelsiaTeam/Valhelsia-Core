@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.valhelsia.valhelsia_core.common.capability.counter.CounterProvider;
-import net.valhelsia.valhelsia_core.common.capability.counter.SimpleCounter;
+import net.valhelsia.valhelsia_core.common.util.counter.SerializableCounter;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -21,18 +21,18 @@ import java.util.function.Supplier;
  * @version 0.1.1
  * @since 2021-05-31
  */
-public record UpdateCounterPacket(SimpleCounter timer) {
+public record UpdateCounterPacket(SerializableCounter timer) {
 
     public static void encode(UpdateCounterPacket packet, FriendlyByteBuf buffer) {
         CompoundTag compound = packet.timer.save(new CompoundTag());
-        compound.putString("name", packet.timer.getName().toString());
+        compound.putString("name", packet.timer.getSerializedName());
 
         buffer.writeNbt(compound);
     }
 
     public static UpdateCounterPacket decode(FriendlyByteBuf buffer) {
         CompoundTag compound = buffer.readNbt();
-        SimpleCounter timer = new SimpleCounter(new ResourceLocation(Objects.requireNonNull(compound).getString("name")));
+        SerializableCounter timer = new SerializableCounter(new ResourceLocation(Objects.requireNonNull(compound).getString("name")));
         timer.load(compound);
 
         return new UpdateCounterPacket(timer);
@@ -46,7 +46,7 @@ public record UpdateCounterPacket(SimpleCounter timer) {
 
             if (player != null) {
                 player.getCapability(CounterProvider.CAPABILITY).ifPresent((counterCapability) -> {
-                    counterCapability.getCounter(packet.timer.getName()).load(packet.timer.save(new CompoundTag()));
+                    counterCapability.getCounter(new ResourceLocation(packet.timer.getSerializedName())).load(packet.timer.save(new CompoundTag()));
                 });
             }
         });

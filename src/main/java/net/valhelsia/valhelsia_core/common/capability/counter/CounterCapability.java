@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.common.capability.counter;
 
 import net.minecraft.resources.ResourceLocation;
+import net.valhelsia.valhelsia_core.common.util.counter.SerializableCounter;
 
 import java.util.List;
 
@@ -9,13 +10,12 @@ import java.util.List;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.capability.counter.CounterCapability
  *
  * @author stal111
- * @version 0.1.1
  * @since 2021-02-03
  */
 public interface CounterCapability {
-    void setCounters(List<SimpleCounter> timers);
-    void addCounter(SimpleCounter timer);
-    void removeCounter(SimpleCounter timer);
-    List<SimpleCounter> getCounters();
-    SimpleCounter getCounter(ResourceLocation name);
+    void setCounters(List<SerializableCounter> timers);
+    void addCounter(SerializableCounter timer);
+    void removeCounter(SerializableCounter timer);
+    List<SerializableCounter> getCounters();
+    SerializableCounter getCounter(ResourceLocation name);
 }

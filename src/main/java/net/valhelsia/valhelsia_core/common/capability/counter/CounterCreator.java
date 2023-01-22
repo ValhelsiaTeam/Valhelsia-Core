@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.common.capability.counter;
 
 import net.minecraft.resources.ResourceLocation;
+import net.valhelsia.valhelsia_core.common.util.counter.SerializableCounter;
 
 import java.util.function.Function;
 
@@ -9,16 +10,15 @@ import java.util.function.Function;
  * Valhelsia Core - net.valhelsia.valhelsia_core.common.capability.counter.CounterCreator
  *
  * @author Valhelsia Team
- * @version 1.18.1 - 0.3.2
  * @since 2022-01-16
  */
-public record CounterCreator<T extends SimpleCounter>(Function<ResourceLocation, T> factory, ResourceLocation name) {
+public record CounterCreator<T extends SerializableCounter>(Function<ResourceLocation, T> factory, ResourceLocation name) {
 
     public T create() {
         return this.factory.apply(this.name);
     }
 
-    public static<T extends SimpleCounter> CounterCreator<T> of(Function<ResourceLocation, T> factory, ResourceLocation name) {
+    public static<T extends SerializableCounter> CounterCreator<T> of(Function<ResourceLocation, T> factory, ResourceLocation name) {
         return new CounterCreator<>(factory, name);
     }
 }

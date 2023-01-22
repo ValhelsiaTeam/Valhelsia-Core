@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.common.capability.counter;
 
 import net.minecraft.resources.ResourceLocation;
+import net.valhelsia.valhelsia_core.common.util.counter.SerializableCounter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,30 +16,30 @@ import java.util.List;
  */
 public class CounterImpl implements CounterCapability {
 
-    private List<SimpleCounter> timers = new ArrayList<>();
+    private List<SerializableCounter> timers = new ArrayList<>();
 
     @Override
-    public void setCounters(List<SimpleCounter> timers) {
+    public void setCounters(List<SerializableCounter> timers) {
         this.timers = timers;
     }
 
     @Override
-    public void addCounter(SimpleCounter timer) {
+    public void addCounter(SerializableCounter timer) {
         this.timers.add(timer);
     }
 
     @Override
-    public void removeCounter(SimpleCounter timer) {
+    public void removeCounter(SerializableCounter timer) {
         this.timers.remove(timer);
     }
 
     @Override
-    public List<SimpleCounter> getCounters() {
+    public List<SerializableCounter> getCounters() {
         return this.timers;
     }
 
     @Override
-    public SimpleCounter getCounter(ResourceLocation name) {
-        return this.timers.stream().filter(timer1 -> timer1.getName().equals(name)).findFirst().orElseThrow(() -> new IllegalArgumentException("No timer found with name: " + name));
+    public SerializableCounter getCounter(ResourceLocation name) {
+        return this.timers.stream().filter(timer1 -> timer1.getSerializedName().equals(name.toString())).findFirst().orElseThrow(() -> new IllegalArgumentException("No timer found with name: " + name));
     }
 }
