@@ -8,7 +8,8 @@
     "BlockStateBaseMixin",
     "FlintAndSteelItemMixin",
     "ItemStackHandlerMixin",
-    "ThrownPotionMixin"
+    "ThrownPotionMixin",
+    "BlockBehaviourMixin"
   ],
   "client": [
     "client.CapeLayerMixin",
