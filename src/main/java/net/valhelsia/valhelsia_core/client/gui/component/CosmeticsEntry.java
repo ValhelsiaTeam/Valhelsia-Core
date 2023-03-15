@@ -53,7 +53,7 @@ public class CosmeticsEntry extends Button implements SelectableComponent {
     }
 
     @Override
-    public void renderButton(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         GuiComponent.fill(poseStack, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, BG_COLOR);
 
         if (this.isSelected()) {

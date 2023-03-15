@@ -3,6 +3,7 @@ package net.valhelsia.valhelsia_core.client.gui.component;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.FastColor;
@@ -36,13 +37,14 @@ public class CosmeticsCategoryButton extends Button implements SelectableCompone
     }
 
     @Override
-    public void renderButton(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         this.font.draw(poseStack, category.getComponent(), this.getX() + 2, this.getY() + 4, this.isSelected() ? ACTIVATED_COLOR : COLOR);
 
         if (this.isSelected()) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, CosmeticsWardrobeScreen.TEXTURE);
-            this.blit(poseStack, this.getX() - 4, this.getY() + 5, 208, 0, 3, 5);
+
+            GuiComponent.blit(poseStack, this.getX() - 4, this.getY() + 5, 208, 0, 3, 5);
         }
     }
 

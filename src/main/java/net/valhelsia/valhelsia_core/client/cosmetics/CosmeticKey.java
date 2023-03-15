@@ -33,13 +33,8 @@ public record CosmeticKey(CosmeticsSource source, String name) {
             return Optional.empty();
         }
 
-        Optional<CosmeticsSource> optional = CosmeticsRegistry.getSource(parts[0]);
+        return CosmeticsRegistry.getSource(parts[0]).map(cosmeticsSource -> new CosmeticKey(cosmeticsSource, parts[1]));
 
-        if (optional.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(new CosmeticKey(optional.get(), parts[1]));
     }
 
     /**
@@ -52,11 +47,10 @@ public record CosmeticKey(CosmeticsSource source, String name) {
     static CosmeticKey of(CompoundTag tag) {
         Optional<CosmeticsSource> optional = CosmeticsRegistry.getSource(tag.getString(TAG_SOURCE));
 
-        if (optional.isEmpty()) {
-            return null;
-        }
+        return optional
+                .map(cosmeticsSource -> new CosmeticKey(cosmeticsSource, tag.getString(TAG_COSMETIC)))
+                .orElse(null);
 
-        return new CosmeticKey(optional.get(), tag.getString(TAG_COSMETIC));
     }
 
     /**
