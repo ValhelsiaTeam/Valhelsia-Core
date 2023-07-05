@@ -5,11 +5,12 @@
   "package": "net.valhelsia.valhelsia_core.core.mixin",
   "refmap": "valhelsia_core.refmap.json",
   "mixins": [
+    "AbstractFurnaceBlockEntityMixin",
+    "BlockBehaviourMixin",
     "BlockStateBaseMixin",
     "FlintAndSteelItemMixin",
     "ItemStackHandlerMixin",
-    "ThrownPotionMixin",
-    "BlockBehaviourMixin"
+    "ThrownPotionMixin"
   ],
   "client": [
     "client.CapeLayerMixin",
