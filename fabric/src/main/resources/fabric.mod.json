@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "valhelsia_core",
+  "version": "${version}",
+
+  "name": "Valhelsia Core",
+  "description": "",
+  "authors": [],
+  "contact": {},
+
+  "license": "All Rights Reserved",
+  "icon": "icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.valhelsia.valhelsia_core.ValhelsiaCoreFabric"
+    ],
+    "client": [
+      "net.valhelsia.valhelsia_core.client.ValhelsiaCoreFabricClient"
+    ]
+  },
+  "mixins": [
+    "valhelsia_core.mixins.json",
+    "valhelsia_core-common.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.19",
+    "minecraft": ">=1.19.4"
+  }
+}
