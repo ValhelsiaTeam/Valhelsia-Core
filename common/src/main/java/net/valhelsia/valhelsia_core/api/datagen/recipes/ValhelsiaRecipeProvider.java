@@ -4,7 +4,7 @@ import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.valhelsia.valhelsia_core.api.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

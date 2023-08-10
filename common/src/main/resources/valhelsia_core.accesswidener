@@ -23,3 +23,7 @@ accessible method net/minecraft/world/item/crafting/Ingredient$ItemValue <init> 
 accessible class net/minecraft/data/tags/IntrinsicHolderTagsProvider$IntrinsicTagAppender
 
 accessible field net/minecraft/data/tags/TagsProvider builders Ljava/util/Map;
+
+transitive-accessible method net/minecraft/world/level/block/FireBlock setFlammable (Lnet/minecraft/world/level/block/Block;II)V
+
+accessible method net/minecraft/world/item/crafting/Ingredient valueFromJson (Lcom/google/gson/JsonObject;)Lnet/minecraft/world/item/crafting/Ingredient$Value;

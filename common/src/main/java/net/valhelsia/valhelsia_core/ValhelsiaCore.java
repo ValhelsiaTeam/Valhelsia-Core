@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core;
 
-import net.valhelsia.valhelsia_core.api.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.core.ModDefinition;
 import net.valhelsia.valhelsia_core.core.registry.ModRegistryCollector;
 
 import java.util.Map;

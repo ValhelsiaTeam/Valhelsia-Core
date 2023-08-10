@@ -5,7 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.valhelsia.valhelsia_core.api.client.ClientSetupHelper;
-import net.valhelsia.valhelsia_core.api.registry.RegistryEntry;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

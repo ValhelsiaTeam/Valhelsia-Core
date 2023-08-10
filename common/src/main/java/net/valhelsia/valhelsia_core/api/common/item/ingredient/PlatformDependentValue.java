@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.valhelsia.valhelsia_core.api.helper.PlatformHelper;
+import net.valhelsia.valhelsia_core.api.common.helper.PlatformHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

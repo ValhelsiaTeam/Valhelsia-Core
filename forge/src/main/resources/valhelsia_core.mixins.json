@@ -1,9 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.valhelsia.valhelsia_core.mixin.forge",
+  "package": "net.valhelsia.valhelsia_core.core.mixin.forge",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ItemStackHandlerMixin"
   ],
   "client": [
   ],

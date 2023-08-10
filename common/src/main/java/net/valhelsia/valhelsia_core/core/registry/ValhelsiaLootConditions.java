@@ -3,12 +3,12 @@ package net.valhelsia.valhelsia_core.core.registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
-import net.valhelsia.valhelsia_core.api.loot.condition.DateCondition;
-import net.valhelsia.valhelsia_core.api.loot.condition.EntityTagCondition;
-import net.valhelsia.valhelsia_core.api.loot.condition.MatchBlockCondition;
-import net.valhelsia.valhelsia_core.api.registry.RegistryClass;
-import net.valhelsia.valhelsia_core.api.registry.RegistryEntry;
-import net.valhelsia.valhelsia_core.api.registry.helper.DefaultRegistryHelper;
+import net.valhelsia.valhelsia_core.api.common.loot.condition.DateCondition;
+import net.valhelsia.valhelsia_core.api.common.loot.condition.EntityTagCondition;
+import net.valhelsia.valhelsia_core.api.common.loot.condition.MatchBlockCondition;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.DefaultRegistryHelper;
 
 /**
  * @author Valhelsia Team

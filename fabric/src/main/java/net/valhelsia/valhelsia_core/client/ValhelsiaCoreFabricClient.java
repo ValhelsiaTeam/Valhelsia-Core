@@ -6,9 +6,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.client.fabric.FabricClientSetupHelper;
-import net.valhelsia.valhelsia_core.api.registry.RegistryManager;
-import net.valhelsia.valhelsia_core.api.registry.helper.block.BlockRegistryEntry;
-import net.valhelsia.valhelsia_core.api.registry.helper.block.BlockRegistryHelper;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryEntry;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
 
 /**
  * @author Valhelsia Team - stal111

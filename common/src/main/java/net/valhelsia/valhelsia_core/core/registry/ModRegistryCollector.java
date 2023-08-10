@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.core.registry;
 
 import net.minecraft.core.registries.Registries;
-import net.valhelsia.valhelsia_core.api.registry.RegistryCollector;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryCollector;
 
 /**
  * @author Valhelsia Team

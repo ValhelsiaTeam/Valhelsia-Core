@@ -26,7 +26,7 @@ import net.minecraft.world.level.storage.loot.functions.FunctionUserBuilder;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.valhelsia.valhelsia_core.api.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
 
 import java.util.HashSet;
 import java.util.Set;

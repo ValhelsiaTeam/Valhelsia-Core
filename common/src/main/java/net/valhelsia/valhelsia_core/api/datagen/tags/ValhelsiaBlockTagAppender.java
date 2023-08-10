@@ -3,9 +3,9 @@ package net.valhelsia.valhelsia_core.api.datagen.tags;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.valhelsia.valhelsia_core.api.registry.RegistryEntry;
-import net.valhelsia.valhelsia_core.api.registry.helper.block.BlockEntrySet;
-import net.valhelsia.valhelsia_core.api.registry.helper.block.BlockRegistryEntry;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockEntrySet;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryEntry;
 
 /**
  * @author Valhelsia Team - stal111

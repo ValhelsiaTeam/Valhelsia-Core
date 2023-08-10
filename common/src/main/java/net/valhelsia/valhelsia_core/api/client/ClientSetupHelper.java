@@ -3,7 +3,7 @@ package net.valhelsia.valhelsia_core.api.client;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.valhelsia.valhelsia_core.api.registry.RegistryEntry;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 
 /**
  * @author Valhelsia Team - stal111

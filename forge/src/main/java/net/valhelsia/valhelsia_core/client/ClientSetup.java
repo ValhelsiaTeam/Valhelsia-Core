@@ -8,9 +8,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.client.forge.ForgeClientSetupHelper;
-import net.valhelsia.valhelsia_core.api.registry.RegistryManager;
-import net.valhelsia.valhelsia_core.api.registry.helper.block.BlockRegistryEntry;
-import net.valhelsia.valhelsia_core.api.registry.helper.block.BlockRegistryHelper;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryEntry;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
 
 /**
  * @author Valhelsia Team - stal111
