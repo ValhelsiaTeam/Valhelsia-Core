@@ -7,6 +7,7 @@ import net.valhelsia.valhelsia_core.api.client.forge.ForgeClientSetupHelper;
 import net.valhelsia.valhelsia_core.client.ModClientSetup;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Valhelsia Team - stal111
@@ -14,11 +15,11 @@ import java.util.function.Consumer;
  */
 public class ModDefinitionImpl {
 
-    public static void scheduleClientSetup(Consumer<ClientSetupHelper> clientSetup) {
+    public static void scheduleClientSetup(Supplier<Consumer<ClientSetupHelper>> clientSetup) {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             ForgeClientSetupHelper helper = new ForgeClientSetupHelper();
 
-            clientSetup.accept(helper);
+            clientSetup.get().accept(helper);
 
             new ModClientSetup(helper);
         });

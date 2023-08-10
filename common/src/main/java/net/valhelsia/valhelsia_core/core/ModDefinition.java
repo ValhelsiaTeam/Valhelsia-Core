@@ -6,18 +6,19 @@ import net.valhelsia.valhelsia_core.api.client.ClientSetupHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Valhelsia Team
  * @since 2022-11-02
  */
-public record ModDefinition(String modId, RegistryManager registryManager, ValhelsiaEventHandler eventHandler, Consumer<ClientSetupHelper> clientSetup) {
+public record ModDefinition(String modId, RegistryManager registryManager, ValhelsiaEventHandler eventHandler, Supplier<Consumer<ClientSetupHelper>> clientSetup) {
 
     public static ModDefinition.Builder of(String modId) {
         return new ModDefinition.Builder(modId);
     }
 
-    public ModDefinition(String modId, RegistryManager registryManager, ValhelsiaEventHandler eventHandler, Consumer<ClientSetupHelper> clientSetup) {
+    public ModDefinition(String modId, RegistryManager registryManager, ValhelsiaEventHandler eventHandler, Supplier<Consumer<ClientSetupHelper>> clientSetup) {
         this.modId = modId;
         this.registryManager = registryManager;
         this.eventHandler = eventHandler;
@@ -29,7 +30,7 @@ public record ModDefinition(String modId, RegistryManager registryManager, Valhe
     }
 
     @ExpectPlatform
-    public static void scheduleClientSetup(Consumer<ClientSetupHelper> clientSetup) {
+    public static void scheduleClientSetup(Supplier<Consumer<ClientSetupHelper>> clientSetup) {
         throw new AssertionError();
     }
 
@@ -39,7 +40,7 @@ public record ModDefinition(String modId, RegistryManager registryManager, Valhe
 
         private RegistryManager registryManager;
         private ValhelsiaEventHandler eventHandler = ValhelsiaEventHandler.DEFAULT;
-        private Consumer<ClientSetupHelper> clientSetup = helper -> {};
+        private Supplier<Consumer<ClientSetupHelper>> clientSetup = () -> helper -> {};
 
         private Builder(String modId) {
             this.modId = modId;
@@ -58,7 +59,7 @@ public record ModDefinition(String modId, RegistryManager registryManager, Valhe
             return this;
         }
 
-        public Builder clientSetup(Consumer<ClientSetupHelper> consumer) {
+        public Builder clientSetup(Supplier<Consumer<ClientSetupHelper>> consumer) {
             this.clientSetup = consumer;
 
             return this;

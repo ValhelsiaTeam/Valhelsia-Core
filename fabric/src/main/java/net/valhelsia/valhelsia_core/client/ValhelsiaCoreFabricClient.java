@@ -24,7 +24,7 @@ public class ValhelsiaCoreFabricClient implements ClientModInitializer {
         ValhelsiaCore.VALHELSIA_MODS.values().forEach(modDefinition -> {
             this.setBlockRenderLayers(modDefinition.registryManager());
 
-            modDefinition.clientSetup().accept(helper);
+            modDefinition.clientSetup().get().accept(helper);
         });
     }
 

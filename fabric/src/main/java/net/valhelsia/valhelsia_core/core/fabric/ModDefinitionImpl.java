@@ -3,6 +3,7 @@ package net.valhelsia.valhelsia_core.core.fabric;
 import net.valhelsia.valhelsia_core.api.client.ClientSetupHelper;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Valhelsia Team - stal111
@@ -11,6 +12,6 @@ import java.util.function.Consumer;
 public class ModDefinitionImpl {
 
     // Not needed on fabric
-    public static void scheduleClientSetup(Consumer<ClientSetupHelper> clientSetup) {
+    public static void scheduleClientSetup(Supplier<Consumer<ClientSetupHelper>> clientSetup) {
     }
 }
