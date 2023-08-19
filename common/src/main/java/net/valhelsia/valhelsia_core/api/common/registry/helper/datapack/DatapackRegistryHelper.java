@@ -8,8 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryCollector;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 
-import java.util.function.Supplier;
-
 /**
  * Base class for {@link RegistryHelper}s that can be used for Datapack Registries.
  * <p>
@@ -38,7 +36,7 @@ public class DatapackRegistryHelper<T> extends RegistryHelper<T, DatapackRegistr
 
     @DoNotCall
     @Override
-    public ImmutableList<Supplier<DatapackRegistryClass<T>>> getRegistryClasses() {
+    public ImmutableList<Class<?>> getRegistryClasses() {
         throw new UnsupportedOperationException("Use DatapackRegistryHelper#getClassCollector instead");
     }
 }

@@ -17,6 +17,7 @@ public class ModRegistryCollector extends RegistryCollector {
     protected void collectHelpers() {
         //this.addItemHelper(ValhelsiaItems::new);
         //this.addBlockHelper(ValhelsiaItems::new);
-        this.addMappedHelper(Registries.LOOT_CONDITION_TYPE, ValhelsiaLootConditions::new);
+        this.addMappedHelper(Registries.LOOT_CONDITION_TYPE, ValhelsiaLootConditions.class);
+        this.addMappedHelper(Registries.STRUCTURE_PROCESSOR, ValhelsiaStructureProcessors.class);
     }
 }

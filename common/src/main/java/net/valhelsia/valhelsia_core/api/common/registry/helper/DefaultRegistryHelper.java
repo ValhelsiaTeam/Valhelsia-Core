@@ -3,7 +3,6 @@ package net.valhelsia.valhelsia_core.api.common.registry.helper;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 
 import java.util.function.Supplier;
@@ -16,7 +15,7 @@ import java.util.function.Supplier;
  */
 public class DefaultRegistryHelper<T> extends MappedRegistryHelper<T> {
 
-    public DefaultRegistryHelper(ResourceKey<? extends Registry<T>> registry, String modId, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+    public DefaultRegistryHelper(ResourceKey<? extends Registry<T>> registry, String modId, ImmutableList<Class<?>> registryClasses) {
         super(registry, modId, registryClasses);
     }
 

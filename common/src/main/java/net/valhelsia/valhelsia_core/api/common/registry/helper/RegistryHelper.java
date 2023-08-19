@@ -5,8 +5,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 
-import java.util.function.Supplier;
-
 /**
  * @author Valhelsia Team
  * @since 2022-12-20
@@ -29,5 +27,5 @@ public abstract class RegistryHelper<T, R extends RegistryClass> {
         return this.modId;
     }
 
-    public abstract ImmutableList<Supplier<R>> getRegistryClasses();
+    public abstract ImmutableList<Class<?>> getRegistryClasses();
 }

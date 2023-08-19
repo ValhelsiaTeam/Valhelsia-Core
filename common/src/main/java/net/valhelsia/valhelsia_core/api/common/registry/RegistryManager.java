@@ -16,7 +16,6 @@ import net.valhelsia.valhelsia_core.api.common.registry.helper.datapack.Datapack
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Registry Helper <br>
@@ -65,7 +64,13 @@ public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends R
     public void register(RegistryContext context) {
         for (RegistryHelper<?, ?> registryHelper : this.registryHelpers.values()) {
             if (registryHelper instanceof MappedRegistryHelper<?> mappedRegistryHelper) {
-                registryHelper.getRegistryClasses().forEach(Supplier::get);
+                registryHelper.getRegistryClasses().forEach(registryClass -> {
+                    try {
+                        Class.forName(registryClass.getName());
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
                 mappedRegistryHelper.internalRegister(context);
             }

@@ -6,9 +6,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
-
-import java.util.function.Supplier;
 
 /**
  * @author Valhelsia Team
@@ -16,7 +13,7 @@ import java.util.function.Supplier;
  */
 public class ItemRegistryHelper extends DefaultRegistryHelper<Item> {
 
-    public ItemRegistryHelper(ResourceKey<? extends Registry<Item>> registry, String modId, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+    public ItemRegistryHelper(ResourceKey<? extends Registry<Item>> registry, String modId, ImmutableList<Class<?>> registryClasses) {
         super(registry, modId, registryClasses);
     }
 

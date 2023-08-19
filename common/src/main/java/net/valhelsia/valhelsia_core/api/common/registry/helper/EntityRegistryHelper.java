@@ -5,10 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
-
-import java.util.function.Supplier;
 
 /**
  * @author Valhelsia Team - stal111
@@ -16,7 +13,7 @@ import java.util.function.Supplier;
  */
 public class EntityRegistryHelper extends DefaultRegistryHelper<EntityType<?>> {
 
-    public EntityRegistryHelper(ResourceKey<? extends Registry<EntityType<?>>> registry, String modId, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+    public EntityRegistryHelper(ResourceKey<? extends Registry<EntityType<?>>> registry, String modId, ImmutableList<Class<?>> registryClasses) {
         super(registry, modId, registryClasses);
     }
 

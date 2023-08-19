@@ -6,4 +6,7 @@ package net.valhelsia.valhelsia_core.api.common.registry;
  */
 public interface RegistryClass {
 
+    default void load() {
+
+    }
 }

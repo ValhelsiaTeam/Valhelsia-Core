@@ -26,10 +26,10 @@ import java.util.function.Supplier;
 public abstract class MappedRegistryHelper<T> extends RegistryHelper<T, RegistryClass> {
 
     private final ValhelsiaRegistry<T> registry;
-    private final ImmutableList<Supplier<RegistryClass>> registryClasses;
+    private final ImmutableList<Class<?>> registryClasses;
     private final List<RegistryEntry<? extends T>> entries = new ArrayList<>();
 
-    public MappedRegistryHelper(ResourceKey<? extends Registry<T>> registry, String modId, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+    public MappedRegistryHelper(ResourceKey<? extends Registry<T>> registry, String modId, ImmutableList<Class<?>> registryClasses) {
         super(registry, modId);
         this.registry = this.createRegistry(registry, modId);
         this.registryClasses = registryClasses;
@@ -69,7 +69,7 @@ public abstract class MappedRegistryHelper<T> extends RegistryHelper<T, Registry
     protected abstract <O extends T> RegistryEntry<O> createEntry(String name, Supplier<O> supplier);
 
     @Override
-    public ImmutableList<Supplier<RegistryClass>> getRegistryClasses() {
+    public ImmutableList<Class<?>> getRegistryClasses() {
         return this.registryClasses;
     }
 }

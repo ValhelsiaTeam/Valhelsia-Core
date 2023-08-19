@@ -6,7 +6,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
 
@@ -23,7 +22,7 @@ import java.util.function.UnaryOperator;
  */
 public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
 
-    public BlockRegistryHelper(ResourceKey<? extends Registry<Block>> registry, String modId, ImmutableList<Supplier<RegistryClass>> registryClasses) {
+    public BlockRegistryHelper(ResourceKey<? extends Registry<Block>> registry, String modId, ImmutableList<Class<?>> registryClasses) {
         super(registry, modId, registryClasses);
     }
     @Override

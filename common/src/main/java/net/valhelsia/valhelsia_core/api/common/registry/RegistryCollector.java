@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -44,23 +43,19 @@ public abstract class RegistryCollector {
      */
     protected abstract void collectHelpers();
 
-    @SafeVarargs
-    public final void addBlockHelper(Supplier<RegistryClass>... registryClasses) {
+    public final void addBlockHelper(Class<?>... registryClasses) {
         this.addMappedHelper(Registries.BLOCK, BlockRegistryHelper::new, registryClasses);
     }
 
-    @SafeVarargs
-    public final void addItemHelper(Supplier<RegistryClass>... registryClasses) {
+    public final void addItemHelper(Class<?>... registryClasses) {
         this.addMappedHelper(Registries.ITEM, ItemRegistryHelper::new, registryClasses);
     }
 
-    @SafeVarargs
-    public final <T> void addMappedHelper(ResourceKey<Registry<T>> key, Supplier<RegistryClass>... registryClasses) {
+    public final <T> void addMappedHelper(ResourceKey<Registry<T>> key, Class<?>... registryClasses) {
         this.registryHelpers.put(key, new DefaultRegistryHelper<>(key, this.modId, ImmutableList.copyOf(registryClasses)));
     }
 
-    @SafeVarargs
-    public final <T> void addMappedHelper(ResourceKey<Registry<T>> key, TriFunction<ResourceKey<Registry<T>>, String, ImmutableList<Supplier<RegistryClass>>, MappedRegistryHelper<T>> registryHelper, Supplier<RegistryClass>... registryClasses) {
+    public final <T> void addMappedHelper(ResourceKey<Registry<T>> key, TriFunction<ResourceKey<Registry<T>>, String, ImmutableList<Class<?>>, MappedRegistryHelper<T>> registryHelper, Class<?>... registryClasses) {
         this.registryHelpers.put(key, registryHelper.apply(key, this.modId, ImmutableList.copyOf(registryClasses)));
     }
 
