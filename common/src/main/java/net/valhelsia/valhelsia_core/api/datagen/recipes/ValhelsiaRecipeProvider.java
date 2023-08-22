@@ -1,10 +1,9 @@
 package net.valhelsia.valhelsia_core.api.datagen.recipes;
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.api.datagen.DataProviderContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -21,13 +20,13 @@ public class ValhelsiaRecipeProvider extends RecipeProvider {
     @NotNull
     private Consumer<FinishedRecipe> finishedRecipeConsumer = finishedRecipe -> {};
 
-    private final RegistryManager registryManager;
+    private final String modId;
     private final List<RecipeSubProvider> subProviders;
 
     @SafeVarargs
-    public ValhelsiaRecipeProvider(PackOutput packOutput, RegistryManager registryManager, Function<ValhelsiaRecipeProvider, RecipeSubProvider>... subProviders) {
-        super(packOutput);
-        this.registryManager = registryManager;
+    public ValhelsiaRecipeProvider(DataProviderContext context, Function<ValhelsiaRecipeProvider, RecipeSubProvider>... subProviders) {
+        super(context.output());
+        this. modId = context.registryManager().modId();
         this.subProviders = Arrays.stream(subProviders).map(function -> function.apply(this)).toList();
     }
 
@@ -44,6 +43,6 @@ public class ValhelsiaRecipeProvider extends RecipeProvider {
     }
 
     public String getModId() {
-        return this.registryManager.modId();
+        return this.modId;
     }
 }
