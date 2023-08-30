@@ -7,7 +7,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
-import net.valhelsia.valhelsia_core.api.client.forge.ForgeClientSetupHelper;
+import net.valhelsia.valhelsia_core.api.client.ClientSetupHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
@@ -18,12 +18,8 @@ import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegist
  */
 public class ClientSetup {
 
-    private final ForgeClientSetupHelper helper;
-
-    public ClientSetup() {
+    public ClientSetup(ClientSetupHelper helper) {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        this.helper = new ForgeClientSetupHelper();
 
         modEventBus.addListener(this::onClientSetup);
     }

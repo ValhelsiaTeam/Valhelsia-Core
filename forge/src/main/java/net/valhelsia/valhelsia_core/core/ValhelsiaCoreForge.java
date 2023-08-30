@@ -1,7 +1,5 @@
 package net.valhelsia.valhelsia_core.core;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
@@ -18,8 +16,7 @@ public class ValhelsiaCoreForge {
 
         ModDefinition.of("valhelsia_core-forge")
                 .withRegistryManager(REGISTRY_MANAGER)
+                .clientSetup(() -> ClientSetup::new)
                 .create();
-
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientSetup::new);
     }
 }
