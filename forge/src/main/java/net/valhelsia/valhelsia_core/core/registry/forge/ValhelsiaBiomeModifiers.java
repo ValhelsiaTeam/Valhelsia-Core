@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.core.registry;
+package net.valhelsia.valhelsia_core.core.registry.forge;
 
 import com.mojang.serialization.Codec;
 import net.minecraftforge.common.world.BiomeModifier;
@@ -7,7 +7,7 @@ import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.world.forge.AddNetherSpawnsBiomeModifier;
-import net.valhelsia.valhelsia_core.core.ValhelsiaCoreForge;
+import net.valhelsia.valhelsia_core.core.forge.ValhelsiaCoreForge;
 
 /**
  * @author Valhelsia Team

@@ -1,8 +1,9 @@
-package net.valhelsia.valhelsia_core.core;
+package net.valhelsia.valhelsia_core.core.forge;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
+import net.valhelsia.valhelsia_core.core.ValhelsiaEventHandler;
 
 /**
  * @author Valhelsia Team - stal111

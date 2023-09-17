@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.core.registry;
+package net.valhelsia.valhelsia_core.core.registry.forge;
 
 import net.minecraftforge.registries.ForgeRegistries;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryCollector;

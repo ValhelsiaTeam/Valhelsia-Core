@@ -13,7 +13,7 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.MobSpawnSettingsBuilder;
 import net.minecraftforge.common.world.ModifiableBiomeInfo;
-import net.valhelsia.valhelsia_core.core.registry.ValhelsiaBiomeModifiers;
+import net.valhelsia.valhelsia_core.core.registry.forge.ValhelsiaBiomeModifiers;
 
 import java.util.List;
 import java.util.Optional;
