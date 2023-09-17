@@ -86,6 +86,6 @@ public class BlockRegistryEntry<T extends Block> extends RegistryEntry<T> {
 
     @FunctionalInterface
     public interface ItemFunction {
-        BlockItem apply(RegistryEntry<? extends Block> registryEntry);
+        BlockItem apply(BlockRegistryEntry<? extends Block> registryEntry);
     }
 }

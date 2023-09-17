@@ -6,6 +6,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SkullBlock;
+import net.minecraft.world.level.block.WallSkullBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
 
@@ -33,6 +36,10 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
     @Override
     public <O extends Block> BlockRegistryEntry<O> register(String name, Supplier<O> object) {
         return super.registerInternal(name, object);
+    }
+
+    public <S extends SkullBlock, W extends WallSkullBlock> SkullRegistryEntry<S, W> registerSkull(String name, SkullBlock.Type type, SkullRegistryEntry.SkullFactory<S> skull, SkullRegistryEntry.SkullFactory<W> wallSkull, BlockBehaviour.Properties properties, SkullRegistryEntry.SkullItemFactory itemFactory) {
+        return new SkullRegistryEntry<>(this.register(name + "_skull", () -> skull.create(type, properties)), this.register(name + "_wall_skull", () -> wallSkull.create(type, properties))).withItem(itemFactory);
     }
 
     public <T extends Block> BlockEntrySet<T, DyeColor> registerColorEntrySet(String name, Function<DyeColor, T> function) {
