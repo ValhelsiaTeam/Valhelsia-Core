@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.valhelsia.valhelsia_core.api.common.item.ingredient.PlatformDependentValue;
+import net.valhelsia.valhelsia_core.api.common.item.ingredient.PlatformDependentIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -31,8 +31,8 @@ public abstract class RecipeSubProvider {
     public static final TagKey<Item> FORGE_WOODEN_CHESTS_TAG = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "chests/wooden"));
     public static final TagKey<Item> FABRIC_CHESTS_TAG = TagKey.create(Registries.ITEM, new ResourceLocation("c", "chests"));
 
-    public static final Ingredient WOODEN_STICK_INGREDIENT = PlatformDependentValue.createIngredient(new ResourceLocation("forge", "rods/wooden"), Items.STICK);
-    public static final Ingredient WOODEN_CHEST_INGREDIENT = PlatformDependentValue.createIngredient(FORGE_WOODEN_CHESTS_TAG.location(), FABRIC_CHESTS_TAG.location());
+    public static final Ingredient WOODEN_STICK_INGREDIENT = PlatformDependentIngredient.createIngredient(new ResourceLocation("forge", "rods/wooden"), Items.STICK);
+    public static final Ingredient WOODEN_CHEST_INGREDIENT = PlatformDependentIngredient.createIngredient(FORGE_WOODEN_CHESTS_TAG.location(), FABRIC_CHESTS_TAG.location());
 
     private final ValhelsiaRecipeProvider provider;
 
