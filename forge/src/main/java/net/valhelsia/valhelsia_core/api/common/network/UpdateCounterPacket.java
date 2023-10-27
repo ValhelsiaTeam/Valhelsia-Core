@@ -5,13 +5,12 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
 import net.valhelsia.valhelsia_core.api.common.counter.SerializableCounter;
 import net.valhelsia.valhelsia_core.api.common.counter.capability.CounterProvider;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * Update Counter Packet <br>
@@ -38,9 +37,9 @@ public record UpdateCounterPacket(SerializableCounter timer) {
         return new UpdateCounterPacket(timer);
     }
 
-    public static void consume(UpdateCounterPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            assert ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT;
+    public static void consume(UpdateCounterPacket packet, CustomPayloadEvent.Context context) {
+        context.enqueueWork(() -> {
+            assert context.getDirection() == NetworkDirection.PLAY_TO_CLIENT;
 
             LocalPlayer player = Minecraft.getInstance().player;
 
@@ -50,6 +49,6 @@ public record UpdateCounterPacket(SerializableCounter timer) {
                 });
             }
         });
-        ctx.get().setPacketHandled(true);
+        context.setPacketHandled(true);
     }
 }

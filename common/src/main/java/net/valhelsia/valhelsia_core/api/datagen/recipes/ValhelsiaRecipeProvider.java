@@ -1,14 +1,14 @@
 package net.valhelsia.valhelsia_core.api.datagen.recipes;
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.valhelsia.valhelsia_core.api.datagen.DataProviderContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -17,8 +17,8 @@ import java.util.function.Function;
  */
 public class ValhelsiaRecipeProvider extends RecipeProvider {
 
-    @NotNull
-    private Consumer<FinishedRecipe> finishedRecipeConsumer = finishedRecipe -> {};
+    @Nullable
+    private RecipeOutput recipeOutput = null;
 
     private final String modId;
     private final List<RecipeSubProvider> subProviders;
@@ -26,20 +26,20 @@ public class ValhelsiaRecipeProvider extends RecipeProvider {
     @SafeVarargs
     public ValhelsiaRecipeProvider(DataProviderContext context, Function<ValhelsiaRecipeProvider, RecipeSubProvider>... subProviders) {
         super(context.output());
-        this. modId = context.registryManager().modId();
+        this.modId = context.registryManager().modId();
         this.subProviders = Arrays.stream(subProviders).map(function -> function.apply(this)).toList();
     }
 
     @OverridingMethodsMustInvokeSuper
     @Override
-    protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
-        this.finishedRecipeConsumer = consumer;
+    protected void buildRecipes(@NotNull RecipeOutput recipeOutput) {
+        this.recipeOutput = recipeOutput;
         this.subProviders.forEach(RecipeSubProvider::registerRecipes);
     }
 
-    @NotNull
-    public Consumer<FinishedRecipe> getFinishedRecipeConsumer() {
-        return this.finishedRecipeConsumer;
+    @Nullable
+    public RecipeOutput getRecipeOutput() {
+        return this.recipeOutput;
     }
 
     public String getModId() {

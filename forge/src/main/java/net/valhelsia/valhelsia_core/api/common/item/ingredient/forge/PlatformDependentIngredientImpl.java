@@ -1,13 +1,12 @@
 package net.valhelsia.valhelsia_core.api.common.item.ingredient.forge;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.crafting.AbstractIngredient;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.IIngredientSerializer;
+import net.minecraftforge.common.crafting.ingredients.AbstractIngredient;
+import net.minecraftforge.common.crafting.ingredients.IIngredientSerializer;
 import net.valhelsia.valhelsia_core.api.common.helper.PlatformHelper;
 import net.valhelsia.valhelsia_core.api.common.item.ingredient.PlatformDependentIngredient;
 import org.jetbrains.annotations.NotNull;
@@ -44,33 +43,27 @@ public class PlatformDependentIngredientImpl extends AbstractIngredient implemen
     }
 
     @Override
-    public @NotNull IIngredientSerializer<? extends Ingredient> getSerializer() {
+    public IIngredientSerializer<? extends Ingredient> serializer() {
         return Serializer.INSTANCE;
     }
 
-    @Override
-    public @NotNull JsonElement toJson() {
-        JsonObject json = new JsonObject();
-
-        json.addProperty("type", CraftingHelper.getID(Serializer.INSTANCE).toString());
-
-        json.add("forge_value", this.forgeValue.toJson());
-        json.add("fabric_value", this.fabricValue.toJson());
-
-        return json;
-    }
-
     public static class Serializer implements IIngredientSerializer<PlatformDependentIngredientImpl> {
+
         public static final PlatformDependentIngredientImpl.Serializer INSTANCE = new PlatformDependentIngredientImpl.Serializer();
 
-        @Override
-        public @NotNull PlatformDependentIngredientImpl parse(@NotNull FriendlyByteBuf buffer) {
-            return new PlatformDependentIngredientImpl(Ingredient.fromNetwork(buffer), Ingredient.fromNetwork(buffer));
-        }
+        private static final Codec<PlatformDependentIngredientImpl> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                        Ingredient.CODEC.fieldOf("forge_value").forGetter(ingredient -> {
+                            return ingredient.forgeValue;
+                        }),
+                        Ingredient.CODEC.fieldOf("fabric_value").forGetter(ingredient -> {
+                            return ingredient.fabricValue;
+                        })
+                ).apply(instance, PlatformDependentIngredientImpl::new)
+        );
 
         @Override
-        public @NotNull PlatformDependentIngredientImpl parse(@NotNull JsonObject json) {
-            return new PlatformDependentIngredientImpl(Ingredient.fromJson(json.get("forge_value")), Ingredient.fromJson(json.get("fabric_value")));
+        public Codec<? extends PlatformDependentIngredientImpl> codec() {
+            return CODEC;
         }
 
         @Override
@@ -79,5 +72,9 @@ public class PlatformDependentIngredientImpl extends AbstractIngredient implemen
             ingredient.fabricValue.toNetwork(buffer);
         }
 
+        @Override
+        public PlatformDependentIngredientImpl read(FriendlyByteBuf buffer) {
+            return new PlatformDependentIngredientImpl(Ingredient.fromNetwork(buffer), Ingredient.fromNetwork(buffer));
+        }
     }
 }

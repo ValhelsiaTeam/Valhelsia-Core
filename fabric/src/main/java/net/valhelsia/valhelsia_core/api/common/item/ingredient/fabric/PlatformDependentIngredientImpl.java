@@ -1,12 +1,14 @@
 package net.valhelsia.valhelsia_core.api.common.item.ingredient.fabric;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.common.helper.PlatformHelper;
 import net.valhelsia.valhelsia_core.api.common.item.ingredient.PlatformDependentIngredient;
 import org.jetbrains.annotations.NotNull;
@@ -57,20 +59,33 @@ public class PlatformDependentIngredientImpl implements CustomIngredient, Platfo
     }
 
     public static class Serializer implements CustomIngredientSerializer<PlatformDependentIngredientImpl> {
+
+        private static final ResourceLocation ID = new ResourceLocation(ValhelsiaCore.MOD_ID, "platform_dependent");
+
+        private static final Codec<PlatformDependentIngredientImpl> ALLOW_EMPTY_CODEC = createCodec(Ingredient.CODEC);
+        private static final Codec<PlatformDependentIngredientImpl> DISALLOW_EMPTY_CODEC = createCodec(Ingredient.CODEC_NONEMPTY);
+
+        private static Codec<PlatformDependentIngredientImpl> createCodec(Codec<Ingredient> ingredientCodec) {
+            return RecordCodecBuilder.create(instance ->
+                    instance.group(
+                            ingredientCodec.fieldOf("forge_value").forGetter(ingredient -> {
+                                return ingredient.forgeValue;
+                            }),
+                            ingredientCodec.fieldOf("fabric_value").forGetter(ingredient -> {
+                                return ingredient.fabricValue;
+                            })
+                    ).apply(instance, PlatformDependentIngredientImpl::new)
+            );
+        }
+
         @Override
         public ResourceLocation getIdentifier() {
-            return null;
+            return ID;
         }
 
         @Override
-        public PlatformDependentIngredientImpl read(JsonObject json) {
-            return new PlatformDependentIngredientImpl(Ingredient.fromJson(json.get("forge_value")), Ingredient.fromJson(json.get("fabric_value")));
-        }
-
-        @Override
-        public void write(JsonObject json, PlatformDependentIngredientImpl ingredient) {
-            json.add("forge_value", ingredient.forgeValue.toJson());
-            json.add("fabric_value", ingredient.fabricValue.toJson());
+        public Codec<PlatformDependentIngredientImpl> getCodec(boolean allowEmpty) {
+            return allowEmpty ? ALLOW_EMPTY_CODEC : DISALLOW_EMPTY_CODEC;
         }
 
         @Override
@@ -83,6 +98,5 @@ public class PlatformDependentIngredientImpl implements CustomIngredient, Platfo
             ingredient.forgeValue.toNetwork(buffer);
             ingredient.fabricValue.toNetwork(buffer);
         }
-
     }
 }

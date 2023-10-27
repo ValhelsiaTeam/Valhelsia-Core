@@ -1,13 +1,10 @@
 package net.valhelsia.valhelsia_core.api.common.loot.condition;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -28,6 +25,12 @@ import java.util.Set;
  * @since 2021-10-26
  */
 public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemCondition {
+
+    public static final Codec<EntityTagCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            TagKey.codec(Registries.ENTITY_TYPE).fieldOf("tag").forGetter(condition -> {
+                return condition.tag;
+            })
+    ).apply(instance, EntityTagCondition::new));
 
     public static Builder builder(TagKey<EntityType<?>> tag) {
         return () -> new EntityTagCondition(tag);
@@ -53,20 +56,5 @@ public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemC
         Entity entity = lootContext.getParam(LootContextParams.THIS_ENTITY);
 
         return entity.getType().is(this.tag);
-    }
-
-    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<EntityTagCondition> {
-        @Override
-        public void serialize(@NotNull JsonObject jsonObject, EntityTagCondition instance, @NotNull JsonSerializationContext context) {
-            jsonObject.addProperty("tag", instance.tag.location().toString());
-        }
-
-        @Override
-        @NotNull
-        public EntityTagCondition deserialize(@NotNull JsonObject jsonObject, @NotNull JsonDeserializationContext context) {
-            ResourceLocation resourceLocation = new ResourceLocation(GsonHelper.getAsString(jsonObject, "tag"));
-
-            return new EntityTagCondition(TagKey.create(Registries.ENTITY_TYPE, resourceLocation));
-        }
     }
 }

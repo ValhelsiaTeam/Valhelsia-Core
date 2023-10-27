@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.api.datagen.recipes;
 
-import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.TagKey;
@@ -34,8 +34,8 @@ public record ValhelsiaShapedRecipeBuilder(ShapedRecipeBuilder builder) {
         return this;
     }
 
-    public ValhelsiaShapedRecipeBuilder unlockedBy(String criterionName, CriterionTriggerInstance triggerInstance) {
-        this.builder.unlockedBy(criterionName, triggerInstance);
+    public ValhelsiaShapedRecipeBuilder unlockedBy(String criterionName, Criterion<?> criterion) {
+        this.builder.unlockedBy(criterionName, criterion);
 
         return this;
     }

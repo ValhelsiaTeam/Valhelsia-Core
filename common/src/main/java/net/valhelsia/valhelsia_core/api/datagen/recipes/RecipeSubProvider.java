@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.api.datagen.recipes;
 
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -8,6 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -20,6 +22,8 @@ import net.valhelsia.valhelsia_core.api.common.item.ingredient.PlatformDependent
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 /**
@@ -42,12 +46,17 @@ public abstract class RecipeSubProvider {
 
     protected abstract void registerRecipes();
 
+    @Nullable
+    public RecipeOutput getRecipeOutput() {
+        return this.provider.getRecipeOutput();
+    }
+
     public void add(RecipeBuilder builder) {
-        builder.save(this.provider.getFinishedRecipeConsumer());
+        builder.save(this.provider.getRecipeOutput());
     }
 
     public void add(RecipeBuilder builder, String path) {
-        builder.save(this.provider.getFinishedRecipeConsumer(), new ResourceLocation(this.provider.getModId(), path));
+        builder.save(this.provider.getRecipeOutput(), new ResourceLocation(this.provider.getModId(), path));
     }
 
     public void storageRecipe(ItemLike item, ItemLike block) {
@@ -215,7 +224,7 @@ public abstract class RecipeSubProvider {
         return BuiltInRegistries.ITEM.getKey(item.asItem()).getPath();
     }
 
-    public InventoryChangeTrigger.TriggerInstance has(RecipePart<?> part) {
+    public Criterion<InventoryChangeTrigger.TriggerInstance> has(RecipePart<?> part) {
         if (part.get() instanceof ItemLike itemLike) {
             return has(itemLike);
         }
@@ -263,20 +272,20 @@ public abstract class RecipeSubProvider {
         return RecipePart.of(ingredient);
     }
 
-    protected static InventoryChangeTrigger.TriggerInstance has(ItemLike... items) {
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike... items) {
         return inventoryTrigger(ItemPredicate.Builder.item().of(items).build());
     }
 
-    protected static InventoryChangeTrigger.TriggerInstance has(TagKey<Item> tagKey) {
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(TagKey<Item> tagKey) {
         return inventoryTrigger(ItemPredicate.Builder.item().of(tagKey).build());
     }
 
-    protected static InventoryChangeTrigger.TriggerInstance has(TagKey<Item> forgeTag, TagKey<Item> fabricTag) {
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(TagKey<Item> forgeTag, TagKey<Item> fabricTag) {
         return inventoryTrigger(ItemPredicate.Builder.item().of(forgeTag).build(), ItemPredicate.Builder.item().of(fabricTag).build());
     }
 
-    protected static InventoryChangeTrigger.TriggerInstance inventoryTrigger(ItemPredicate... predicates) {
-        return new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, predicates);
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate... predicates) {
+        return CriteriaTriggers.INVENTORY_CHANGED.createCriterion(new InventoryChangeTrigger.TriggerInstance(Optional.empty(), MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, List.of(predicates)));
     }
 
     protected static String getHasName(ItemLike itemLike) {

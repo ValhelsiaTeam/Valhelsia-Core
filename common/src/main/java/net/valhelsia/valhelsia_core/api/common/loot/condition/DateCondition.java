@@ -1,10 +1,8 @@
 package net.valhelsia.valhelsia_core.api.common.loot.condition;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import net.minecraft.util.GsonHelper;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -22,6 +20,18 @@ import java.util.Set;
 public record DateCondition(int month,
                             int startDay,
                             int endDay) implements LootItemCondition {
+
+    public static final Codec<DateCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.INT.fieldOf("month").forGetter(condition -> {
+                return condition.month;
+            }),
+            Codec.INT.fieldOf("start_day").forGetter(condition -> {
+                return condition.startDay;
+            }),
+            Codec.INT.fieldOf("end_day").forGetter(condition -> {
+                return condition.endDay;
+            })
+    ).apply(instance, DateCondition::new));
 
     public static Builder builder(int month, int startDay, int endDay) {
         return () -> new DateCondition(month, startDay, endDay);
@@ -43,21 +53,5 @@ public record DateCondition(int month,
     public boolean test(LootContext lootContext) {
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.MONTH) + 1 == this.month && calendar.get(Calendar.DATE) >= this.startDay && calendar.get(Calendar.DATE) <= this.endDay;
-    }
-
-    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<DateCondition> {
-        @Override
-        public void serialize(@NotNull JsonObject jsonObject, DateCondition instance, @NotNull JsonSerializationContext context) {
-            jsonObject.addProperty("month", instance.month);
-            jsonObject.addProperty("start_day", instance.startDay);
-            jsonObject.addProperty("end_day", instance.endDay);
-        }
-
-        @Override
-        @NotNull
-        public DateCondition deserialize(@NotNull JsonObject jsonObject, @NotNull JsonDeserializationContext context) {
-            return new DateCondition(GsonHelper.getAsInt(jsonObject, "month"), GsonHelper.getAsInt(jsonObject, "start_day"), GsonHelper.getAsInt(jsonObject, "end_day"));
-
-        }
     }
 }
