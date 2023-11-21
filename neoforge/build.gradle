@@ -46,6 +46,8 @@ remapJar {
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier.set(null)
+
+    atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
 }
 
 jar {
