@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.api.datagen.tags;
+package net.valhelsia.valhelsia_core.datagen.tags;
 
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.tags.TagKey;

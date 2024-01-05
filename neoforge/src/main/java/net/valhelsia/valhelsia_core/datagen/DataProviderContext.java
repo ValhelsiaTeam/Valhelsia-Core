@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.api.datagen;
+package net.valhelsia.valhelsia_core.datagen;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

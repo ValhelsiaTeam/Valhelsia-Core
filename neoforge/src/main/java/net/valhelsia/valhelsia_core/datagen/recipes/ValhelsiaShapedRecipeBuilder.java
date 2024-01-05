@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.api.datagen.recipes;
+package net.valhelsia.valhelsia_core.datagen.recipes;
 
 import net.minecraft.advancements.Criterion;
 import net.minecraft.data.recipes.RecipeCategory;

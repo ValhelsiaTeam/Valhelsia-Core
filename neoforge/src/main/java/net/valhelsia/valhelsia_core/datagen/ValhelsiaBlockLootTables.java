@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.api.datagen;
+package net.valhelsia.valhelsia_core.datagen;
 
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;

@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.api.datagen.tags;
+package net.valhelsia.valhelsia_core.datagen.tags;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;

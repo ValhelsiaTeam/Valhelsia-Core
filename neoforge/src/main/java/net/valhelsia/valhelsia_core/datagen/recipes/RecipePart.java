@@ -1,4 +1,4 @@
-package net.valhelsia.valhelsia_core.api.datagen.recipes;
+package net.valhelsia.valhelsia_core.datagen.recipes;
 
 /**
  * @author Valhelsia Team
