@@ -7,6 +7,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.common.helper.PlatformHelper;
 import net.valhelsia.valhelsia_core.api.common.item.ingredient.PlatformDependentIngredient;
 import org.jetbrains.annotations.NotNull;
@@ -57,9 +58,12 @@ public class PlatformDependentIngredientImpl implements CustomIngredient, Platfo
     }
 
     public static class Serializer implements CustomIngredientSerializer<PlatformDependentIngredientImpl> {
+
+        private static final ResourceLocation ID = new ResourceLocation(ValhelsiaCore.MOD_ID, "platform_dependent");
+
         @Override
         public ResourceLocation getIdentifier() {
-            return null;
+            return ID;
         }
 
         @Override
@@ -83,6 +87,5 @@ public class PlatformDependentIngredientImpl implements CustomIngredient, Platfo
             ingredient.forgeValue.toNetwork(buffer);
             ingredient.fabricValue.toNetwork(buffer);
         }
-
     }
 }
