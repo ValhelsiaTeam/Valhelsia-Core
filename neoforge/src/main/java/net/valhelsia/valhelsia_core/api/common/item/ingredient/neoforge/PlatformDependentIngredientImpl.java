@@ -3,8 +3,8 @@ package net.valhelsia.valhelsia_core.api.common.item.ingredient.neoforge;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.valhelsia.valhelsia_core.api.common.helper.PlatformHelper;
 import net.valhelsia.valhelsia_core.api.common.item.ingredient.PlatformDependentIngredient;
+import net.valhelsia.valhelsia_core.core.registry.neoforge.ValhelsiaIngredientTypes;
 
 import java.util.Arrays;
 
@@ -30,10 +30,10 @@ public class PlatformDependentIngredientImpl extends Ingredient implements Platf
     private final boolean isSimple;
 
     public PlatformDependentIngredientImpl(Ingredient forgeValue, Ingredient fabricValue) {
-        super(Arrays.stream(PlatformHelper.isForge() ? forgeValue.getValues() : fabricValue.getValues()));
+        super(Arrays.stream(forgeValue.getValues()), ValhelsiaIngredientTypes.PLATFORM_DEPENDENT_INGREDIENT);
         this.forgeValue = forgeValue;
         this.fabricValue = fabricValue;
-        this.isSimple = PlatformHelper.isForge() ? forgeValue.isSimple() : fabricValue.isSimple();
+        this.isSimple = forgeValue.isSimple();
     }
 
     public static Ingredient createIngredient(Ingredient forgeValue, Ingredient fabricValue) {

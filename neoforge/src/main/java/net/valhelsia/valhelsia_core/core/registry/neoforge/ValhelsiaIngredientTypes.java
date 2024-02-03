@@ -16,7 +16,7 @@ public class ValhelsiaIngredientTypes implements RegistryClass {
 
     public static final MappedRegistryHelper<IngredientType<?>> HELPER = ValhelsiaCoreForge.REGISTRY_MANAGER.getHelper(NeoForgeRegistries.Keys.INGREDIENT_TYPES);
 
-    public static final RegistryEntry<IngredientType<PlatformDependentIngredientImpl>> PLATFORM_DEPENDENT_INGREDIENT = HELPER.register("platform_dependent_ingredient", () -> new IngredientType<>(PlatformDependentIngredientImpl.CODEC));
+    public static final RegistryEntry<IngredientType<PlatformDependentIngredientImpl>> PLATFORM_DEPENDENT_INGREDIENT = HELPER.register("platform_dependent", () -> new IngredientType<>(PlatformDependentIngredientImpl.CODEC));
 
 
 }

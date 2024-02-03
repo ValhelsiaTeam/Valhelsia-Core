@@ -27,6 +27,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -76,8 +77,10 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
         return LootTable.lootTable().withPool(withSurvivesExplosion(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(property, value))))));
     }
 
-    protected static LootTable.Builder droppingAndFlowerPot(ItemLike flower) {
-        return LootTable.lootTable().withPool(withSurvivesExplosion(Blocks.FLOWER_POT, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(Blocks.FLOWER_POT)))).withPool(withSurvivesExplosion(flower, LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(flower))));
+    protected void dropPottedContents(@NotNull Block flowerPot) {
+        this.add(flowerPot, (arg) -> {
+            return this.createPotFlowerItemTable(((FlowerPotBlock)arg).getPotted());
+        });
     }
 
     protected static LootTable.Builder droppingWithFunction(Block block, Function<LootItem.Builder<?>, LootItem.Builder<?>> mapping) {
@@ -94,10 +97,6 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
 
     protected static LootTable.Builder dropping(Block block, LootItemCondition.Builder conditionBuilder, LootPoolEntryContainer.Builder<?> lootEntryBuilder) {
         return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(conditionBuilder).otherwise(lootEntryBuilder)));
-    }
-
-    protected void registerFlowerPot(Block flowerPot) {
-        this.add(flowerPot, (pot) -> droppingAndFlowerPot(((FlowerPotBlock) pot).getContent()));
     }
 
     protected void registerDropping(Block blockIn, ItemLike drop) {
