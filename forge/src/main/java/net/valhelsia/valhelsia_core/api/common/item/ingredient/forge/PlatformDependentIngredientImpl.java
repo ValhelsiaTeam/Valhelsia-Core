@@ -53,6 +53,8 @@ public class PlatformDependentIngredientImpl extends AbstractIngredient implemen
         JsonObject json = new JsonObject();
 
         json.addProperty("type", CraftingHelper.getID(Serializer.INSTANCE).toString());
+        // This is needed for the Fabric API to recognize the ingredient
+        json.addProperty("fabric:type", CraftingHelper.getID(Serializer.INSTANCE).toString());
 
         json.add("forge_value", this.forgeValue.toJson());
         json.add("fabric_value", this.fabricValue.toJson());
