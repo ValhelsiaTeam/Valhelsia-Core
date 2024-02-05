@@ -20,8 +20,11 @@ public class PlatformDependentIngredientImpl extends Ingredient implements Platf
                     }),
                     Ingredient.CODEC.fieldOf("fabric_value").forGetter(ingredient -> {
                         return ingredient.fabricValue;
+                    }),
+                    Codec.STRING.fieldOf("fabric:type").forGetter(ingredient -> {
+                        return "valhelsia_core:platform_dependent";
                     })
-            ).apply(instance, PlatformDependentIngredientImpl::new)
+            ).apply(instance, (forgeValue, fabricValue, s) -> new PlatformDependentIngredientImpl(forgeValue, fabricValue))
     );
 
     private final Ingredient forgeValue;
