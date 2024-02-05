@@ -4,6 +4,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.UnaryOperator;
 
 /**
@@ -43,7 +45,7 @@ public abstract class RecipeSubProvider {
         this.provider = provider;
     }
 
-    protected abstract void registerRecipes();
+    protected abstract void registerRecipes(CompletableFuture<HolderLookup.Provider> lookupProvider);
 
     @Nullable
     public RecipeOutput getRecipeOutput() {
