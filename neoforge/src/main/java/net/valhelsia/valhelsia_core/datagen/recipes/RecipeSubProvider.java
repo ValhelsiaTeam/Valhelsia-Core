@@ -24,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.UnaryOperator;
 
 /**
@@ -45,7 +44,7 @@ public abstract class RecipeSubProvider {
         this.provider = provider;
     }
 
-    protected abstract void registerRecipes(CompletableFuture<HolderLookup.Provider> lookupProvider);
+    protected abstract void registerRecipes(HolderLookup.Provider lookupProvider);
 
     @Nullable
     public RecipeOutput getRecipeOutput() {
