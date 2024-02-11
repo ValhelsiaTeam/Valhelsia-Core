@@ -8,9 +8,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.AbstractIngredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
-import net.valhelsia.valhelsia_core.api.common.helper.PlatformHelper;
 import net.valhelsia.valhelsia_core.api.common.item.ingredient.PlatformDependentIngredient;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Valhelsia Team - stal111
@@ -21,12 +21,9 @@ public class PlatformDependentIngredientImpl extends AbstractIngredient implemen
     private final Ingredient forgeValue;
     private final Ingredient fabricValue;
 
-    private final boolean isSimple;
-
     public PlatformDependentIngredientImpl(Ingredient forgeValue, Ingredient fabricValue) {
         this.forgeValue = forgeValue;
         this.fabricValue = fabricValue;
-        this.isSimple = PlatformHelper.isForge() ? forgeValue.isSimple() : fabricValue.isSimple();
     }
 
     public static Ingredient createIngredient(Ingredient forgeValue, Ingredient fabricValue) {
@@ -35,12 +32,17 @@ public class PlatformDependentIngredientImpl extends AbstractIngredient implemen
 
     @Override
     public ItemStack @NotNull [] getItems() {
-        return PlatformHelper.isForge() ? this.forgeValue.getItems() : this.fabricValue.getItems();
+        return this.forgeValue.getItems();
     }
 
     @Override
     public boolean isSimple() {
-        return this.isSimple;
+        return this.forgeValue.isSimple();
+    }
+
+    @Override
+    public boolean test(@Nullable ItemStack stack) {
+        return this.forgeValue.test(stack);
     }
 
     @Override
@@ -80,6 +82,5 @@ public class PlatformDependentIngredientImpl extends AbstractIngredient implemen
             ingredient.forgeValue.toNetwork(buffer);
             ingredient.fabricValue.toNetwork(buffer);
         }
-
     }
 }
