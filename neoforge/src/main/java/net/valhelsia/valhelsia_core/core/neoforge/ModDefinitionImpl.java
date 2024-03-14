@@ -15,13 +15,13 @@ import java.util.function.Supplier;
  */
 public class ModDefinitionImpl {
 
-    public static void scheduleClientSetup(Supplier<Consumer<ClientSetupHelper>> clientSetup) {
+    public static void scheduleClientSetup(String modId, Supplier<Consumer<ClientSetupHelper>> clientSetup) {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             ForgeClientSetupHelper helper = new ForgeClientSetupHelper();
 
             clientSetup.get().accept(helper);
 
-            new ModClientSetup(helper);
+            new ModClientSetup(modId, helper);
         }
     }
 }

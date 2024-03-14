@@ -12,6 +12,6 @@ import java.util.function.Supplier;
 public class ModDefinitionImpl {
 
     // Not needed on fabric
-    public static void scheduleClientSetup(Supplier<Consumer<ClientSetupHelper>> clientSetup) {
+    public static void scheduleClientSetup(String modID, Supplier<Consumer<ClientSetupHelper>> clientSetup) {
     }
 }

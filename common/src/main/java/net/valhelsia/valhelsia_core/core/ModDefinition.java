@@ -26,11 +26,11 @@ public record ModDefinition(String modId, RegistryManager registryManager, Valhe
 
         this.eventHandler.register(registryManager);
 
-        ModDefinition.scheduleClientSetup(this.clientSetup);
+        ModDefinition.scheduleClientSetup(this.modId, this.clientSetup);
     }
 
     @ExpectPlatform
-    public static void scheduleClientSetup(Supplier<Consumer<ClientSetupHelper>> clientSetup) {
+    public static void scheduleClientSetup(String modId, Supplier<Consumer<ClientSetupHelper>> clientSetup) {
         throw new AssertionError();
     }
 

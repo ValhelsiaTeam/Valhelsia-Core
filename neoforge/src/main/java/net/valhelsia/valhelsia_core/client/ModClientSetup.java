@@ -1,8 +1,9 @@
 package net.valhelsia.valhelsia_core.client;
 
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.valhelsia.valhelsia_core.api.client.neoforge.ForgeClientSetupHelper;
+import net.valhelsia.valhelsia_core.client.event.ClientEvents;
 
 /**
  * @author Valhelsia Team - stal111
@@ -10,11 +11,13 @@ import net.valhelsia.valhelsia_core.api.client.neoforge.ForgeClientSetupHelper;
  */
 public class ModClientSetup {
 
-    public ModClientSetup(ForgeClientSetupHelper helper) {
-        ModList.get().getModContainerById("valhelsia_furniture").ifPresent(modContainer -> modContainer.getEventBus().addListener((EntityRenderersEvent.RegisterRenderers event) -> {
-            helper.getEntityRenderers().forEach(consumer -> {
-                consumer.accept(event);
-            });
-        }));
+    public ModClientSetup(String modId, ForgeClientSetupHelper helper) {
+        ModList.get().getModContainerById(modId).ifPresent(modContainer -> {
+            IEventBus eventBus = modContainer.getEventBus();
+
+            if (eventBus != null) {
+                eventBus.register(new ClientEvents(helper));
+            }
+        });
     }
 }

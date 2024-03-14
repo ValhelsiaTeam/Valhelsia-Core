@@ -1,11 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.valhelsia.valhelsia_core.mixin.fabric",
+  "package": "net.valhelsia.valhelsia_core.core.fabric.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
+    "client.SkullBlockRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
