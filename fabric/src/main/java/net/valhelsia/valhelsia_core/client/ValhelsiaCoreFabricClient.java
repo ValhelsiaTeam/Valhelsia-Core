@@ -18,7 +18,7 @@ public class ValhelsiaCoreFabricClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        System.out.println("CLIENT INIT");
+        ValhelsiaCore.LOGGER.debug("CLIENT INIT");
         FabricClientSetupHelper helper = new FabricClientSetupHelper();
 
         ValhelsiaCore.VALHELSIA_MODS.values().forEach(modDefinition -> {

@@ -12,13 +12,10 @@ import java.util.function.Supplier;
 public class CreativeTabFactoryImpl {
 
     public static Supplier<CreativeModeTab> create(Consumer<CreativeModeTab.Builder> consumer) {
-        System.out.println("TEST");
 
         var builder = CreativeModeTab.builder();
 
         consumer.accept(builder);
-
-        System.out.println("TEST2");
 
         return builder::build;
     }
