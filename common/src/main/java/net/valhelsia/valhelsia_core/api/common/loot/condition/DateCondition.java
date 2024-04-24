@@ -2,6 +2,7 @@ package net.valhelsia.valhelsia_core.api.common.loot.condition;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
@@ -21,7 +22,7 @@ public record DateCondition(int month,
                             int startDay,
                             int endDay) implements LootItemCondition {
 
-    public static final Codec<DateCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<DateCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.INT.fieldOf("month").forGetter(condition -> {
                 return condition.month;
             }),

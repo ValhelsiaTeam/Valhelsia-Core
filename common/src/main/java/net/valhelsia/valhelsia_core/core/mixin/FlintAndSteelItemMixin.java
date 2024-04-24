@@ -2,6 +2,7 @@ package net.valhelsia.valhelsia_core.core.mixin;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.item.context.UseOnContext;
@@ -34,7 +35,7 @@ public class FlintAndSteelItemMixin {
                 level.setBlockAndUpdate(pos, use.litState().apply(state));
 
                 if (player != null) {
-                    context.getItemInHand().hurtAndBreak(1, player, (playerEntity -> playerEntity.broadcastBreakEvent(context.getHand())));
+                    context.getItemInHand().hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
                 }
 
                 cir.setReturnValue(use.resultType().getResult(level));

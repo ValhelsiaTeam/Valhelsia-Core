@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.api.common.block.entity.neoforge;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -69,22 +70,23 @@ public abstract class ValhelsiaContainerBlockEntity<T extends BlockEntity> exten
     }
 
     @Override
-    public void load(@Nonnull CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+
         this.lockKey = LockCode.fromTag(tag);
 
         if (tag.contains("CustomName", 8)) {
-            this.name = Component.Serializer.fromJson(tag.getString("CustomName"));
+            this.name = Component.Serializer.fromJson(tag.getString("CustomName"), lookupProvider);
         }
     }
 
     @Override
-    protected void saveAdditional(@Nonnull CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(@Nonnull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
         this.lockKey.addToTag(tag);
 
         if (this.name != null) {
-            tag.putString("CustomName", Component.Serializer.toJson(this.name));
+            tag.putString("CustomName", Component.Serializer.toJson(this.name, lookupProvider));
         }
     }
 
@@ -157,11 +159,11 @@ public abstract class ValhelsiaContainerBlockEntity<T extends BlockEntity> exten
         }
     }
 
-    public void saveInventory(CompoundTag tag) {
-        tag.put("Inventory", this.itemStackHandler.serializeNBT());
+    public void saveInventory(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        tag.put("Inventory", this.itemStackHandler.serializeNBT(lookupProvider));
     }
 
-    public void loadInventory(CompoundTag tag) {
-        this.itemStackHandler.deserializeNBT(tag.getCompound("Inventory"));
+    public void loadInventory(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        this.itemStackHandler.deserializeNBT(lookupProvider, tag.getCompound("Inventory"));
     }
 }

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.DefaultRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.ItemRegistryHelper;
@@ -60,8 +60,8 @@ public abstract class RegistryCollector {
     }
 
     @SafeVarargs
-    public final <T> void addDatapackHelper(ResourceKey<Registry<T>> key, Function<BootstapContext<T>, DatapackRegistryClass<T>>... classCollectors) {
-        this.registryHelpers.put(key, new DatapackRegistryHelper<>(key, this.modId, context -> Arrays.stream(classCollectors).map(function -> function.apply((BootstapContext<T>) context)).collect(Collectors.toUnmodifiableList())));
+    public final <T> void addDatapackHelper(ResourceKey<Registry<T>> key, Function<BootstrapContext<T>, DatapackRegistryClass<T>>... classCollectors) {
+        this.registryHelpers.put(key, new DatapackRegistryHelper<>(key, this.modId, context -> Arrays.stream(classCollectors).map(function -> function.apply((BootstrapContext<T>) context)).collect(Collectors.toUnmodifiableList())));
     }
 
     public final <T> void addDatapackHelper(ResourceKey<Registry<T>> key, TriFunction<ResourceKey<Registry<T>>, String, DatapackClassCollector, DatapackRegistryHelper<T>> registryHelper, DatapackClassCollector classCollector) {
@@ -78,6 +78,6 @@ public abstract class RegistryCollector {
 
     @FunctionalInterface
     public interface DatapackClassCollector {
-        List<DatapackRegistryClass<?>> collect(BootstapContext<?> context);
+        List<DatapackRegistryClass<?>> collect(BootstrapContext<?> context);
     }
 }

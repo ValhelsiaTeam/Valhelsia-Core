@@ -4,7 +4,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
@@ -35,12 +35,12 @@ public abstract class ValhelsiaBiomeModifierProvider extends DatapackRegistryCla
     public HolderSet.Named<Biome> isNether;
     public HolderSet.Named<Biome> isEnd;
 
-    public ValhelsiaBiomeModifierProvider(BootstapContext<BiomeModifier> context) {
+    public ValhelsiaBiomeModifierProvider(BootstrapContext<BiomeModifier> context) {
         super(context);
     }
 
     @Override
-    public void init(BootstapContext<BiomeModifier> context) {
+    public void init(BootstrapContext<BiomeModifier> context) {
         this.biomeRegistry = context.lookup(Registries.BIOME);
         this.featureRegistry = context.lookup(Registries.PLACED_FEATURE);
 

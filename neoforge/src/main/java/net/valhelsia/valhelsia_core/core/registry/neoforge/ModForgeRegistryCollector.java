@@ -16,7 +16,5 @@ public class ModForgeRegistryCollector extends RegistryCollector {
     @Override
     protected void collectHelpers() {
         this.addMappedHelper(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ValhelsiaBiomeModifiers.class);
-        this.addMappedHelper(NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, ValhelsiaLootModifiers.class);
-        this.addMappedHelper(NeoForgeRegistries.Keys.INGREDIENT_TYPES, ValhelsiaIngredientTypes.class);
     }
 }

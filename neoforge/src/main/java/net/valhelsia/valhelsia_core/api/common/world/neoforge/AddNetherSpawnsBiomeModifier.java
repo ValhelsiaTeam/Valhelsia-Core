@@ -2,10 +2,10 @@ package net.valhelsia.valhelsia_core.api.common.world.neoforge;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
@@ -29,14 +29,14 @@ public record AddNetherSpawnsBiomeModifier(HolderSet<Biome> biomes,
                                            double charge,
                                            double energyBudget) implements BiomeModifier {
 
-    public static final Codec<AddNetherSpawnsBiomeModifier> CODEC = RecordCodecBuilder.create(instance -> {
+    public static final MapCodec<AddNetherSpawnsBiomeModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> {
         return instance.group(Biome.LIST_CODEC.fieldOf("biomes").forGetter(modifier -> {
             return modifier.biomes;
         }), MobCategory.CODEC.optionalFieldOf("category").forGetter(modifier -> {
             return modifier.category;
-        }), new ExtraCodecs.EitherCodec<>(MobSpawnSettings.SpawnerData.CODEC.listOf(), MobSpawnSettings.SpawnerData.CODEC).xmap(
+        }), Codec.either(MobSpawnSettings.SpawnerData.CODEC.listOf(), MobSpawnSettings.SpawnerData.CODEC).xmap(
                 either -> either.map(Function.identity(), List::of), // convert list/singleton to list when decoding
-                list -> list.size() == 1 ? Either.right(list.get(0)) : Either.left(list) // convert list to singleton/list when encoding
+                list -> list.size() == 1 ? Either.right(list.getFirst()) : Either.left(list) // convert list to singleton/list when encoding
         ).fieldOf("spawners").forGetter(modifier -> {
             return modifier.spawners;
         }), Codec.DOUBLE.fieldOf("charge").forGetter(modifier -> {
@@ -60,7 +60,7 @@ public record AddNetherSpawnsBiomeModifier(HolderSet<Biome> biomes,
     }
 
     @Override
-    public Codec<? extends BiomeModifier> codec() {
+    public MapCodec<? extends BiomeModifier> codec() {
         return ValhelsiaBiomeModifiers.ADD_NETHER_SPAWNS.get();
     }
 }

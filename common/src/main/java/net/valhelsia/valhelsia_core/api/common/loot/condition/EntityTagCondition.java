@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.api.common.loot.condition;
 
 import com.google.common.collect.ImmutableSet;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemCondition {
 
-    public static final Codec<EntityTagCondition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<EntityTagCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TagKey.codec(Registries.ENTITY_TYPE).fieldOf("tag").forGetter(condition -> {
                 return condition.tag;
             })

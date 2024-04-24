@@ -3,7 +3,7 @@ package net.valhelsia.valhelsia_core.api.common.world.structure.jigsaw;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -31,14 +31,14 @@ public class JigsawBuilder {
     @Nullable
     private final String folder;
     private final List<ElementInfo> elements = new ArrayList<>();
-    private final BootstapContext<StructureTemplatePool> context;
+    private final BootstrapContext<StructureTemplatePool> context;
 
     private final ElementFunction elementFunction;
 
     private StructureTemplatePool.Projection projection = StructureTemplatePool.Projection.RIGID;
     private ResourceKey<StructureProcessorList> processors = EMPTY_PROCESSOR_LIST;
 
-    private JigsawBuilder(ResourceKey<StructureTemplatePool> key, @Nullable String folder, BootstapContext<StructureTemplatePool> context, @Nullable ElementFunction elementFunction) {
+    private JigsawBuilder(ResourceKey<StructureTemplatePool> key, @Nullable String folder, BootstrapContext<StructureTemplatePool> context, @Nullable ElementFunction elementFunction) {
         this.key = key;
         this.folder = folder;
         this.context = context;
@@ -46,11 +46,11 @@ public class JigsawBuilder {
         this.elementFunction = Objects.requireNonNullElseGet(elementFunction, () -> (resourceLocation, holder, projection, terrainAdjustment) -> StructurePoolElement.single(resourceLocation.toString(), holder));
     }
 
-    public static JigsawBuilder builder(ResourceKey<StructureTemplatePool> key, String folder, BootstapContext<StructureTemplatePool> context, @Nullable ElementFunction elementFunction) {
+    public static JigsawBuilder builder(ResourceKey<StructureTemplatePool> key, String folder, BootstrapContext<StructureTemplatePool> context, @Nullable ElementFunction elementFunction) {
         return new JigsawBuilder(key, folder, context, elementFunction);
     }
 
-    public static JigsawBuilder builder(ResourceKey<StructureTemplatePool> key, BootstapContext<StructureTemplatePool> context, @Nullable ElementFunction elementFunction) {
+    public static JigsawBuilder builder(ResourceKey<StructureTemplatePool> key, BootstrapContext<StructureTemplatePool> context, @Nullable ElementFunction elementFunction) {
         return new JigsawBuilder(key, null, context, elementFunction);
     }
 

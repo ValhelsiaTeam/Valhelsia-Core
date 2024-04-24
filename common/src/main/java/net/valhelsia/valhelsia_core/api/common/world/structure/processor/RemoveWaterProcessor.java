@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.api.common.world.structure.processor;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
@@ -31,7 +31,7 @@ public class RemoveWaterProcessor extends StructureProcessor {
 
     public static final RemoveWaterProcessor INSTANCE = new RemoveWaterProcessor();
 
-    public static final Codec<RemoveWaterProcessor> CODEC = Codec.unit(() -> {
+    public static final MapCodec<RemoveWaterProcessor> CODEC = MapCodec.unit(() -> {
         return RemoveWaterProcessor.INSTANCE;
     });
 

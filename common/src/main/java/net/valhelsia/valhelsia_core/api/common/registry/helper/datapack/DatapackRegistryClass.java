@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.api.common.registry.helper.datapack;
 
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 
 /**
@@ -9,9 +9,9 @@ import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
  */
 public abstract class DatapackRegistryClass<T> implements RegistryClass {
 
-    private final BootstapContext<T> context;
+    private final BootstrapContext<T> context;
 
-    public DatapackRegistryClass(BootstapContext<T> context) {
+    public DatapackRegistryClass(BootstrapContext<T> context) {
         this.context = context;
 
         this.init(context);
@@ -19,13 +19,13 @@ public abstract class DatapackRegistryClass<T> implements RegistryClass {
         this.bootstrap(context);
     }
 
-    public void init(BootstapContext<T> context) {
+    public void init(BootstrapContext<T> context) {
 
     }
 
-    public abstract void bootstrap(BootstapContext<T> context);
+    public abstract void bootstrap(BootstrapContext<T> context);
 
-    public BootstapContext<T> getContext() {
+    public BootstrapContext<T> getContext() {
         return this.context;
     }
 }

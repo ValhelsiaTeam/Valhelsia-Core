@@ -5,7 +5,7 @@ import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.ItemRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
@@ -86,7 +86,7 @@ public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends R
 
         for (RegistryHelper<?, ? extends RegistryClass> helper : this.registryHelpers.values()) {
             if (helper instanceof DatapackRegistryHelper<?> datapackRegistryHelper) {
-                Function<BootstapContext<?>, List<DatapackRegistryClass<?>>> function = context -> datapackRegistryHelper.getClassCollector().collect(context);
+                Function<BootstrapContext<?>, List<DatapackRegistryClass<?>>> function = context -> datapackRegistryHelper.getClassCollector().collect(context);
 
                 builder.add(datapackRegistryHelper.getRegistry(), function::apply);
             }
