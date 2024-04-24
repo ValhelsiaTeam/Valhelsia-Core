@@ -4,18 +4,24 @@ import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -26,11 +32,14 @@ import net.minecraft.world.level.storage.loot.functions.FunctionUserBuilder;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
@@ -116,5 +125,32 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
             lootEntryBuilder.apply(SetItemCountFunction.setCount(ConstantValue.exactly(integer)).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(intProperty, integer))));
         });
         return lootEntryBuilder;
+    }
+
+    @Override
+    public void generate(@NotNull BiConsumer<ResourceLocation, LootTable.Builder> biConsumer) {
+        this.generate();
+
+        HashSet<ResourceLocation> set = new HashSet<>();
+
+        for (RegistryEntry<? extends Block> entry : this.registryManager.getBlockHelper().getRegistryEntries()) {
+            ResourceLocation resourceLocation;
+
+            if (!entry.get().isEnabled(this.enabledFeatures) || (resourceLocation = entry.get().getLootTable()) == BuiltInLootTables.EMPTY || !set.add(resourceLocation)) {
+                continue;
+            }
+
+            LootTable.Builder builder = this.map.remove(resourceLocation);
+
+            if (builder == null) {
+                throw new IllegalStateException(String.format(Locale.ROOT, "Missing loottable '%s' for '%s'", resourceLocation, BuiltInRegistries.BLOCK.getKey(entry.get())));
+            }
+
+            biConsumer.accept(resourceLocation, builder);
+        }
+
+        if (!this.map.isEmpty()) {
+            throw new IllegalStateException("Created block loot tables for non-blocks: " + this.map.keySet());
+        }
     }
 }
