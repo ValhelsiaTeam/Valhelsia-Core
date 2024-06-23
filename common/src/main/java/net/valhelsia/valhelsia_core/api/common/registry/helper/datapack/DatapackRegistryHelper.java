@@ -27,7 +27,7 @@ public class DatapackRegistryHelper<T> extends RegistryHelper<T, DatapackRegistr
     }
 
     public ResourceKey<T> createKey(String name) {
-        return ResourceKey.create(this.getRegistry(), new ResourceLocation(this.getModId(), name));
+        return ResourceKey.create(this.getRegistry(), ResourceLocation.fromNamespaceAndPath(this.getModId(), name));
     }
 
     public RegistryCollector.DatapackClassCollector getClassCollector() {

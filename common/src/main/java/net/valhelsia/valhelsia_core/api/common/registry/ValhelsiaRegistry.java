@@ -31,7 +31,7 @@ public abstract class ValhelsiaRegistry<T> implements Codec<T>, Keyable {
 
     public abstract <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> supplier, Function<Supplier<O>, RegistryEntry<T, O>> function);
 
-    public abstract void register(RegistryContext context);
+    public abstract void register(RegistryContext context, Object object);
 
     public abstract Collection<? extends Supplier<? extends T>> getEntries();
 

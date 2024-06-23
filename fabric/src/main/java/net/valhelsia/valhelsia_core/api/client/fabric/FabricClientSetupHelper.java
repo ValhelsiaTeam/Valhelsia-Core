@@ -35,17 +35,17 @@ public class FabricClientSetupHelper implements ClientSetupHelper {
     private static final Set<Consumer<HashMap<SkullBlock.Type, SkullModelBase>>> SKULL_MODELS = ConcurrentHashMap.newKeySet();
 
     @Override
-    public <T extends Entity> void registerEntityRenderer(RegistryEntry<? extends EntityType<? extends T>> type, EntityRendererProvider<T> provider) {
+    public <T extends Entity> void registerEntityRenderer(RegistryEntry<EntityType<?>, ? extends EntityType<? extends T>> type, EntityRendererProvider<T> provider) {
         EntityRendererRegistry.register(type.get(), provider);
     }
 
     @Override
-    public <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> provider) {
+    public <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<BlockEntityType<?>, ? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> provider) {
         BlockEntityRenderers.register(type.get(), provider);
     }
 
     @Override
-    public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor) {
+    public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<MenuType<?>, ? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor) {
         MenuScreens.register(type.get(), constructor);
     }
 

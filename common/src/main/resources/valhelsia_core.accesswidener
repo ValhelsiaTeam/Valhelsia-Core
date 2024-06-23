@@ -3,10 +3,8 @@ accessWidener v2 named
 transitive-accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier
 accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 
-accessible class net/minecraft/world/item/crafting/Ingredient$Value
-
 accessible method net/minecraft/world/level/block/state/BlockBehaviour$Properties <init> ()V
-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties offsetFunction Ljava/util/Optional;
+accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties offsetFunction Lnet/minecraft/world/level/block/state/BlockBehaviour$OffsetFunction;
 
 transitive-accessible field net/minecraft/data/models/BlockModelGenerators blockStateOutput Ljava/util/function/Consumer;
 transitive-accessible field net/minecraft/data/models/BlockModelGenerators modelOutput Ljava/util/function/BiConsumer;

@@ -5,7 +5,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.client.ClientSetupHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
@@ -18,9 +17,7 @@ import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegist
  */
 public class ClientSetup {
 
-    public ClientSetup(ClientSetupHelper helper) {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
+    public ClientSetup(ClientSetupHelper helper, IEventBus modEventBus) {
         modEventBus.addListener(this::onClientSetup);
     }
 

@@ -2,7 +2,6 @@ package net.valhelsia.valhelsia_core.core.neoforge;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
 import net.valhelsia.valhelsia_core.client.ClientSetup;
@@ -15,13 +14,13 @@ public class ValhelsiaCoreForge {
 
     public static final RegistryManager REGISTRY_MANAGER = new RegistryManager(new ModForgeRegistryCollector(ValhelsiaCore.MOD_ID));
 
-    public ValhelsiaCoreForge() {
+    public ValhelsiaCoreForge(IEventBus modEventBus) {
         ValhelsiaCore.init();
 
         ModDefinition.of("valhelsia_core-forge")
                 .withRegistryManager(REGISTRY_MANAGER)
-                .clientSetup(() -> ClientSetup::new)
-                .withEventHandler(new ModEventHandler(FMLJavaModLoadingContext.get().getModEventBus()))
+                .clientSetup(() -> helper -> new ClientSetup(helper, modEventBus))
+                .withEventHandler(new ModEventHandler(modEventBus))
                 .create();
     }
 

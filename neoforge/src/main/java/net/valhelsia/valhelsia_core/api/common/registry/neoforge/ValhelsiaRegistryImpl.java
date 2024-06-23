@@ -6,10 +6,12 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryContext;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.ValhelsiaRegistry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -39,10 +41,8 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
     }
 
     @Override
-    public void register(RegistryContext context) {
-        if (context instanceof RegistryContextImpl.ForgeRegistryContext forgeContext) {
-            this.deferredRegister.register(forgeContext.modEventBus());
-        }
+    public void register(RegistryContext context, @Nullable Object object) {
+        this.deferredRegister.register((IEventBus) object);
     }
 
     @Override

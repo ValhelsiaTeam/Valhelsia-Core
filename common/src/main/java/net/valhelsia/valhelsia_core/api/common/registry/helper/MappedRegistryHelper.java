@@ -9,6 +9,7 @@ import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryContext;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.ValhelsiaRegistry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,8 +52,8 @@ public abstract class MappedRegistryHelper<T> extends RegistryHelper<T, Registry
      * @param context the registry context
      */
     @DoNotCall
-    public final void internalRegister(RegistryContext context) {
-        this.registry.register(context);
+    public final void internalRegister(RegistryContext context, @Nullable Object o) {
+        this.registry.register(context, o);
     }
 
     public <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> object) {
@@ -60,7 +61,7 @@ public abstract class MappedRegistryHelper<T> extends RegistryHelper<T, Registry
     }
 
     public <O extends T, E extends RegistryEntry<T, O>> E registerInternal(String name, Supplier<O> object) {
-        var entry = this.registry.register(name, object, supplier -> this.createEntry(ResourceKey.create(this.registry.getRegistryKey(), new ResourceLocation(this.getModId(), name))));
+        var entry = this.registry.register(name, object, supplier -> this.createEntry(ResourceKey.create(this.registry.getRegistryKey(), ResourceLocation.fromNamespaceAndPath(this.getModId(), name))));
 
         this.entries.add(entry);
 

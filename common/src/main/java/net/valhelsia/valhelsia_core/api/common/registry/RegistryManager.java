@@ -13,6 +13,7 @@ import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.datapack.DatapackRegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.datapack.DatapackRegistryHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Function;
@@ -61,7 +62,7 @@ public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends R
      * @param context the mod event bus
      */
     @DoNotCall
-    public void register(RegistryContext context) {
+    public void register(RegistryContext context, @Nullable Object o) {
         for (RegistryHelper<?, ?> registryHelper : this.registryHelpers.values()) {
             if (registryHelper instanceof MappedRegistryHelper<?> mappedRegistryHelper) {
                 registryHelper.getRegistryClasses().forEach(registryClass -> {
@@ -72,7 +73,7 @@ public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends R
                     }
                 });
 
-                mappedRegistryHelper.internalRegister(context);
+                mappedRegistryHelper.internalRegister(context, o);
             }
         }
 

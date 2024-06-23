@@ -24,7 +24,7 @@ import java.util.function.Function;
  */
 public class JigsawBuilder {
 
-    private static final ResourceKey<StructureProcessorList> EMPTY_PROCESSOR_LIST = ResourceKey.create(Registries.PROCESSOR_LIST, new ResourceLocation("empty"));
+    private static final ResourceKey<StructureProcessorList> EMPTY_PROCESSOR_LIST = ResourceKey.create(Registries.PROCESSOR_LIST, ResourceLocation.withDefaultNamespace("empty"));
 
     private final ResourceKey<StructureTemplatePool> key;
 
@@ -93,7 +93,7 @@ public class JigsawBuilder {
         Holder<StructureTemplatePool> fallbackPoolHolder = this.context.lookup(Registries.TEMPLATE_POOL).getOrThrow(Pools.EMPTY);
 
         for (ElementInfo info : this.elements) {
-            list.add(Pair.of(this.elementFunction.apply(new ResourceLocation(modId, info.location()), processorListHolder, this.projection, terrainAdjustment), info.weight));
+            list.add(Pair.of(this.elementFunction.apply(ResourceLocation.fromNamespaceAndPath(modId, info.location()), processorListHolder, this.projection, terrainAdjustment), info.weight));
         }
 
         this.context.register(this.key, new StructureTemplatePool(fallbackPoolHolder, list, this.projection));

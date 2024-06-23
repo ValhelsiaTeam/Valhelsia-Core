@@ -49,7 +49,7 @@ public abstract class RecipeSubProvider {
     }
 
     public void add(RecipeBuilder builder, String path) {
-        builder.save(this.provider.getRecipeOutput(), new ResourceLocation(this.provider.getModId(), path));
+        builder.save(this.provider.getRecipeOutput(), ResourceLocation.fromNamespaceAndPath(this.provider.getModId(), path));
     }
 
     public void storageRecipe(ItemLike item, ItemLike block) {

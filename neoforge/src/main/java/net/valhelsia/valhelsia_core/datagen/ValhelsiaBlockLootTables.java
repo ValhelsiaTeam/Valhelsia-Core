@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.datagen;
 
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -9,7 +10,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
@@ -35,7 +35,6 @@ import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -50,18 +49,14 @@ import java.util.function.Function;
  */
 public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
 
-    public static final LootItemCondition.Builder HAS_SILK_TOUCH = MatchTool.toolMatches(ItemPredicate.Builder.item().withSubPredicate(ItemSubPredicates.ENCHANTMENTS, ItemEnchantmentsPredicate.enchantments(List.of(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))))));
-    public static final LootItemCondition.Builder HAS_NO_SILK_TOUCH = HAS_SILK_TOUCH.invert();
     public static final LootItemCondition.Builder HAS_SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().of(Items.SHEARS));
-    public static final LootItemCondition.Builder HAS_SHEARS_OR_SILK_TOUCH = HAS_SHEARS.or(HAS_SILK_TOUCH);
-    public static final LootItemCondition.Builder HAS_NO_SHEARS_OR_SILK_TOUCH = HAS_SHEARS_OR_SILK_TOUCH.invert();
     public static final float[] NORMAL_LEAVES_SAPLING_CHANCES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
     public static final float[] JUNGLE_LEAVES_SAPLING_CHANGES = new float[]{0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F};
 
     private final RegistryManager registryManager;
 
-    public ValhelsiaBlockLootTables(Set<Item> explosionResistant, FeatureFlagSet flagSet, RegistryManager registryManager) {
-        super(explosionResistant, flagSet);
+    public ValhelsiaBlockLootTables(Set<Item> explosionResistant, FeatureFlagSet flagSet, HolderLookup.Provider lookupProvider, RegistryManager registryManager) {
+        super(explosionResistant, flagSet, lookupProvider);
         this.registryManager = registryManager;
     }
 
@@ -132,7 +127,7 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
     }
 
     @Override
-    public void generate(HolderLookup.@NotNull Provider lookupProvider, @NotNull BiConsumer<ResourceKey<LootTable>, LootTable.Builder> biConsumer) {
+    public void generate(@NotNull BiConsumer<ResourceKey<LootTable>, LootTable.Builder> biConsumer) {
         this.generate();
 
         HashSet<ResourceKey<LootTable>> set = new HashSet<>();

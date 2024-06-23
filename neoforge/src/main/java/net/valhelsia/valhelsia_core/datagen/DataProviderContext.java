@@ -14,6 +14,6 @@ import java.util.concurrent.CompletableFuture;
 public record DataProviderContext(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, RegistryManager registryManager) {
 
     public ResourceLocation location(String name) {
-        return new ResourceLocation(this.registryManager.modId(), name);
+        return ResourceLocation.fromNamespaceAndPath(this.registryManager.modId(), name);
     }
 }

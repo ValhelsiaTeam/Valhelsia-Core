@@ -19,7 +19,7 @@ public class ValhelsiaRegistries {
     public static final ValhelsiaRegistry<ConfigValueType<?>> CONFIG_VALUE_TYPE_REGISTRY = ValhelsiaRegistries.makeSyncedRegistry(CONFIG_VALUE_TYPE);
 
     private static <T> ResourceKey<Registry<T>> createRegistryKey(String name) {
-        return ResourceKey.createRegistryKey(new ResourceLocation(ValhelsiaCore.MOD_ID, name));
+        return ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(ValhelsiaCore.MOD_ID, name));
     }
 
     private static <T> ValhelsiaRegistry<T> makeSyncedRegistry(ResourceKey<? extends Registry<T>> resourceKey) {
