@@ -5,8 +5,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 
-import java.util.function.Supplier;
-
 /**
  * Default implementation of a {@link MappedRegistryHelper}
  *
@@ -20,7 +18,7 @@ public class DefaultRegistryHelper<T> extends MappedRegistryHelper<T> {
     }
 
     @Override
-    protected <O extends T> RegistryEntry<O> createEntry(String name, Supplier<O> supplier) {
-        return new RegistryEntry<>(supplier);
+    protected <O extends T> RegistryEntry<T, O> createEntry(ResourceKey<T> key) {
+        return new RegistryEntry<>(key);
     }
 }

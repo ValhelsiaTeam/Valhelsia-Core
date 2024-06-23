@@ -25,5 +25,5 @@ public abstract class ValhelsiaModelProvider extends ModelProvider {
 
     public abstract void generateItemModels(ItemModelGenerators modelGenerators);
 
-    public abstract Collection<RegistryEntry<? extends Block>> getBlocks();
+    public abstract Collection<RegistryEntry<Block, ? extends Block>> getBlocks();
 }

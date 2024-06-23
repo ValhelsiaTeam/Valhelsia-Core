@@ -1,5 +1,6 @@
 package net.valhelsia.valhelsia_core.api.common.registry.helper.block;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -8,13 +9,12 @@ import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * @author Valhelsia Team
  * @since 2022-12-20
  */
-public class BlockRegistryEntry<T extends Block> extends RegistryEntry<T> {
+public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T> {
 
     private static final ItemFunction DEFAULT_ITEM_FUNCTION = registryObject -> new BlockItem(registryObject.get(), new Item.Properties());
 
@@ -30,9 +30,9 @@ public class BlockRegistryEntry<T extends Block> extends RegistryEntry<T> {
 
     private ValhelsiaRenderType renderType = ValhelsiaRenderType.SOLID;
 
-    public BlockRegistryEntry(String name, Supplier<T> entry) {
-        super(entry);
-        this.name = name;
+    public BlockRegistryEntry(ResourceKey<Block> key) {
+        super(key);
+        this.name = key.location().getPath();
     }
 
     public <O extends T> BlockRegistryEntry<O> withItem() {

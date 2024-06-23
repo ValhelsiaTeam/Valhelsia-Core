@@ -6,7 +6,6 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -15,10 +14,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.valhelsia.valhelsia_core.api.common.item.ingredient.PlatformDependentIngredient;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -32,11 +30,6 @@ import java.util.function.UnaryOperator;
  */
 public abstract class RecipeSubProvider {
 
-    public static final TagKey<Item> FORGE_WOODEN_CHESTS_TAG = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "chests/wooden"));
-    public static final TagKey<Item> FABRIC_CHESTS_TAG = TagKey.create(Registries.ITEM, new ResourceLocation("c", "chests"));
-
-    public static final Ingredient WOODEN_STICK_INGREDIENT = PlatformDependentIngredient.createIngredient(new ResourceLocation("forge", "rods/wooden"), Items.STICK);
-    public static final Ingredient WOODEN_CHEST_INGREDIENT = PlatformDependentIngredient.createIngredient(FORGE_WOODEN_CHESTS_TAG.location(), FABRIC_CHESTS_TAG.location());
 
     private final ValhelsiaRecipeProvider provider;
 
@@ -105,23 +98,23 @@ public abstract class RecipeSubProvider {
     }
 
     public void sword(ItemLike result, RecipePart<?> material) {
-        this.shaped(RecipeCategory.COMBAT, result, builder -> builder.pattern("#").pattern("#").pattern("X").define('#', material).define('X', WOODEN_STICK_INGREDIENT).unlockedBy(this, material));
+        this.shaped(RecipeCategory.COMBAT, result, builder -> builder.pattern("#").pattern("#").pattern("X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
     }
 
     public void shovel(ItemLike result, RecipePart<?> material) {
-        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("#").pattern("X").pattern("X").define('#', material).define('X', WOODEN_STICK_INGREDIENT).unlockedBy(this, material));
+        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("#").pattern("X").pattern("X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
     }
 
     public void pickaxe(ItemLike result, RecipePart<?> material) {
-        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("###").pattern(" X ").pattern(" X ").define('#', material).define('X', WOODEN_STICK_INGREDIENT).unlockedBy(this, material));
+        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("###").pattern(" X ").pattern(" X ").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
     }
 
     public void axe(ItemLike result, RecipePart<?> material) {
-        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("##").pattern("#X").pattern(" X").define('#', material).define('X', WOODEN_STICK_INGREDIENT).unlockedBy(this, material));
+        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("##").pattern("#X").pattern(" X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
     }
 
     public void hoe(ItemLike result, RecipePart<?> material) {
-        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("##").pattern(" X").pattern(" X").define('#', material).define('X', WOODEN_STICK_INGREDIENT).unlockedBy(this, material));
+        this.shaped(RecipeCategory.TOOLS, result, builder -> builder.pattern("##").pattern(" X").pattern(" X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, material));
     }
 
     public void helmet(ItemLike result, RecipePart<?> material) {
@@ -145,7 +138,7 @@ public abstract class RecipeSubProvider {
     }
 
     public void chestBoat(ItemLike result, ItemLike boat) {
-        this.shapeless(RecipeCategory.TRANSPORTATION, result, builder -> builder.requires(boat).requires(WOODEN_CHEST_INGREDIENT).unlockedBy("has_" + getName(boat), has(boat)).unlockedBy("has_chest", has(FORGE_WOODEN_CHESTS_TAG, FABRIC_CHESTS_TAG)));
+        this.shapeless(RecipeCategory.TRANSPORTATION, result, builder -> builder.requires(boat).requires(Tags.Items.CHESTS_WOODEN).unlockedBy("has_" + getName(boat), has(boat)).unlockedBy("has_chest", has(Tags.Items.CHESTS_WOODEN)));
     }
 
     public void glassPane(ItemLike result, RecipePart<?> glass) {
@@ -157,7 +150,7 @@ public abstract class RecipeSubProvider {
     }
 
     public void sign(ItemLike result, RecipePart<?> planks) {
-        this.shaped(RecipeCategory.DECORATIONS, result, 3, builder -> builder.pattern("###").pattern("###").pattern(" X ").define('#', planks).define('X', WOODEN_STICK_INGREDIENT).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.DECORATIONS, result, 3, builder -> builder.pattern("###").pattern("###").pattern(" X ").define('#', planks).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, planks));
     }
 
     public void door(ItemLike result, RecipePart<?> planks) {
@@ -169,11 +162,11 @@ public abstract class RecipeSubProvider {
     }
 
     public void fence(ItemLike result, RecipePart<?> planks) {
-        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 3, builder -> builder.pattern("#X#").pattern("#X#").define('#', planks).define('X', WOODEN_STICK_INGREDIENT).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 3, builder -> builder.pattern("#X#").pattern("#X#").define('#', planks).define('X', Tags.Items.RODS_WOODEN).unlockedBy(this, planks));
     }
 
     public void fenceGate(ItemLike result, RecipePart<?> planks) {
-        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, builder -> builder.pattern("#X#").pattern("#X#").define('X', planks).define('#', WOODEN_STICK_INGREDIENT).unlockedBy(this, planks));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result, builder -> builder.pattern("#X#").pattern("#X#").define('X', planks).define('#', Tags.Items.RODS_WOODEN).unlockedBy(this, planks));
     }
 
     public void button(ItemLike result, ItemLike planks) {

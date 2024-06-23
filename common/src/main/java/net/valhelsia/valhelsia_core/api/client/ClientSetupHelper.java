@@ -24,11 +24,11 @@ import java.util.function.Function;
  */
 public interface ClientSetupHelper {
 
-    <T extends Entity> void registerEntityRenderer(RegistryEntry<? extends EntityType<? extends T>> type, EntityRendererProvider<T> provider);
+    <T extends Entity> void registerEntityRenderer(RegistryEntry<EntityType<?>, ? extends EntityType<? extends T>> type, EntityRendererProvider<T> provider);
 
-    <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> provider);
+    <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<BlockEntityType<?>, ? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> provider);
 
-    <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor);
+    <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<MenuType<?>, ? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor);
 
     void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model);
 

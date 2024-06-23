@@ -137,7 +137,7 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
 
         HashSet<ResourceKey<LootTable>> set = new HashSet<>();
 
-        for (RegistryEntry<? extends Block> entry : this.registryManager.getBlockHelper().getRegistryEntries()) {
+        for (RegistryEntry<Block, ? extends Block> entry : this.registryManager.getBlockHelper().getRegistryEntries()) {
             ResourceKey<LootTable> resourceKey;
 
             if (!entry.get().isEnabled(this.enabledFeatures) || (resourceKey = entry.get().getLootTable()) == BuiltInLootTables.EMPTY || !set.add(resourceKey)) {

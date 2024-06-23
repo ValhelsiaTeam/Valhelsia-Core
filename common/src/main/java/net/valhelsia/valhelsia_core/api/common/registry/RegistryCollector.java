@@ -7,7 +7,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.DefaultRegistryHelper;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.ItemRegistryHelper;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.item.ItemRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;

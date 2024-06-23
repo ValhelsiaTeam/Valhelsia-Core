@@ -36,17 +36,17 @@ public class ForgeClientSetupHelper implements ClientSetupHelper {
     private final Map<SkullBlock.Type, Function<EntityModelSet, SkullModelBase>> skullModels = new ConcurrentHashMap<>();
 
     @Override
-    public <T extends Entity> void registerEntityRenderer(RegistryEntry<? extends EntityType<? extends T>> type, EntityRendererProvider<T> provider) {
+    public <T extends Entity> void registerEntityRenderer(RegistryEntry<EntityType<?>, ? extends EntityType<? extends T>> type, EntityRendererProvider<T> provider) {
         this.entityRenderers.add(event -> event.registerEntityRenderer(type.get(), provider));
     }
 
     @Override
-    public <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> provider) {
+    public <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<BlockEntityType<?>, ? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> provider) {
         this.entityRenderers.add(event -> event.registerBlockEntityRenderer(type.get(), provider));
     }
 
     @Override
-    public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor) {
+    public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<MenuType<?>, ? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor) {
         this.menuScreens.add(event -> event.register(type.get(), constructor));
     }
 

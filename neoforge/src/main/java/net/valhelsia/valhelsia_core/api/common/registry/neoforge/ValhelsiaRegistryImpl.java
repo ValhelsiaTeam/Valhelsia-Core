@@ -34,7 +34,7 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
     }
 
     @Override
-    public <O extends T> RegistryEntry<O> register(String name, Supplier<O> supplier, Function<Supplier<O>, RegistryEntry<O>> function) {
+    public <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> supplier, Function<Supplier<O>, RegistryEntry<T, O>> function) {
         return function.apply(this.deferredRegister.register(name, supplier));
     }
 

@@ -17,6 +17,6 @@ public class ValhelsiaLootConditions implements RegistryClass {
 
     public static final DefaultRegistryHelper<LootItemConditionType> LOOT_CONDITION_TYPES = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.LOOT_CONDITION_TYPE);
 
-    public static final RegistryEntry<LootItemConditionType> DATE = LOOT_CONDITION_TYPES.register("date", () -> new LootItemConditionType(DateCondition.CODEC));
-    public static final RegistryEntry<LootItemConditionType> ENTITY_TAG = LOOT_CONDITION_TYPES.register("entity_tag", () -> new LootItemConditionType(EntityTagCondition.CODEC));
+    public static final RegistryEntry<LootItemConditionType, LootItemConditionType> DATE = LOOT_CONDITION_TYPES.register("date", () -> new LootItemConditionType(DateCondition.CODEC));
+    public static final RegistryEntry<LootItemConditionType, LootItemConditionType> ENTITY_TAG = LOOT_CONDITION_TYPES.register("entity_tag", () -> new LootItemConditionType(EntityTagCondition.CODEC));
 }

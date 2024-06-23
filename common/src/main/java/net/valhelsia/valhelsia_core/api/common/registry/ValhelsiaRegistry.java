@@ -29,7 +29,7 @@ public abstract class ValhelsiaRegistry<T> implements Codec<T>, Keyable {
         throw new AssertionError();
     }
 
-    public abstract <O extends T> RegistryEntry<O> register(String name, Supplier<O> supplier, Function<Supplier<O>, RegistryEntry<O>> function);
+    public abstract <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> supplier, Function<Supplier<O>, RegistryEntry<T, O>> function);
 
     public abstract void register(RegistryContext context);
 
@@ -39,5 +39,9 @@ public abstract class ValhelsiaRegistry<T> implements Codec<T>, Keyable {
 
     public String getModId() {
         return this.modId;
+    }
+
+    public ResourceKey<? extends Registry<T>> getRegistryKey() {
+        return this.registryKey;
     }
 }

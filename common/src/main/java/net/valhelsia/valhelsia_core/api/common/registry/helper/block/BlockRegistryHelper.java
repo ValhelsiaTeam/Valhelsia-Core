@@ -29,8 +29,8 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
         super(registry, modId, registryClasses);
     }
     @Override
-    protected <O extends Block> RegistryEntry<O> createEntry(String name, Supplier<O> supplier) {
-        return new BlockRegistryEntry<>(name, supplier);
+    protected <O extends Block> RegistryEntry<Block, O> createEntry(ResourceKey<Block> key) {
+        return new BlockRegistryEntry<>(key);
     }
 
     @Override

@@ -17,6 +17,6 @@ public class ValhelsiaBiomeModifiers implements RegistryClass {
 
     public static final MappedRegistryHelper<MapCodec<? extends BiomeModifier>> HELPER = ValhelsiaCoreForge.REGISTRY_MANAGER.getHelper(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS);
 
-    public static final RegistryEntry<MapCodec<AddNetherSpawnsBiomeModifier>> ADD_NETHER_SPAWNS = HELPER.register("add_nether_spawns", () -> AddNetherSpawnsBiomeModifier.CODEC);
+    public static final RegistryEntry<MapCodec<? extends BiomeModifier>, MapCodec<AddNetherSpawnsBiomeModifier>> ADD_NETHER_SPAWNS = HELPER.register("add_nether_spawns", () -> AddNetherSpawnsBiomeModifier.CODEC);
 
 }

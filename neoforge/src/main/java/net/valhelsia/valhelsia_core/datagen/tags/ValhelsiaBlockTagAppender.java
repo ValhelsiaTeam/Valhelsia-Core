@@ -19,15 +19,15 @@ public class ValhelsiaBlockTagAppender {
         this.tagAppender = tagAppender;
     }
 
-    public final ValhelsiaBlockTagAppender add(RegistryEntry<? extends Block> registryEntry) {
+    public final ValhelsiaBlockTagAppender add(RegistryEntry<Block, ? extends Block> registryEntry) {
         this.tagAppender.add(registryEntry.get());
 
         return this;
     }
 
     @SafeVarargs
-    public final ValhelsiaBlockTagAppender add(RegistryEntry<? extends Block>... registryEntries) {
-        for (RegistryEntry<? extends Block> entry : registryEntries) {
+    public final ValhelsiaBlockTagAppender add(RegistryEntry<Block, ? extends Block>... registryEntries) {
+        for (RegistryEntry<Block, ? extends Block> entry : registryEntries) {
             this.tagAppender.add(entry.get());
         }
         return this;

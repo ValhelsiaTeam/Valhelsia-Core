@@ -17,7 +17,7 @@ public class EntityRegistryHelper extends DefaultRegistryHelper<EntityType<?>> {
         super(registry, modId, registryClasses);
     }
 
-    public <T extends Entity> RegistryEntry<EntityType<T>> register(String name, EntityType.Builder<T> builder) {
+    public <T extends Entity> RegistryEntry<EntityType<?>, EntityType<T>> register(String name, EntityType.Builder<T> builder) {
         return super.register(name, () -> builder.build(name));
     }
 }

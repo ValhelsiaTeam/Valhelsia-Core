@@ -15,5 +15,5 @@ public class ValhelsiaStructureProcessors {
 
     public static final MappedRegistryHelper<StructureProcessorType<?>> HELPER = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.STRUCTURE_PROCESSOR);
 
-    public static final RegistryEntry<StructureProcessorType<RemoveWaterProcessor>> REMOVE_WATER = HELPER.register("remove_water", () -> () -> RemoveWaterProcessor.CODEC);
+    public static final RegistryEntry<StructureProcessorType<?>, StructureProcessorType<RemoveWaterProcessor>> REMOVE_WATER = HELPER.register("remove_water", () -> () -> RemoveWaterProcessor.CODEC);
 }

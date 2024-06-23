@@ -15,8 +15,8 @@ public class ModRegistryCollector extends RegistryCollector {
 
     @Override
     protected void collectHelpers() {
-        //this.addItemHelper(ValhelsiaItems::new);
-        //this.addBlockHelper(ValhelsiaItems::new);
+//        this.addItemHelper(ValhelsiaItems.class);
+//        this.addBlockHelper(ValhelsiaItems.class);
         this.addMappedHelper(Registries.LOOT_CONDITION_TYPE, ValhelsiaLootConditions.class);
         this.addMappedHelper(Registries.STRUCTURE_PROCESSOR, ValhelsiaStructureProcessors.class);
     }
