@@ -6,7 +6,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryContext;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
@@ -42,7 +42,11 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
 
     @Override
     public void register(RegistryContext context, @Nullable Object object) {
-        this.deferredRegister.register((IEventBus) object);
+        var bus = ModLoadingContext.get().getActiveContainer().getEventBus();
+
+        if (bus != null) {
+            this.deferredRegister.register(bus);
+        }
     }
 
     @Override
