@@ -7,13 +7,12 @@ import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.item.ItemRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.datapack.DatapackRegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.datapack.DatapackRegistryHelper;
-import org.jetbrains.annotations.Nullable;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.item.ItemRegistryHelper;
 
 import java.util.List;
 import java.util.function.Function;
@@ -58,11 +57,9 @@ public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends R
     /**
      * Loads all provided registry classes and registers the DeferredRegister for all {@link MappedRegistryHelper}.
      * You will never need to call this method yourself.
-     *
-     * @param context the mod event bus
      */
     @DoNotCall
-    public void register(RegistryContext context, @Nullable Object o) {
+    public void register() {
         for (RegistryHelper<?, ?> registryHelper : this.registryHelpers.values()) {
             if (registryHelper instanceof MappedRegistryHelper<?> mappedRegistryHelper) {
                 registryHelper.getRegistryClasses().forEach(registryClass -> {
@@ -73,7 +70,7 @@ public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends R
                     }
                 });
 
-                mappedRegistryHelper.internalRegister(context, o);
+                mappedRegistryHelper.internalRegister();
             }
         }
 

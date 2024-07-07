@@ -8,10 +8,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryContext;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.ValhelsiaRegistry;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,7 +49,7 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
 
 
     @Override
-    public void register(RegistryContext context, @Nullable Object object) {
+    public void register() {
     }
 
     @Override

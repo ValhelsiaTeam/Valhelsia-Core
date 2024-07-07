@@ -8,10 +8,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryContext;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.ValhelsiaRegistry;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -41,7 +39,7 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
     }
 
     @Override
-    public void register(RegistryContext context, @Nullable Object object) {
+    public void register() {
         var bus = ModLoadingContext.get().getActiveContainer().getEventBus();
 
         if (bus != null) {

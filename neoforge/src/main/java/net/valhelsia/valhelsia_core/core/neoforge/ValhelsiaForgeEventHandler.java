@@ -2,14 +2,13 @@ package net.valhelsia.valhelsia_core.core.neoforge;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
 import net.valhelsia.valhelsia_core.core.ValhelsiaEventHandler;
 
 /**
  * @author Valhelsia Team - stal111
  * @since 2023-08-09
  */
-public abstract class ValhelsiaForgeEventHandler extends ValhelsiaEventHandler {
+public abstract class ValhelsiaForgeEventHandler implements ValhelsiaEventHandler {
 
     private final IEventBus modEventBus;
 
@@ -18,7 +17,7 @@ public abstract class ValhelsiaForgeEventHandler extends ValhelsiaEventHandler {
     }
 
     @Override
-    protected void register(RegistryManager registryManager) {
+    public void register() {
         this.registerModEvents(this.modEventBus);
         this.registerForgeEvents(NeoForge.EVENT_BUS);
     }

@@ -6,10 +6,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryContext;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.ValhelsiaRegistry;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,12 +46,10 @@ public abstract class MappedRegistryHelper<T> extends RegistryHelper<T, Registry
     /**
      * Registers the {@link ValhelsiaRegistry}.
      * You will never need to call this method yourself.
-     *
-     * @param context the registry context
      */
     @DoNotCall
-    public final void internalRegister(RegistryContext context, @Nullable Object o) {
-        this.registry.register(context, o);
+    public final void internalRegister() {
+        this.registry.register();
     }
 
     public <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> object) {

@@ -24,7 +24,8 @@ public record ModDefinition(String modId, RegistryManager registryManager, Valhe
         this.eventHandler = eventHandler;
         this.clientSetup = clientSetup;
 
-        this.eventHandler.register(registryManager);
+        this.registryManager.register();
+        this.eventHandler.register();
 
         ModDefinition.scheduleClientSetup(this.modId, this.clientSetup);
     }
