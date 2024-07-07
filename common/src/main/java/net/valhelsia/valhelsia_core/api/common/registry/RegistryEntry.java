@@ -54,7 +54,7 @@ public class RegistryEntry<R, T extends R> implements Holder<R>, Supplier<T> {
 
         return (T) Optional.ofNullable(this.holder)
                 .map(Holder::value)
-                .orElseThrow(() -> new IllegalStateException("Registry entry is not bound"));
+                .orElseThrow(() -> new IllegalStateException("Registry entry for key " + this.key + " is not bound."));
     }
 
     @Override
