@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryContext;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.ValhelsiaRegistry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +27,7 @@ import java.util.stream.Stream;
 public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
 
     private final Registry<T> registry;
-    private final List<RegistryEntry<? extends T>> entries = new ArrayList<>();
+    private final List<RegistryEntry<T, ? extends T>> entries = new ArrayList<>();
 
     protected ValhelsiaRegistryImpl(String modId, ResourceKey<? extends Registry<T>> registryKey) {
         super(modId, registryKey);
@@ -38,8 +39,8 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
     }
 
     @Override
-    public <O extends T> RegistryEntry<O> register(String name, Supplier<O> supplier, Function<Supplier<O>, RegistryEntry<O>> function) {
-        O object = Registry.register(this.registry, new ResourceLocation(this.getModId(), name), supplier.get());
+    public <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> supplier, Function<Supplier<O>, RegistryEntry<T, O>> function) {
+        O object = Registry.register(this.registry, ResourceLocation.fromNamespaceAndPath(this.getModId(), name), supplier.get());
         var entry = function.apply(() -> object);
 
         this.entries.add(entry);
@@ -50,11 +51,11 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
 
 
     @Override
-    public void register(RegistryContext context) {
+    public void register(RegistryContext context, @Nullable Object object) {
     }
 
     @Override
-    public Collection<RegistryEntry<? extends T>> getEntries() {
+    public Collection<RegistryEntry<T, ? extends T>> getEntries() {
         return this.entries;
     }
 

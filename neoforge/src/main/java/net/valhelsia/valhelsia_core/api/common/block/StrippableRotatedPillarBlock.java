@@ -4,8 +4,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.ToolAction;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -25,12 +25,12 @@ public class StrippableRotatedPillarBlock extends RotatedPillarBlock {
 
     @Nullable
     @Override
-    public BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
-        if (!context.getItemInHand().canPerformAction(toolAction)) {
+    public BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility itemAbility, boolean simulate) {
+        if (!context.getItemInHand().canPerformAction(itemAbility)) {
             return null;
         }
 
-        if (toolAction == ToolActions.AXE_STRIP) {
+        if (itemAbility == ItemAbilities.AXE_STRIP) {
             return this.strippedBlock.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, state.getValue(RotatedPillarBlock.AXIS));
         }
 
