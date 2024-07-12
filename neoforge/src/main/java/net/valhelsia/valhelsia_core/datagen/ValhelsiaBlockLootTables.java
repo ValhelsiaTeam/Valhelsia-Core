@@ -123,7 +123,6 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-
     }
 
     @Override
