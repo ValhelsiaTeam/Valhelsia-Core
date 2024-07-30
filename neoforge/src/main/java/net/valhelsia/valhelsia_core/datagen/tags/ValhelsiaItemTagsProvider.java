@@ -1,13 +1,8 @@
 package net.valhelsia.valhelsia_core.datagen.tags;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.tags.TagBuilder;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
+import net.valhelsia.valhelsia_core.datagen.DataProviderContext;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -17,14 +12,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public abstract class ValhelsiaItemTagsProvider extends ItemTagsProvider {
 
-    public ValhelsiaItemTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTagLookup) {
-        super(packOutput, lookupProvider, blockTagLookup);
-    }
-
-    @Override
-    protected @NotNull TagBuilder getOrCreateRawBuilder(TagKey<Item> tag) {
-        return this.builders.computeIfAbsent(tag.location(), (resourceLocation) -> {
-            return TagBuilder.create();
-        });
+    public ValhelsiaItemTagsProvider(DataProviderContext context, CompletableFuture<TagLookup<Block>> blockTagLookup) {
+        super(context.output(), context.lookupProvider(), blockTagLookup, context.registryManager().modId(), context.fileHelper());
     }
 }
