@@ -11,7 +11,7 @@ import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.valhelsia.valhelsia_core.datagen.ValhelsiaModelProvider;
+import net.valhelsia.valhelsia_core.datagen.model.ValhelsiaModelProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -46,7 +46,7 @@ public abstract class ModelProviderMixin {
     @Redirect(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/data/models/BlockModelGenerators;run()V"))
     private void valhelsia_core_run$registerBlockStateModels(BlockModelGenerators instance) {
         if (!this.createModels(modelProvider -> {
-            modelProvider.generateBlockStateModels(instance, this.skippedAutoBlockModels::add);
+            modelProvider.generateBlockStateModels(instance);
 
             modelProvider.getBlocks().forEach(entry -> {
                 Item item = Item.BY_BLOCK.get(entry.get());
