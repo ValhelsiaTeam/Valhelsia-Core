@@ -9,6 +9,7 @@ import net.valhelsia.valhelsia_core.datagen.DataProviderContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * @author Valhelsia Team - stal111
@@ -17,14 +18,14 @@ import java.util.Collection;
 public class ValhelsiaModelProvider extends ModelProvider {
 
     @Nullable
-    private final BlockModelGenerator blockModelGenerator;
+    private final Function<BlockModelGenerators, BlockModelGenerator> blockModelGenerator;
 
     @Nullable
-    private final ItemModelGenerator itemModelGenerator;
+    private final Function<ItemModelGenerators, ItemModelGenerator> itemModelGenerator;
 
     private final Collection<RegistryEntry<Block, ? extends Block>> blocks;
 
-    public ValhelsiaModelProvider(DataProviderContext context, @Nullable BlockModelGenerator blockModelGenerator, @Nullable ItemModelGenerator itemModelGenerator) {
+    public ValhelsiaModelProvider(DataProviderContext context, @Nullable Function<BlockModelGenerators, BlockModelGenerator> blockModelGenerator, @Nullable Function<ItemModelGenerators, ItemModelGenerator> itemModelGenerator) {
         super(context.output());
         this.blockModelGenerator = blockModelGenerator;
         this.itemModelGenerator = itemModelGenerator;
@@ -33,13 +34,13 @@ public class ValhelsiaModelProvider extends ModelProvider {
 
     public void generateBlockStateModels(BlockModelGenerators modelGenerators) {
         if (this.blockModelGenerator != null) {
-            this.blockModelGenerator.generate(modelGenerators.blockStateOutput, modelGenerators.modelOutput);
+            this.blockModelGenerator.apply(modelGenerators).generate();
         }
     }
 
     public void generateItemModels(ItemModelGenerators modelGenerators) {
         if (this.itemModelGenerator != null) {
-            this.itemModelGenerator.generate(modelGenerators.output);
+            this.itemModelGenerator.apply(modelGenerators).generate();
         }
     }
 

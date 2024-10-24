@@ -86,12 +86,4 @@ public abstract class ModelProviderMixin {
     private boolean valhelsia_core_run$preventException(List<Block> instance) {
         return true;
     }
-
-    @Redirect(method = "method_25741", at = @At(value = "INVOKE", target = "Ljava/util/Set;contains(Ljava/lang/Object;)Z"))
-    private static boolean valhelsia_core_run$registerBlockStateModels(Set<Item> instance, Object o) {
-        if (o instanceof Item item) {
-            return !BLOCK_ITEMS.containsKey(ModelLocationUtils.getModelLocation(item));
-        }
-        return true;
-    }
 }
