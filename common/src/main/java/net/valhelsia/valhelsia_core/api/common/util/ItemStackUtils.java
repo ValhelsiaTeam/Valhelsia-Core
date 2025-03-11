@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
@@ -21,10 +22,18 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ItemStackUtils {
 
+    /**
+     * @deprecated Use {@link ItemStack#consume(int, LivingEntity)} instead
+     */
+    @Deprecated(forRemoval = true)
     public static void shrinkStack(@Nullable Player player, ItemStack stack) {
         shrinkStack(player, stack, 1);
     }
 
+    /**
+     * @deprecated Use {@link ItemStack#consume(int, LivingEntity)} instead
+     */
+    @Deprecated(forRemoval = true)
     public static void shrinkStack(@Nullable Player player, ItemStack stack, int count) {
         if (player == null || !player.isCreative()) {
             stack.shrink(count);
