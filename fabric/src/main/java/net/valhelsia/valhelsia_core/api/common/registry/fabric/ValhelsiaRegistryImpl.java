@@ -29,7 +29,7 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
 
     protected ValhelsiaRegistryImpl(String modId, ResourceKey<? extends Registry<T>> registryKey) {
         super(modId, registryKey);
-        this.registry = (Registry<T>) BuiltInRegistries.REGISTRY.get(registryKey.location());
+        this.registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(registryKey.location());
     }
 
     public static <T> ValhelsiaRegistry<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId) {
@@ -45,8 +45,6 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
 
         return entry;
     }
-
-
 
     @Override
     public void register() {

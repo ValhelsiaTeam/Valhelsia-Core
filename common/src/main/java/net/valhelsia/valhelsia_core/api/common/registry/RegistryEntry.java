@@ -43,8 +43,8 @@ public class RegistryEntry<R, T extends R> implements Holder<R>, Supplier<T> {
             return;
         }
 
-        Optional.ofNullable((Registry<R>) BuiltInRegistries.REGISTRY.get(this.key.registry()))
-                .flatMap(objects -> objects.getHolder(this.key))
+        Optional.ofNullable((Registry<R>) BuiltInRegistries.REGISTRY.getValue(this.key.registry()))
+                .flatMap(objects -> objects.get(this.key))
                 .ifPresent(reference -> this.holder = reference);
     }
 

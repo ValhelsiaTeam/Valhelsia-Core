@@ -73,7 +73,7 @@ public abstract class ValhelsiaContainerBlockEntity<T extends BlockEntity> exten
     protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider) {
         super.loadAdditional(tag, lookupProvider);
 
-        this.lockKey = LockCode.fromTag(tag);
+        this.lockKey = LockCode.fromTag(tag, lookupProvider);
 
         if (tag.contains("CustomName", 8)) {
             this.name = Component.Serializer.fromJson(tag.getString("CustomName"), lookupProvider);
@@ -83,7 +83,7 @@ public abstract class ValhelsiaContainerBlockEntity<T extends BlockEntity> exten
     @Override
     protected void saveAdditional(@Nonnull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider) {
         super.saveAdditional(tag, lookupProvider);
-        this.lockKey.addToTag(tag);
+        this.lockKey.addToTag(tag, lookupProvider);
 
         if (this.name != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.name, lookupProvider));

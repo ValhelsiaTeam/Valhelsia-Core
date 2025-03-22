@@ -4,12 +4,16 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -32,9 +36,13 @@ public abstract class RecipeSubProvider {
 
 
     private final ValhelsiaRecipeProvider provider;
+    private final HolderLookup.Provider lookupProvider;
+    private final HolderGetter<Item> items;
 
-    public RecipeSubProvider(ValhelsiaRecipeProvider provider) {
+    public RecipeSubProvider(ValhelsiaRecipeProvider provider, HolderLookup.Provider lookupProvider) {
         this.provider = provider;
+        this.lookupProvider = lookupProvider;
+        this.items = lookupProvider.lookupOrThrow(Registries.ITEM);
     }
 
     protected abstract void registerRecipes(HolderLookup.Provider lookupProvider);
@@ -49,7 +57,7 @@ public abstract class RecipeSubProvider {
     }
 
     public void add(RecipeBuilder builder, String path) {
-        builder.save(this.provider.getRecipeOutput(), ResourceLocation.fromNamespaceAndPath(this.provider.getModId(), path));
+        builder.save(this.provider.getRecipeOutput(), ResourceKey.create(Registries.RECIPE, ResourceLocation.fromNamespaceAndPath(this.provider.getModId(), path)));
     }
 
     public void storageRecipe(ItemLike item, ItemLike block) {
@@ -198,19 +206,19 @@ public abstract class RecipeSubProvider {
     }
 
     public void shapeless(RecipeCategory category, ItemLike result, UnaryOperator<ShapelessRecipeBuilder> recipe) {
-        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(category, result)));
+        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(this.items, category, result)));
     }
 
     public void shapeless(RecipeCategory category, ItemLike result, UnaryOperator<ShapelessRecipeBuilder> recipe, String path) {
-        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(category, result)), path);
+        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(this.items, category, result)), path);
     }
 
     public void shapeless(RecipeCategory category, ItemLike result, int count, UnaryOperator<ShapelessRecipeBuilder> recipe) {
-        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(category, result, count)));
+        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(this.items, category, result, count)));
     }
 
     public void shapeless(RecipeCategory category, ItemLike result, int count, UnaryOperator<ShapelessRecipeBuilder> recipe, String path) {
-        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(category, result, count)), path);
+        this.add(recipe.apply(ShapelessRecipeBuilder.shapeless(this.items, category, result, count)), path);
     }
 
     public static String getName(ItemLike item) {
@@ -228,9 +236,9 @@ public abstract class RecipeSubProvider {
         }
 
         if (part.get() instanceof Ingredient ingredient) {
-            ItemLike[] itemLikes = Arrays.stream(ingredient.getItems()).map(ItemStack::getItem).toArray(ItemLike[]::new);
+            ItemLike[] itemLikes = ingredient.items().stream().map(Holder::value).toArray(ItemLike[]::new);
 
-            return inventoryTrigger(ItemPredicate.Builder.item().of(itemLikes).build());
+            return inventoryTrigger(ItemPredicate.Builder.item().of(this.items, itemLikes).build());
         }
 
         throw new IllegalArgumentException("Invalid type: " + part.get().getClass());
@@ -266,15 +274,15 @@ public abstract class RecipeSubProvider {
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike... items) {
-        return inventoryTrigger(ItemPredicate.Builder.item().of(items).build());
+        return inventoryTrigger(ItemPredicate.Builder.item().of(null, items).build());
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(TagKey<Item> tagKey) {
-        return inventoryTrigger(ItemPredicate.Builder.item().of(tagKey).build());
+        return inventoryTrigger(ItemPredicate.Builder.item().of(null, tagKey).build());
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(TagKey<Item> forgeTag, TagKey<Item> fabricTag) {
-        return inventoryTrigger(ItemPredicate.Builder.item().of(forgeTag).build(), ItemPredicate.Builder.item().of(fabricTag).build());
+        return inventoryTrigger(ItemPredicate.Builder.item().of(null, forgeTag).build(), ItemPredicate.Builder.item().of(null, fabricTag).build());
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate... predicates) {

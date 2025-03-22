@@ -28,19 +28,16 @@ public class ValhelsiaRecipeProvider extends RecipeProvider {
 
     @SafeVarargs
     public ValhelsiaRecipeProvider(DataProviderContext context, Function<ValhelsiaRecipeProvider, RecipeSubProvider>... subProviders) {
-        super(context.output(), context.lookupProvider());
+        super(null, null); //TODO
         this.modId = context.registryManager().modId();
         this.subProviders = Arrays.stream(subProviders).map(function -> function.apply(this)).toList();
         this.lookupProvider = context.lookupProvider();
     }
 
     @Override
-    protected final void buildRecipes(@NotNull RecipeOutput recipeOutput) {
-        this.recipeOutput = recipeOutput;
+    protected void buildRecipes() {
+        this.subProviders.forEach(recipeSubProvider -> recipeSubProvider.registerRecipes(null)); //TODO
 
-        this.lookupProvider.thenAccept(provider -> {
-            this.subProviders.forEach(recipeSubProvider -> recipeSubProvider.registerRecipes(provider));
-        });
     }
 
     @Nullable

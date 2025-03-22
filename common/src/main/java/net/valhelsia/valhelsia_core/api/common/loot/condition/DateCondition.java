@@ -1,18 +1,15 @@
 package net.valhelsia.valhelsia_core.api.common.loot.condition;
 
-import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.valhelsia.valhelsia_core.core.registry.ValhelsiaLootConditions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
-import java.util.Set;
 
 /**
  * @author Valhelsia Team
@@ -42,12 +39,6 @@ public record DateCondition(int month,
     @NotNull
     public LootItemConditionType getType() {
         return ValhelsiaLootConditions.DATE.get();
-    }
-
-    @Override
-    @NotNull
-    public Set<LootContextParam<?>> getReferencedContextParams() {
-        return ImmutableSet.of();
     }
 
     @Override

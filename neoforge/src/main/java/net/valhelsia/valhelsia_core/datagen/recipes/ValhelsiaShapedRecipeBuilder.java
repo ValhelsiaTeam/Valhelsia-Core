@@ -21,7 +21,7 @@ public record ValhelsiaShapedRecipeBuilder(ShapedRecipeBuilder builder) {
     }
 
     public static ValhelsiaShapedRecipeBuilder shaped(RecipeCategory category, ItemLike result, int count) {
-        return new ValhelsiaShapedRecipeBuilder(new ShapedRecipeBuilder(category, result, count));
+        return new ValhelsiaShapedRecipeBuilder(null); //TODO
     }
 
     public ValhelsiaShapedRecipeBuilder unlockedBy(RecipeSubProvider provider, ItemLike itemLike) {

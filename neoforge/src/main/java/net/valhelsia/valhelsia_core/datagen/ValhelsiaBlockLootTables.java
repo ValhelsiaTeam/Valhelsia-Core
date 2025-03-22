@@ -49,7 +49,6 @@ import java.util.function.Function;
  */
 public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
 
-    public static final LootItemCondition.Builder HAS_SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().of(Items.SHEARS));
     public static final float[] NORMAL_LEAVES_SAPLING_CHANCES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
     public static final float[] JUNGLE_LEAVES_SAPLING_CHANGES = new float[]{0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F};
 
@@ -134,17 +133,17 @@ public abstract class ValhelsiaBlockLootTables extends BlockLootSubProvider {
         for (RegistryEntry<Block, ? extends Block> entry : this.registryManager.getBlockHelper().getRegistryEntries()) {
             ResourceKey<LootTable> resourceKey;
 
-            if (!entry.get().isEnabled(this.enabledFeatures) || (resourceKey = entry.get().getLootTable()) == BuiltInLootTables.EMPTY || !set.add(resourceKey)) {
-                continue;
-            }
+//            if (!entry.get().isEnabled(this.enabledFeatures) || (resourceKey = entry.get().getLootTable()) == BuiltInLootTables.EMPTY || !set.add(resourceKey)) {
+//                continue;
+//            }
 
-            LootTable.Builder builder = this.map.remove(resourceKey);
+//            LootTable.Builder builder = this.map.remove(resourceKey);
 
-            if (builder == null) {
-                throw new IllegalStateException(String.format(Locale.ROOT, "Missing loottable '%s' for '%s'", resourceKey, BuiltInRegistries.BLOCK.getKey(entry.get())));
-            }
+//            if (builder == null) {
+//                throw new IllegalStateException(String.format(Locale.ROOT, "Missing loottable '%s' for '%s'", resourceKey, BuiltInRegistries.BLOCK.getKey(entry.get())));
+//            }
 
-            biConsumer.accept(resourceKey, builder);
+//            biConsumer.accept(resourceKey, builder);
         }
 
         if (!this.map.isEmpty()) {
