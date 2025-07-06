@@ -5,6 +5,7 @@ import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.ValhelsiaRegistry;
@@ -31,12 +32,8 @@ public abstract class MappedRegistryHelper<T> extends RegistryHelper<T, Registry
 
     public MappedRegistryHelper(ResourceKey<? extends Registry<T>> registry, String modId, ImmutableList<Class<?>> registryClasses) {
         super(registry, modId);
-        this.registry = this.createRegistry(registry, modId);
+        this.registry = ValhelsiaCore.INSTANCE.createRegistry(registry, modId);
         this.registryClasses = registryClasses;
-    }
-
-    private ValhelsiaRegistry<T> createRegistry(ResourceKey<? extends Registry<T>> key, String modId) {
-        return ValhelsiaRegistry.create(key, modId);
     }
 
     public Collection<RegistryEntry<T, ? extends T>> getRegistryEntries() {

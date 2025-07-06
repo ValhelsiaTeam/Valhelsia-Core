@@ -23,6 +23,6 @@ public class ValhelsiaRegistries {
     }
 
     private static <T> ValhelsiaRegistry<T> makeSyncedRegistry(ResourceKey<? extends Registry<T>> resourceKey) {
-        return ValhelsiaRegistry.create(resourceKey, ValhelsiaCore.MOD_ID);
+        return ValhelsiaCore.INSTANCE.createRegistry(resourceKey, ValhelsiaCore.MOD_ID);
     }
 }

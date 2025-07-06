@@ -4,6 +4,7 @@ import net.minecraft.util.StringRepresentable;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 
 import java.util.EnumMap;
+import java.util.List;
 
 /**
  * @author Valhelsia Team
@@ -13,6 +14,10 @@ public class RegistryEntrySet<E, T extends E, K extends Enum<K> & StringRepresen
 
     public RegistryEntrySet(Class<K> keyType) {
         super(keyType);
+    }
+
+    public List<R> getEntries() {
+        return this.values().stream().toList();
     }
 }
 

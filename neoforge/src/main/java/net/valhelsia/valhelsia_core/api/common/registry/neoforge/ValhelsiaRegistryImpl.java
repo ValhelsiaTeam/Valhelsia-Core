@@ -24,12 +24,12 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
 
     private final DeferredRegister<T> deferredRegister;
 
-    protected ValhelsiaRegistryImpl(String modId, ResourceKey<? extends Registry<T>> registryKey) {
+    public ValhelsiaRegistryImpl(String modId, ResourceKey<? extends Registry<T>> registryKey) {
         super(modId, registryKey);
         this.deferredRegister = DeferredRegister.create(registryKey, modId);
     }
 
-    public static <T> ValhelsiaRegistry<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId) {
+    public ValhelsiaRegistry<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId) {
         return new ValhelsiaRegistryImpl<>(modId, registryKey);
     }
 

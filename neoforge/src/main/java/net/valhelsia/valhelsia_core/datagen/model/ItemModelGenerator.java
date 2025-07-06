@@ -10,11 +10,11 @@ import java.util.function.Supplier;
 public abstract class ItemModelGenerator {
 
     private final ItemModelGenerators defaultGenerators;
-    public final BiConsumer<ResourceLocation, Supplier<JsonElement>> output;
+//    public final BiConsumer<ResourceLocation, Supplier<JsonElement>> output;
 
     public ItemModelGenerator(ItemModelGenerators defaultGenerators) {
         this.defaultGenerators = defaultGenerators;
-        this.output = defaultGenerators.output;
+//        this.output = defaultGenerators.output;
     }
 
     protected abstract void generate();

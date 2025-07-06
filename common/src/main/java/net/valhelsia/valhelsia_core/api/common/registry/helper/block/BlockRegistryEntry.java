@@ -1,5 +1,6 @@
 package net.valhelsia.valhelsia_core.api.common.registry.helper.block;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -16,7 +17,7 @@ import java.util.Optional;
  */
 public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T> {
 
-    private static final ItemFunction DEFAULT_ITEM_FUNCTION = registryObject -> new BlockItem(registryObject.get(), new Item.Properties());
+    private static final ItemFunction DEFAULT_ITEM_FUNCTION = registryObject -> new BlockItem(registryObject.get(), new Item.Properties().setId(ResourceKey.create(Registries.ITEM, registryObject.key.location())).overrideDescription(registryObject.get().getDescriptionId()));
 
     private final String name;
 

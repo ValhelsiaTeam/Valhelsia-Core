@@ -2,7 +2,6 @@ package net.valhelsia.valhelsia_core.api.common.registry;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Keyable;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
@@ -24,10 +23,7 @@ public abstract class ValhelsiaRegistry<T> implements Codec<T>, Keyable {
         this.registryKey = registryKey;
     }
 
-    @ExpectPlatform
-    public static <T> ValhelsiaRegistry<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId) {
-        throw new AssertionError();
-    }
+    public abstract ValhelsiaRegistry<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId);
 
     public abstract <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> supplier, Function<Supplier<O>, RegistryEntry<T, O>> function);
 

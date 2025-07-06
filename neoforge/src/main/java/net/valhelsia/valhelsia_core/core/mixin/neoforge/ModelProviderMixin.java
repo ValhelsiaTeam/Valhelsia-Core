@@ -43,33 +43,33 @@ public abstract class ModelProviderMixin {
     @Unique
     private final static Map<ResourceLocation, Supplier<JsonElement>> BLOCK_ITEMS = new HashMap<>();
 
-    @Redirect(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/data/models/BlockModelGenerators;run()V"))
-    private void valhelsia_core_run$registerBlockStateModels(BlockModelGenerators instance) {
-        if (!this.createModels(modelProvider -> {
-            modelProvider.generateBlockStateModels(instance);
-
-            modelProvider.getBlocks().forEach(entry -> {
-                Item item = Item.BY_BLOCK.get(entry.get());
-
-                if (item == null || this.skippedAutoBlockModels.contains(item)) {
-                    return;
-                }
-
-                ResourceLocation resourceLocation = ModelLocationUtils.getModelLocation(item);
-
-                BLOCK_ITEMS.putIfAbsent(resourceLocation, new DelegatedModel(ModelLocationUtils.getModelLocation(entry.get())));
-            });
-        })) {
-            instance.run();
-        }
-    }
-
-    @Redirect(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/data/models/ItemModelGenerators;run()V"))
-    private void valhelsia_core_run$registerItemModels(ItemModelGenerators instance) {
-        if (!this.createModels(modelProvider -> modelProvider.generateItemModels(instance))) {
-            instance.run();
-        }
-    }
+//    @Redirect(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/data/models/BlockModelGenerators;run()V"))
+//    private void valhelsia_core_run$registerBlockStateModels(BlockModelGenerators instance) {
+//        if (!this.createModels(modelProvider -> {
+//            modelProvider.generateBlockStateModels(instance);
+//
+//            modelProvider.getBlocks().forEach(entry -> {
+//                Item item = Item.BY_BLOCK.get(entry.get());
+//
+//                if (item == null || this.skippedAutoBlockModels.contains(item)) {
+//                    return;
+//                }
+//
+//                ResourceLocation resourceLocation = ModelLocationUtils.getModelLocation(item);
+//
+//                BLOCK_ITEMS.putIfAbsent(resourceLocation, new DelegatedModel(ModelLocationUtils.getModelLocation(entry.get())));
+//            });
+//        })) {
+//            instance.run();
+//        }
+//    }
+//
+//    @Redirect(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/data/models/ItemModelGenerators;run()V"))
+//    private void valhelsia_core_run$registerItemModels(ItemModelGenerators instance) {
+//        if (!this.createModels(modelProvider -> modelProvider.generateItemModels(instance))) {
+//            instance.run();
+//        }
+//    }
 
     @Unique
     private boolean createModels(Consumer<ValhelsiaModelProvider> consumer) {
@@ -82,16 +82,16 @@ public abstract class ModelProviderMixin {
         return false;
     }
 
-    @Redirect(method = "run", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
-    private boolean valhelsia_core_run$preventException(List<Block> instance) {
-        return true;
-    }
+//    @Redirect(method = "run", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
+//    private boolean valhelsia_core_run$preventException(List<Block> instance) {
+//        return true;
+//    }
 
-    @Redirect(method = "method_25741", at = @At(value = "INVOKE", target = "Ljava/util/Set;contains(Ljava/lang/Object;)Z"))
-    private static boolean valhelsia_core_run$registerBlockStateModels(Set<Item> instance, Object o) {
-        if (o instanceof Item item) {
-            return !BLOCK_ITEMS.containsKey(ModelLocationUtils.getModelLocation(item));
-        }
-        return true;
-    }
+//    @Redirect(method = "method_25741", at = @At(value = "INVOKE", target = "Ljava/util/Set;contains(Ljava/lang/Object;)Z"))
+//    private static boolean valhelsia_core_run$registerBlockStateModels(Set<Item> instance, Object o) {
+//        if (o instanceof Item item) {
+//            return !BLOCK_ITEMS.containsKey(ModelLocationUtils.getModelLocation(item));
+//        }
+//        return true;
+//    }
 }

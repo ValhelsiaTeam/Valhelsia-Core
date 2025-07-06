@@ -1,6 +1,5 @@
 package net.valhelsia.valhelsia_core.core;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.client.ClientSetupHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
@@ -26,13 +25,6 @@ public record ModDefinition(String modId, RegistryManager registryManager, Valhe
 
         this.registryManager.register();
         this.eventHandler.register();
-
-        ModDefinition.scheduleClientSetup(this.modId, this.clientSetup);
-    }
-
-    @ExpectPlatform
-    public static void scheduleClientSetup(String modId, Supplier<Consumer<ClientSetupHelper>> clientSetup) {
-        throw new AssertionError();
     }
 
     public static class Builder {

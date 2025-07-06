@@ -4,13 +4,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.valhelsia.valhelsia_core.datagen.DataProviderContext;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /**
  * @author Valhelsia Team
@@ -24,20 +22,16 @@ public class ValhelsiaRecipeProvider extends RecipeProvider {
     private final String modId;
     private final List<RecipeSubProvider> subProviders;
 
-    private final CompletableFuture<HolderLookup.Provider> lookupProvider;
-
     @SafeVarargs
-    public ValhelsiaRecipeProvider(DataProviderContext context, Function<ValhelsiaRecipeProvider, RecipeSubProvider>... subProviders) {
-        super(null, null); //TODO
+    public ValhelsiaRecipeProvider(DataProviderContext context, HolderLookup.Provider lookupProvider, RecipeOutput recipeOutput, BiFunction<ValhelsiaRecipeProvider, HolderLookup.Provider, RecipeSubProvider>... subProviders) {
+        super(lookupProvider, recipeOutput);
         this.modId = context.registryManager().modId();
-        this.subProviders = Arrays.stream(subProviders).map(function -> function.apply(this)).toList();
-        this.lookupProvider = context.lookupProvider();
+        this.subProviders = Arrays.stream(subProviders).map(function -> function.apply(this, lookupProvider)).toList();
     }
 
     @Override
     protected void buildRecipes() {
         this.subProviders.forEach(recipeSubProvider -> recipeSubProvider.registerRecipes(null)); //TODO
-
     }
 
     @Nullable

@@ -1,6 +1,5 @@
 package net.valhelsia.valhelsia_core.api.common.block.entity;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -17,12 +16,10 @@ public interface MenuCreationContext<T extends BlockEntity, I> {
     ContainerLevelAccess levelAccess();
     Player player();
 
-    @ExpectPlatform
     static <T extends BlockEntity, I> MenuCreationContext<T, I> of(Inventory inventory) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
     static <T extends BlockEntity, I> MenuCreationContext<T, I> of(Inventory inventory, Level level, BlockPos pos, Player player) {
         throw new AssertionError();
     }

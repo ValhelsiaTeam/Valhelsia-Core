@@ -12,13 +12,13 @@ import java.util.function.Supplier;
 public abstract class BlockModelGenerator {
 
     private final BlockModelGenerators defaultGenerators;
-    public final Consumer<BlockStateGenerator> blockStateOutput;
-    public final BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput;
+//    public final Consumer<BlockStateGenerator> blockStateOutput;
+//    public final BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput;
 
     public BlockModelGenerator(BlockModelGenerators defaultGenerators) {
         this.defaultGenerators = defaultGenerators;
-        this.blockStateOutput = defaultGenerators.blockStateOutput;
-        this.modelOutput = defaultGenerators.modelOutput;
+//        this.blockStateOutput = defaultGenerators.blockStateOutput;
+//        this.modelOutput = defaultGenerators.modelOutput;
     }
 
     protected abstract void generate();

@@ -45,10 +45,10 @@ public class ForgeClientSetupHelper implements ClientSetupHelper {
         this.entityRenderers.add(event -> event.registerBlockEntityRenderer(type.get(), provider));
     }
 
-    @Override
-    public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<MenuType<?>, ? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor) {
-        this.menuScreens.add(event -> event.register(type.get(), constructor));
-    }
+//    @Override
+//    public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<MenuType<?>, ? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor) {
+//        this.menuScreens.add(event -> event.register(type.get(), constructor));
+//    }
 
     @Override
     public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model) {
