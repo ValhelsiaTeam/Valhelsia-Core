@@ -11,20 +11,19 @@ import java.util.function.Supplier;
  * @author Valhelsia Team
  * @since 2022-11-02
  */
-public record ModDefinition(String modId, RegistryManager registryManager, ValhelsiaEventHandler eventHandler, Supplier<Consumer<ClientSetupHelper>> clientSetup) {
+public record ModDefinition(String modId, RegistryManager registryManager, ValhelsiaEventHandler eventHandler) {
 
     public static ModDefinition.Builder of(String modId) {
         return new ModDefinition.Builder(modId);
     }
 
     public ModDefinition(String modId, RegistryManager registryManager, ValhelsiaEventHandler eventHandler, Supplier<Consumer<ClientSetupHelper>> clientSetup) {
-        this.modId = modId;
-        this.registryManager = registryManager;
-        this.eventHandler = eventHandler;
-        this.clientSetup = clientSetup;
+        this(modId, registryManager, eventHandler);
 
         this.registryManager.register();
         this.eventHandler.register();
+
+        ValhelsiaCore.INSTANCE.scheduleClientSetup(modId, clientSetup);
     }
 
     public static class Builder {

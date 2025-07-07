@@ -16,7 +16,7 @@ public class ModClientSetup {
             IEventBus eventBus = modContainer.getEventBus();
 
             if (eventBus != null) {
-                eventBus.register(new ClientEvents(helper));
+                eventBus.register(new ClientEvents(modId, helper));
             }
         });
     }

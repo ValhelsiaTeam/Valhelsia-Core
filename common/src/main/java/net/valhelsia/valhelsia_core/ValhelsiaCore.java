@@ -3,6 +3,7 @@ package net.valhelsia.valhelsia_core;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
+import net.valhelsia.valhelsia_core.api.client.ClientSetupHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
 import net.valhelsia.valhelsia_core.api.common.registry.ValhelsiaRegistry;
 import net.valhelsia.valhelsia_core.core.ModDefinition;
@@ -30,6 +31,8 @@ public abstract class ValhelsiaCore {
     public void init() {
         ModDefinition.of(ValhelsiaCore.MOD_ID).withRegistryManager(ValhelsiaCore.REGISTRY_MANAGER).create();
     }
+
+    public abstract void scheduleClientSetup(String modId, Supplier<Consumer<ClientSetupHelper>> clientSetup);
 
     public abstract <T> ValhelsiaRegistry<T> createRegistry(ResourceKey<? extends Registry<T>> key, String modId);
 
