@@ -21,8 +21,7 @@
     ]
   },
   "mixins": [
-    "valhelsia_core.mixins.json",
-    "valhelsia_core-common.mixins.json"
+    "valhelsia_core.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.10",

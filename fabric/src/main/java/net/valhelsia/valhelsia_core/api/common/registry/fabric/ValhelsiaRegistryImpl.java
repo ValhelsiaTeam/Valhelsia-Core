@@ -27,12 +27,13 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
     private final Registry<T> registry;
     private final List<RegistryEntry<T, ? extends T>> entries = new ArrayList<>();
 
-    protected ValhelsiaRegistryImpl(String modId, ResourceKey<? extends Registry<T>> registryKey) {
+    public ValhelsiaRegistryImpl(String modId, ResourceKey<? extends Registry<T>> registryKey) {
         super(modId, registryKey);
         this.registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(registryKey.location());
     }
 
-    public static <T> ValhelsiaRegistry<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId) {
+    @Override
+    public ValhelsiaRegistry<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId) {
         return new ValhelsiaRegistryImpl<>(modId, registryKey);
     }
 

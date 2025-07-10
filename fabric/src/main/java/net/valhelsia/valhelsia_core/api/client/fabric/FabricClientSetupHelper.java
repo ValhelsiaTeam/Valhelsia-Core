@@ -45,11 +45,6 @@ public class FabricClientSetupHelper implements ClientSetupHelper {
     }
 
     @Override
-    public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<MenuType<?>, ? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor) {
-        MenuScreens.register(type.get(), constructor);
-    }
-
-    @Override
     public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model) {
         SKULL_MODELS.add(map -> map.put(type, model.apply(Minecraft.getInstance().getEntityModels())));
     }

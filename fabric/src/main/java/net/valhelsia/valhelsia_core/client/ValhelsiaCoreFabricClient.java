@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
+import net.valhelsia.valhelsia_core.ValhelsiaCoreFabric;
 import net.valhelsia.valhelsia_core.api.client.fabric.FabricClientSetupHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryManager;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryEntry;
@@ -23,8 +24,10 @@ public class ValhelsiaCoreFabricClient implements ClientModInitializer {
 
         ValhelsiaCore.VALHELSIA_MODS.values().forEach(modDefinition -> {
             this.setBlockRenderLayers(modDefinition.registryManager());
+        });
 
-            modDefinition.clientSetup().get().accept(helper);
+        ValhelsiaCoreFabric.CLIENT_SETUPS.forEach(supplier -> {
+            supplier.get().accept(helper);
         });
     }
 

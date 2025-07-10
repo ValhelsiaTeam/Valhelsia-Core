@@ -29,6 +29,7 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
         this.deferredRegister = DeferredRegister.create(registryKey, modId);
     }
 
+    @Override
     public ValhelsiaRegistry<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId) {
         return new ValhelsiaRegistryImpl<>(modId, registryKey);
     }
