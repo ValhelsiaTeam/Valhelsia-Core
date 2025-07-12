@@ -10,7 +10,7 @@
 
   "license": "All Rights Reserved",
   "icon": "icon.png",
-
+  "accessWidener": "valhelsia_core.accesswidener",
   "environment": "*",
   "entrypoints": {
     "main": [

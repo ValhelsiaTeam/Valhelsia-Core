@@ -24,6 +24,8 @@ base {
 }
 
 loom {
+    accessWidenerPath = file("src/main/resources/valhelsia_core.accesswidener")
+
     mixin {
         add sourceSets.main, "${mod_id}.refmap.json"
     }
