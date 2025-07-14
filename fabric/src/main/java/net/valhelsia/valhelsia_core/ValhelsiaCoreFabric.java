@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
@@ -13,11 +14,16 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ValhelsiaCoreFabric extends ValhelsiaCore implements ModInitializer {
+public class ValhelsiaCoreFabric extends ValhelsiaCore implements ModInitializer, PreLaunchEntrypoint {
     public static final List<Supplier<Consumer<ClientSetupHelper>>> CLIENT_SETUPS = new ArrayList<>();
 
     @Override
+    public void onPreLaunch() {
+    }
+
+    @Override
     public void onInitialize() {
+        this.init();
     }
 
     @Override

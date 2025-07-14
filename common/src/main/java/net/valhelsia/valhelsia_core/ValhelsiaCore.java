@@ -24,11 +24,10 @@ public abstract class ValhelsiaCore {
 
     public ValhelsiaCore() {
         INSTANCE = this;
-        REGISTRY_MANAGER = new RegistryManager(new ModRegistryCollector(ValhelsiaCore.MOD_ID));
-        this.init();
     }
 
     public void init() {
+        REGISTRY_MANAGER = new RegistryManager(new ModRegistryCollector(ValhelsiaCore.MOD_ID));
         ModDefinition.of(ValhelsiaCore.MOD_ID).withRegistryManager(ValhelsiaCore.REGISTRY_MANAGER).create();
     }
 

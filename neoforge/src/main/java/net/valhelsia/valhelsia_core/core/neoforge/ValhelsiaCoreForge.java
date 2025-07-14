@@ -27,6 +27,8 @@ public class ValhelsiaCoreForge extends ValhelsiaCore {
     public static RegistryManager REGISTRY_MANAGER;
 
     public ValhelsiaCoreForge(IEventBus modEventBus) {
+        this.init();
+
         REGISTRY_MANAGER = new RegistryManager(new ModForgeRegistryCollector(ValhelsiaCore.MOD_ID));
         ModDefinition.of("valhelsia_core-forge")
                 .withRegistryManager(REGISTRY_MANAGER)

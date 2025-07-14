@@ -2,7 +2,9 @@ package net.valhelsia.valhelsia_core.api.common.registry.helper.item;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -33,6 +35,10 @@ public class ItemRegistryHelper extends DefaultRegistryHelper<Item> {
     @Override
     public <O extends Item> ItemRegistryEntry<O> register(String name, Supplier<O> object) {
         return super.registerInternal(name, object);
+    }
+
+    public <O extends Item> ItemRegistryEntry<O> register(String name, Function<Item.Properties, O> object, Supplier<Item.Properties> properties) {
+        return super.registerInternal(name, () -> object.apply(properties.get().setId(ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(this.getModId(), name)))));
     }
 
     public void registerBlockItems(BlockRegistryHelper registryHelper) {

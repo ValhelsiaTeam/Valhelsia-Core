@@ -35,8 +35,8 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
         return new BlockRegistryEntry<>(key);
     }
 
-    public <O extends Block> BlockRegistryEntry<O> register(String name, Function<BlockBehaviour.Properties, ? extends O> func, BlockBehaviour.Properties properties) {
-        return super.registerInternal(name, () -> func.apply(properties.setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.getModId(), name)))));
+    public <O extends Block> BlockRegistryEntry<O> register(String name, Function<BlockBehaviour.Properties, ? extends O> func, Supplier<BlockBehaviour.Properties> properties) {
+        return super.registerInternal(name, () -> func.apply(properties.get().setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.getModId(), name)))));
     }
 
     @Override
@@ -44,51 +44,51 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
         return super.registerInternal(name, object);
     }
 
-    public <S extends SkullBlock, W extends WallSkullBlock> SkullRegistryEntry<S, W> registerSkull(String name, SkullBlock.Type type, SkullRegistryEntry.SkullFactory<S> skull, SkullRegistryEntry.SkullFactory<W> wallSkull, BlockBehaviour.Properties properties, SkullRegistryEntry.SkullItemFactory itemFactory) {
-        return new SkullRegistryEntry<>(this.register(name + "_skull", () -> skull.create(type, properties)), this.register(name + "_wall_skull", () -> wallSkull.create(type, properties))).withItem(itemFactory);
+    public <S extends SkullBlock, W extends WallSkullBlock> SkullRegistryEntry<S, W> registerSkull(String name, SkullBlock.Type type, SkullRegistryEntry.SkullFactory<S> skull, SkullRegistryEntry.SkullFactory<W> wallSkull, Supplier<BlockBehaviour.Properties> properties, SkullRegistryEntry.SkullItemFactory itemFactory) {
+        return new SkullRegistryEntry<>(this.register(name + "_skull", () -> skull.create(type, properties.get())), this.register(name + "_wall_skull", () -> wallSkull.create(type, properties.get()))).withItem(itemFactory);
     }
 
-    public <T extends Block> BlockEntrySet<T, DyeColor> registerColorEntrySet(String name, Function<DyeColor, Function<BlockBehaviour.Properties, ? extends T>> function, BlockBehaviour.Properties properties) {
+    public <T extends Block> BlockEntrySet<T, DyeColor> registerColorEntrySet(String name, Function<DyeColor, Function<BlockBehaviour.Properties, ? extends T>> function, Function<DyeColor, BlockBehaviour.Properties> properties) {
         return this.registerEntrySet(DyeColor.class, name, function, properties);
     }
 
-    public <T extends Block> BlockEntrySet<T, DyeColor> registerColorEntrySet(UnaryOperator<String> name, Function<DyeColor, Function<BlockBehaviour.Properties, ? extends T>> function, BlockBehaviour.Properties properties) {
+    public <T extends Block> BlockEntrySet<T, DyeColor> registerColorEntrySet(UnaryOperator<String> name, Function<DyeColor, Function<BlockBehaviour.Properties, ? extends T>> function, Function<DyeColor, BlockBehaviour.Properties> properties) {
         return this.registerEntrySet(DyeColor.class, name, function, properties);
     }
 
-    public <T extends Block> BlockEntrySet<T, DyeColor> registerColorEntrySet(String name, Function<DyeColor, Function<BlockBehaviour.Properties, ? extends T>> function, BlockBehaviour.Properties properties, UnaryOperator<BlockRegistryEntry<T>> unaryOperator) {
+    public <T extends Block> BlockEntrySet<T, DyeColor> registerColorEntrySet(String name, Function<DyeColor, Function<BlockBehaviour.Properties, ? extends T>> function, Function<DyeColor, BlockBehaviour.Properties> properties, UnaryOperator<BlockRegistryEntry<T>> unaryOperator) {
         return this.registerEntrySet(DyeColor.class, name, function, properties, unaryOperator);
     }
 
-    public <T extends Block> BlockEntrySet<T, DyeColor> registerColorEntrySet(UnaryOperator<String> name, Function<DyeColor, Function<BlockBehaviour.Properties, ? extends T>> function, BlockBehaviour.Properties properties, UnaryOperator<BlockRegistryEntry<T>> unaryOperator) {
+    public <T extends Block> BlockEntrySet<T, DyeColor> registerColorEntrySet(UnaryOperator<String> name, Function<DyeColor, Function<BlockBehaviour.Properties, ? extends T>> function, Function<DyeColor, BlockBehaviour.Properties> properties, UnaryOperator<BlockRegistryEntry<T>> unaryOperator) {
         return this.registerEntrySet(DyeColor.class, name, function, properties, unaryOperator);
     }
 
-    public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, String name, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, BlockBehaviour.Properties properties) {
+    public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, String name, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, Function<K, BlockBehaviour.Properties> properties) {
         return this.registerEntrySet(keyType, s -> s + "_" + name, function, properties);
     }
 
-    public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> nameFunction, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, BlockBehaviour.Properties properties) {
+    public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> nameFunction, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, Function<K, BlockBehaviour.Properties> properties) {
         BlockEntrySet<T, K> set = new BlockEntrySet<>(keyType);
 
         for (K key : keyType.getEnumConstants()) {
             String name = nameFunction.apply(key.getSerializedName());
-            set.put(key, this.register(name, () -> function.apply(key).apply(properties.setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.getModId(), name))))));
+            set.put(key, this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.getModId(), name))))));
         }
 
         return set;
     }
 
-    public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, String name, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, BlockBehaviour.Properties properties, UnaryOperator<BlockRegistryEntry<T>> unaryOperator) {
+    public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, String name, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, Function<K, BlockBehaviour.Properties> properties, UnaryOperator<BlockRegistryEntry<T>> unaryOperator) {
         return this.registerEntrySet(keyType, s -> s + "_" + name, function, properties, unaryOperator);
     }
 
-    public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> nameFunction, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, BlockBehaviour.Properties properties, UnaryOperator<BlockRegistryEntry<T>> unaryOperator) {
+    public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> nameFunction, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, Function<K, BlockBehaviour.Properties> properties, UnaryOperator<BlockRegistryEntry<T>> unaryOperator) {
         BlockEntrySet<T, K> set = new BlockEntrySet<>(keyType);
 
         for (K key : keyType.getEnumConstants()) {
             String name = nameFunction.apply(key.getSerializedName());
-            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key).apply(properties.setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.getModId(), name)))))));
+            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.getModId(), name)))))));
         }
 
         return set;

@@ -2,17 +2,18 @@
   "schemaVersion": 1,
   "id": "valhelsia_core",
   "version": "${version}",
-
   "name": "Valhelsia Core",
   "description": "",
   "authors": [],
   "contact": {},
-
   "license": "All Rights Reserved",
   "icon": "icon.png",
   "accessWidener": "valhelsia_core.accesswidener",
   "environment": "*",
   "entrypoints": {
+    "preLaunch": [
+      "net.valhelsia.valhelsia_core.ValhelsiaCoreFabric"
+    ],
     "main": [
       "net.valhelsia.valhelsia_core.ValhelsiaCoreFabric"
     ],
@@ -30,7 +31,9 @@
   },
   "custom": {
     "modmenu": {
-      "badges": ["library"]
+      "badges": [
+        "library"
+      ]
     }
   }
 }
