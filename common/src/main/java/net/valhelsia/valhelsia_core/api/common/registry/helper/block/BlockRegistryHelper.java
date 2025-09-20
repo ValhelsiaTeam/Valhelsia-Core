@@ -45,7 +45,7 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
     }
 
     public <S extends SkullBlock, W extends WallSkullBlock> SkullRegistryEntry<S, W> registerSkull(String name, SkullBlock.Type type, SkullRegistryEntry.SkullFactory<S> skull, SkullRegistryEntry.SkullFactory<W> wallSkull, Supplier<BlockBehaviour.Properties> properties, SkullRegistryEntry.SkullItemFactory itemFactory) {
-        return new SkullRegistryEntry<>(this.register(name + "_skull", () -> skull.create(type, properties.get())), this.register(name + "_wall_skull", () -> wallSkull.create(type, properties.get()))).withItem(itemFactory);
+        return new SkullRegistryEntry<>(this.register(name + "_skull", (p) -> skull.create(type, p), properties), this.register(name + "_wall_skull", (p) -> wallSkull.create(type, p), properties)).withItem(itemFactory);
     }
 
     public <T extends Block> BlockEntrySet<T, DyeColor> registerColorEntrySet(String name, Function<DyeColor, Function<BlockBehaviour.Properties, ? extends T>> function, Function<DyeColor, BlockBehaviour.Properties> properties) {

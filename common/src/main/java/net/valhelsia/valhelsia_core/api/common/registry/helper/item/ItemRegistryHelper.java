@@ -13,6 +13,7 @@ import net.valhelsia.valhelsia_core.api.common.registry.helper.DefaultRegistryHe
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -49,45 +50,47 @@ public class ItemRegistryHelper extends DefaultRegistryHelper<Item> {
         });
     }
 
-    public <T extends Item> ItemEntrySet<T, DyeColor> registerColorEntrySet(String name, Function<DyeColor, T> function) {
-        return this.registerEntrySet(DyeColor.class, name, function);
+    public <T extends Item> ItemEntrySet<T, DyeColor> registerColorEntrySet(String name, BiFunction<DyeColor, Item.Properties, T> function, Function<DyeColor, Item.Properties> properties) {
+        return this.registerEntrySet(DyeColor.class, name, function, properties);
     }
 
-    public <T extends Item> ItemEntrySet<T, DyeColor> registerColorEntrySet(UnaryOperator<String> name, Function<DyeColor, T> function) {
-        return this.registerEntrySet(DyeColor.class, name, function);
+    public <T extends Item> ItemEntrySet<T, DyeColor> registerColorEntrySet(UnaryOperator<String> name, BiFunction<DyeColor, Item.Properties, T> function, Function<DyeColor, Item.Properties> properties) {
+        return this.registerEntrySet(DyeColor.class, name, function, properties);
     }
 
-    public <T extends Item> ItemEntrySet<T, DyeColor> registerColorEntrySet(String name, Function<DyeColor, T> function, UnaryOperator<ItemRegistryEntry<T>> unaryOperator) {
-        return this.registerEntrySet(DyeColor.class, name, function, unaryOperator);
+    public <T extends Item> ItemEntrySet<T, DyeColor> registerColorEntrySet(String name, BiFunction<DyeColor, Item.Properties, T> function, Function<DyeColor, Item.Properties> properties, UnaryOperator<ItemRegistryEntry<T>> unaryOperator) {
+        return this.registerEntrySet(DyeColor.class, name, function, properties, unaryOperator);
     }
 
-    public <T extends Item> ItemEntrySet<T, DyeColor> registerColorEntrySet(UnaryOperator<String> name, Function<DyeColor, T> function, UnaryOperator<ItemRegistryEntry<T>> unaryOperator) {
-        return this.registerEntrySet(DyeColor.class, name, function, unaryOperator);
+    public <T extends Item> ItemEntrySet<T, DyeColor> registerColorEntrySet(UnaryOperator<String> name, BiFunction<DyeColor, Item.Properties, T> function, Function<DyeColor, Item.Properties> properties, UnaryOperator<ItemRegistryEntry<T>> unaryOperator) {
+        return this.registerEntrySet(DyeColor.class, name, function, properties, unaryOperator);
     }
 
-    public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, String name, Function<K, T> function) {
-        return this.registerEntrySet(keyType, s -> s + "_" + name, function);
+    public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, String name, BiFunction<K, Item.Properties, T> function, Function<K, Item.Properties> properties) {
+        return this.registerEntrySet(keyType, s -> s + "_" + name, function, properties);
     }
 
-    public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> name, Function<K, T> function) {
+    public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> nameFunction, BiFunction<K, Item.Properties, T> function, Function<K, Item.Properties> properties) {
         ItemEntrySet<T, K> set = new ItemEntrySet<>(keyType);
 
         for (K key : keyType.getEnumConstants()) {
-            set.put(key, this.register(name.apply(key.getSerializedName()), () -> function.apply(key)));
+            String name = nameFunction.apply(key.getSerializedName());
+            set.put(key, this.register(name, () -> function.apply(key, properties.apply(key).setId(ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(this.getModId(), name))))));
         }
 
         return set;
     }
 
-    public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, String name, Function<K, T> function, UnaryOperator<ItemRegistryEntry<T>> unaryOperator) {
-        return this.registerEntrySet(keyType, s -> s + "_" + name, function, unaryOperator);
+    public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, String name, BiFunction<K, Item.Properties, T> function, Function<K, Item.Properties> properties, UnaryOperator<ItemRegistryEntry<T>> unaryOperator) {
+        return this.registerEntrySet(keyType, s -> s + "_" + name, function, properties, unaryOperator);
     }
 
-    public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> name, Function<K, T> function, UnaryOperator<ItemRegistryEntry<T>> unaryOperator) {
+    public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> nameFunction, BiFunction<K, Item.Properties, T> function, Function<K, Item.Properties> properties, UnaryOperator<ItemRegistryEntry<T>> unaryOperator) {
         ItemEntrySet<T, K> set = new ItemEntrySet<>(keyType);
 
         for (K key : keyType.getEnumConstants()) {
-            set.put(key, unaryOperator.apply(this.register(name.apply(key.getSerializedName()), () -> function.apply(key))));
+            String name = nameFunction.apply(key.getSerializedName());
+            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key, properties.apply(key).setId(ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(this.getModId(), name)))))));
         }
 
         return set;
