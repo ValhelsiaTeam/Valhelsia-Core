@@ -7,12 +7,14 @@ import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.datapack.DatapackRegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.datapack.DatapackRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.item.ItemRegistryHelper;
+import net.valhelsia.valhelsia_core.api.common.util.ResourceKeyHelper;
 
 import java.util.List;
 import java.util.function.Function;
@@ -24,7 +26,8 @@ import java.util.function.Function;
  * @author Valhelsia Team
  * @since 2020-11-18
  */
-public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?, ? extends RegistryClass>> registryHelpers) {
+public record RegistryManager(String modId,
+                              ImmutableMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?, ? extends RegistryClass>> registryHelpers) {
 
     public static RegistryManager constructEmpty(String modId) {
         return new RegistryManager(modId, ImmutableMap.of());
@@ -91,5 +94,9 @@ public record RegistryManager(String modId, ImmutableMap<ResourceKey<? extends R
         }
 
         return builder;
+    }
+
+    public <T> ResourceKeyHelper<T> createKeyHelper(ResourceKey<? extends Registry<T>> registry) {
+        return new ResourceKeyHelper<>(registry, s -> ResourceLocation.fromNamespaceAndPath(this.modId(), s));
     }
 }
