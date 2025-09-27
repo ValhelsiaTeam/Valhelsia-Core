@@ -59,8 +59,6 @@ public class ClientEvents {
 
     @SubscribeEvent
     public void onRegisterRenderers(EntityRenderersEvent.CreateSkullModels event) {
-        this.helper.getSkullModels().forEach((type, model) -> {
-            event.registerSkullModel(type, model.apply(event.getEntityModelSet()));
-        });
+        this.helper.getSkullModels().forEach(event::registerSkullModel);
     }
 }
