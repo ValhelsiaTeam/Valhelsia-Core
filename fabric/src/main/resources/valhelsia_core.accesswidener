@@ -8,20 +8,4 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 accessible method net/minecraft/world/level/block/state/BlockBehaviour$Properties <init> ()V
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties offsetFunction Lnet/minecraft/world/level/block/state/BlockBehaviour$OffsetFunction;
 
-transitive-accessible field net/minecraft/data/models/BlockModelGenerators blockStateOutput Ljava/util/function/Consumer;
-transitive-accessible field net/minecraft/data/models/BlockModelGenerators modelOutput Ljava/util/function/BiConsumer;
-
-transitive-accessible field net/minecraft/data/models/ItemModelGenerators output Ljava/util/function/BiConsumer;
-
-transitive-accessible method net/minecraft/data/models/model/ModelTemplates create (Ljava/lang/String;[Lnet/minecraft/data/models/model/TextureSlot;)Lnet/minecraft/data/models/model/ModelTemplate;
-transitive-accessible method net/minecraft/data/models/model/TextureSlot create (Ljava/lang/String;)Lnet/minecraft/data/models/model/TextureSlot;
-
-transitive-accessible method net/minecraft/data/models/BlockModelGenerators createHorizontalFacingDispatch ()Lnet/minecraft/data/models/blockstates/PropertyDispatch;
-transitive-accessible method net/minecraft/data/models/BlockModelGenerators createFacingDispatch ()Lnet/minecraft/data/models/blockstates/PropertyDispatch;
-transitive-accessible method net/minecraft/data/models/BlockModelGenerators createBooleanModelDispatch (Lnet/minecraft/world/level/block/state/properties/BooleanProperty;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/data/models/blockstates/PropertyDispatch;
-
-accessible class net/minecraft/data/tags/IntrinsicHolderTagsProvider$IntrinsicTagAppender
-
-accessible field net/minecraft/data/tags/TagsProvider builders Ljava/util/Map;
-
 transitive-accessible method net/minecraft/world/level/block/FireBlock setFlammable (Lnet/minecraft/world/level/block/Block;II)V
