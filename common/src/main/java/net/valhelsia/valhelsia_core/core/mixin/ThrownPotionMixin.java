@@ -3,8 +3,8 @@ package net.valhelsia.valhelsia_core.core.mixin;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.AbstractThrownPotion;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.valhelsia.valhelsia_core.api.common.helper.FireExtinguishHelper;
@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 /**
  * @author Valhelsia Team
  */
-@Mixin(ThrownPotion.class)
+@Mixin(AbstractThrownPotion.class)
 public abstract class ThrownPotionMixin extends ThrowableItemProjectile {
 
     public ThrownPotionMixin(EntityType<? extends ThrowableItemProjectile> type, Level level) {

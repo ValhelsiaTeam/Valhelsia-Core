@@ -2,8 +2,15 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.107'
 }
 
+version = mod_version
+
 neoForge {
-    neoFormVersion = "1.21.3-20241023.131943"
+    neoFormVersion = "1.21.5-20250325.162830"
+}
+
+
+base {
+    archivesName = "${mod_id}-common-${minecraft_version}"
 }
 
 dependencies {

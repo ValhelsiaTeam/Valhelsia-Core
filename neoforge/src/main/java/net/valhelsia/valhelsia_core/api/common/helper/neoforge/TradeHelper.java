@@ -1,5 +1,6 @@
 package net.valhelsia.valhelsia_core.api.common.helper.neoforge;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
@@ -29,7 +30,7 @@ public class TradeHelper {
         }
     }
 
-    public static void addVillagerTrade(VillagerTradesEvent event, VillagerProfession profession, int level, VillagerTrades.ItemListing... trades) {
+    public static void addVillagerTrade(VillagerTradesEvent event, ResourceKey<VillagerProfession> profession, int level, VillagerTrades.ItemListing... trades) {
         if (event.getType() == profession) {
             addVillagerTrade(event, level, trades);
         }
