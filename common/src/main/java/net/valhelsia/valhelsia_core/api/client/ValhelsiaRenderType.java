@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.api.client;
 
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 
 /**
  * Valhelsia Render Type <br>
@@ -16,12 +16,12 @@ public enum ValhelsiaRenderType {
     CUTOUT,
     TRANSLUCENT;
 
-    public RenderType get() {
+    public ChunkSectionLayer get() {
         return switch (this) {
-            case CUTOUT_MIPPED -> RenderType.cutoutMipped();
-            case CUTOUT -> RenderType.cutout();
-            case TRANSLUCENT -> RenderType.translucent();
-            default -> RenderType.solid();
+            case CUTOUT_MIPPED -> ChunkSectionLayer.CUTOUT_MIPPED;
+            case CUTOUT -> ChunkSectionLayer.CUTOUT;
+            case TRANSLUCENT -> ChunkSectionLayer.TRANSLUCENT;
+            default -> ChunkSectionLayer.SOLID;
         };
     }
 }

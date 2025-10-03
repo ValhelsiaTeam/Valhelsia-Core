@@ -1,7 +1,7 @@
 package net.valhelsia.valhelsia_core.client;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
@@ -37,11 +37,10 @@ public class ValhelsiaCoreFabricClient implements ClientModInitializer {
         }
 
         BlockRegistryHelper helper = manager.getBlockHelper();
-        BlockRenderLayerMap renderLayers = BlockRenderLayerMap.INSTANCE;
 
         helper.getRegistryEntries().forEach(entry -> {
             if (entry instanceof BlockRegistryEntry<? extends Block> blockEntry) {
-                renderLayers.putBlock(entry.get(), blockEntry.getRenderType().get());
+                BlockRenderLayerMap.putBlock(entry.get(), blockEntry.getRenderType().get());
             }
         });
     }

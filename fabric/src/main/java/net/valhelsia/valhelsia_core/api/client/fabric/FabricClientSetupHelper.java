@@ -1,19 +1,15 @@
 package net.valhelsia.valhelsia_core.api.client.fabric;
 
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -36,11 +32,11 @@ public class FabricClientSetupHelper implements ClientSetupHelper {
 
     @Override
     public <T extends Entity> void registerEntityRenderer(RegistryEntry<EntityType<?>, ? extends EntityType<? extends T>> type, EntityRendererProvider<T> provider) {
-        EntityRendererRegistry.register(type.get(), provider);
+        EntityRenderers.register(type.get(), provider);
     }
 
     @Override
-    public <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<BlockEntityType<?>, ? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> provider) {
+    public <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<BlockEntityType<?>, ? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T, ? extends BlockEntityRenderState> provider) {
         BlockEntityRenderers.register(type.get(), provider);
     }
 

@@ -1,11 +1,11 @@
 plugins {
-    id 'net.neoforged.moddev' version '2.0.107'
+    id 'net.neoforged.moddev' version '2.0.112'
 }
 
 version = mod_version
 
 neoForge {
-    neoFormVersion = "1.21.5-20250325.162830"
+    neoFormVersion = "1.21.9-20250930.151910"
 }
 
 

@@ -38,7 +38,7 @@ public class ValhelsiaCoreForge extends ValhelsiaCore {
 
     @Override
     public void scheduleClientSetup(String modId, Supplier<Consumer<ClientSetupHelper>> clientSetup) {
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             ForgeClientSetupHelper helper = new ForgeClientSetupHelper();
 
             clientSetup.get().accept(helper);

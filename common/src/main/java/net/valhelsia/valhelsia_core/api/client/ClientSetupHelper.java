@@ -3,6 +3,7 @@ package net.valhelsia.valhelsia_core.api.client;
 import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -21,7 +22,7 @@ public interface ClientSetupHelper {
 
     <T extends Entity> void registerEntityRenderer(RegistryEntry<EntityType<?>, ? extends EntityType<? extends T>> type, EntityRendererProvider<T> provider);
 
-    <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<BlockEntityType<?>, ? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> provider);
+    <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<BlockEntityType<?>, ? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T, ? extends BlockEntityRenderState> provider);
 
 //    <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<MenuType<?>, ? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor);
 
