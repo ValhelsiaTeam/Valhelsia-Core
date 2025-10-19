@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author Valhelsia Team - stal111
@@ -42,14 +43,14 @@ public class ForgeClientSetupHelper implements ClientSetupHelper {
     }
 
     @Override
-    public <T extends BlockEntity> void registerBlockEntityRenderer(RegistryEntry<BlockEntityType<?>, ? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T, ? extends BlockEntityRenderState> provider) {
+    public <B extends BlockEntity, T extends B, S extends BlockEntityRenderState> void registerBlockEntityRenderer(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<B, S> provider) {
         this.entityRenderers.add(event -> event.registerBlockEntityRenderer(type.get(), provider));
     }
 
-//    @Override
-//    public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<MenuType<?>, ? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor) {
-//        this.menuScreens.add(event -> event.register(type.get(), constructor));
-//    }
+    @Override
+    public <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void registerScreen(RegistryEntry<MenuType<?>, ? extends MenuType<? extends M>> type, MenuScreens.ScreenConstructor<M, U> constructor) {
+        this.menuScreens.add(event -> event.register(type.get(), constructor));
+    }
 
     @Override
     public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model) {
