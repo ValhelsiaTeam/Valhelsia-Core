@@ -8,6 +8,7 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -19,9 +20,9 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.valhelsia.valhelsia_core.api.client.ClientSetupHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -35,7 +36,7 @@ public class ForgeClientSetupHelper implements ClientSetupHelper {
 
     private final Set<Consumer<EntityRenderersEvent.RegisterRenderers>> entityRenderers = ConcurrentHashMap.newKeySet();
     private final Set<Consumer<RegisterMenuScreensEvent>> menuScreens = ConcurrentHashMap.newKeySet();
-    private final Map<SkullBlock.Type, Function<EntityModelSet, SkullModelBase>> skullModels = new ConcurrentHashMap<>();
+    private final List<SkullModelDefinition> skullModels = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public <T extends Entity> void registerEntityRenderer(RegistryEntry<EntityType<?>, ? extends EntityType<? extends T>> type, EntityRendererProvider<T> provider) {
@@ -53,8 +54,8 @@ public class ForgeClientSetupHelper implements ClientSetupHelper {
     }
 
     @Override
-    public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model) {
-        this.skullModels.put(type, model);
+    public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model, @Nullable ResourceLocation skullTexture) {
+        this.skullModels.add(new SkullModelDefinition(type, model, skullTexture));
     }
 
     public Set<Consumer<EntityRenderersEvent.RegisterRenderers>> getEntityRenderers() {
@@ -65,7 +66,14 @@ public class ForgeClientSetupHelper implements ClientSetupHelper {
         return this.menuScreens;
     }
 
-    public Map<SkullBlock.Type, Function<EntityModelSet, SkullModelBase>> getSkullModels() {
+    public List<SkullModelDefinition> getSkullModels() {
         return this.skullModels;
+    }
+
+    public record SkullModelDefinition(
+            SkullBlock.Type type,
+            Function<EntityModelSet, SkullModelBase> model,
+            ResourceLocation skullTexture
+    ) {
     }
 }

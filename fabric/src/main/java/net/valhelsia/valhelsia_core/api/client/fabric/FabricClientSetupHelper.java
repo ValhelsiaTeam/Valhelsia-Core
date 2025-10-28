@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.valhelsia.valhelsia_core.api.client.ClientSetupHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -52,7 +54,7 @@ public class FabricClientSetupHelper implements ClientSetupHelper {
     }
 
     @Override
-    public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model) {
+    public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model, @Nullable ResourceLocation skullTexture) {
         SKULL_MODELS.add(map -> map.put(type, model.apply(Minecraft.getInstance().getEntityModels())));
     }
 
