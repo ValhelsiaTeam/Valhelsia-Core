@@ -1,6 +1,6 @@
 package net.valhelsia.valhelsia_core.core.fabric.mixin.client;
 
-import net.minecraft.client.model.SkullModelBase;
+import net.minecraft.client.model.object.skull.SkullModelBase;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.world.level.block.SkullBlock;
 import net.valhelsia.valhelsia_core.api.client.fabric.FabricClientSetupHelper;

@@ -5,8 +5,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.Pools;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
@@ -24,7 +24,7 @@ import java.util.function.Function;
  */
 public class JigsawBuilder {
 
-    private static final ResourceKey<StructureProcessorList> EMPTY_PROCESSOR_LIST = ResourceKey.create(Registries.PROCESSOR_LIST, ResourceLocation.withDefaultNamespace("empty"));
+    private static final ResourceKey<StructureProcessorList> EMPTY_PROCESSOR_LIST = ResourceKey.create(Registries.PROCESSOR_LIST, Identifier.withDefaultNamespace("empty"));
 
     private final ResourceKey<StructureTemplatePool> key;
 
@@ -93,7 +93,7 @@ public class JigsawBuilder {
         Holder<StructureTemplatePool> fallbackPoolHolder = this.context.lookup(Registries.TEMPLATE_POOL).getOrThrow(Pools.EMPTY);
 
         for (ElementInfo info : this.elements) {
-            list.add(Pair.of(this.elementFunction.apply(ResourceLocation.fromNamespaceAndPath(modId, info.location()), processorListHolder, this.projection, terrainAdjustment), info.weight));
+            list.add(Pair.of(this.elementFunction.apply(Identifier.fromNamespaceAndPath(modId, info.location()), processorListHolder, this.projection, terrainAdjustment), info.weight));
         }
 
         this.context.register(this.key, new StructureTemplatePool(fallbackPoolHolder, list, this.projection));
@@ -108,6 +108,6 @@ public class JigsawBuilder {
 
     @FunctionalInterface
     public interface ElementFunction {
-        Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> apply(ResourceLocation resourceLocation, Holder<StructureProcessorList> processorListHolder, StructureTemplatePool.Projection projection, @Nullable TerrainAdjustment terrainAdjustment);
+        Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> apply(Identifier resourceLocation, Holder<StructureProcessorList> processorListHolder, StructureTemplatePool.Projection projection, @Nullable TerrainAdjustment terrainAdjustment);
     }
 }

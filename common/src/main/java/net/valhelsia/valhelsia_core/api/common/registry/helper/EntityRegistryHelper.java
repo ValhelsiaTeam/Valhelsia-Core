@@ -3,8 +3,8 @@ package net.valhelsia.valhelsia_core.api.common.registry.helper;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
@@ -20,6 +20,6 @@ public class EntityRegistryHelper extends DefaultRegistryHelper<EntityType<?>> {
     }
 
     public <T extends Entity> RegistryEntry<EntityType<?>, EntityType<T>> register(String name, EntityType.Builder<T> builder) {
-        return super.register(name, () -> builder.build(ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(this.getModId(), name))));
+        return super.register(name, () -> builder.build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(this.getModId(), name))));
     }
 }

@@ -12,13 +12,11 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
  */
 public enum ValhelsiaRenderType {
     SOLID,
-    CUTOUT_MIPPED,
     CUTOUT,
     TRANSLUCENT;
 
     public ChunkSectionLayer get() {
         return switch (this) {
-            case CUTOUT_MIPPED -> ChunkSectionLayer.CUTOUT_MIPPED;
             case CUTOUT -> ChunkSectionLayer.CUTOUT;
             case TRANSLUCENT -> ChunkSectionLayer.TRANSLUCENT;
             default -> ChunkSectionLayer.SOLID;

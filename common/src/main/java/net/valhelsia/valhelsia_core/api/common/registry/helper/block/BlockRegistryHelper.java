@@ -3,8 +3,8 @@ package net.valhelsia.valhelsia_core.api.common.registry.helper.block;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
@@ -36,7 +36,7 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
     }
 
     public <O extends Block> BlockRegistryEntry<O> register(String name, Function<BlockBehaviour.Properties, ? extends O> func, Supplier<BlockBehaviour.Properties> properties) {
-        return super.registerInternal(name, () -> func.apply(properties.get().setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.getModId(), name)))));
+        return super.registerInternal(name, () -> func.apply(properties.get().setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(this.getModId(), name)))));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
 
         for (K key : keyType.getEnumConstants()) {
             String name = nameFunction.apply(key.getSerializedName());
-            set.put(key, this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.getModId(), name))))));
+            set.put(key, this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(this.getModId(), name))))));
         }
 
         return set;
@@ -88,7 +88,7 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
 
         for (K key : keyType.getEnumConstants()) {
             String name = nameFunction.apply(key.getSerializedName());
-            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(this.getModId(), name)))))));
+            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(this.getModId(), name)))))));
         }
 
         return set;

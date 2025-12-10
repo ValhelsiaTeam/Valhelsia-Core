@@ -6,8 +6,8 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.ValhelsiaRegistry;
 
@@ -29,7 +29,7 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
 
     public ValhelsiaRegistryImpl(String modId, ResourceKey<? extends Registry<T>> registryKey) {
         super(modId, registryKey);
-        this.registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(registryKey.location());
+        this.registry = (Registry<T>) BuiltInRegistries.REGISTRY.getValue(registryKey.identifier());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
 
     @Override
     public <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> supplier, Function<Supplier<O>, RegistryEntry<T, O>> function) {
-        O object = Registry.register(this.registry, ResourceLocation.fromNamespaceAndPath(this.getModId(), name), supplier.get());
+        O object = Registry.register(this.registry, Identifier.fromNamespaceAndPath(this.getModId(), name), supplier.get());
         var entry = function.apply(() -> object);
 
         this.entries.add(entry);

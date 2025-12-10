@@ -4,14 +4,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.model.object.skull.SkullModelBase;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -54,7 +54,7 @@ public class FabricClientSetupHelper implements ClientSetupHelper {
     }
 
     @Override
-    public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model, @Nullable ResourceLocation skullTexture) {
+    public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model, @Nullable Identifier skullTexture) {
         SKULL_MODELS.add(map -> map.put(type, model.apply(Minecraft.getInstance().getEntityModels())));
     }
 

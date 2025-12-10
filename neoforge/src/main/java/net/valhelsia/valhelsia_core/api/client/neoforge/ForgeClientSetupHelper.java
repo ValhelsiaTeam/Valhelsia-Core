@@ -3,12 +3,12 @@ package net.valhelsia.valhelsia_core.api.client.neoforge;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.model.object.skull.SkullModelBase;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -22,7 +22,10 @@ import net.valhelsia.valhelsia_core.api.client.ClientSetupHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -54,7 +57,7 @@ public class ForgeClientSetupHelper implements ClientSetupHelper {
     }
 
     @Override
-    public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model, @Nullable ResourceLocation skullTexture) {
+    public void registerSkullModel(SkullBlock.Type type, Function<EntityModelSet, SkullModelBase> model, @Nullable Identifier skullTexture) {
         this.skullModels.add(new SkullModelDefinition(type, model, skullTexture));
     }
 
@@ -73,7 +76,7 @@ public class ForgeClientSetupHelper implements ClientSetupHelper {
     public record SkullModelDefinition(
             SkullBlock.Type type,
             Function<EntityModelSet, SkullModelBase> model,
-            ResourceLocation skullTexture
+            Identifier skullTexture
     ) {
     }
 }

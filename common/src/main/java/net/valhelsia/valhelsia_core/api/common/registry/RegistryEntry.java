@@ -5,8 +5,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,9 +64,9 @@ public class RegistryEntry<R, T extends R> implements Holder<R>, Supplier<T> {
     }
 
     @Override
-    public boolean is(ResourceLocation location) {
+    public boolean is(Identifier identifier) {
         this.bind();
-        return location.equals(this.key.location());
+        return identifier.equals(this.key.identifier());
     }
 
     @Override

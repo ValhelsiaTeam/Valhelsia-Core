@@ -6,8 +6,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
@@ -43,7 +43,7 @@ public record RegistryManager(String modId,
 
     public <T, H extends RegistryHelper<T, ?>> H getHelper(ResourceKey<Registry<T>> registryResourceKey) {
         if (!this.hasHelper(registryResourceKey)) {
-            throw new NullPointerException("Registry Manager for '" + this.modId() + "' has no Helper for registry: " + registryResourceKey.location());
+            throw new NullPointerException("Registry Manager for '" + this.modId() + "' has no Helper for registry: " + registryResourceKey.identifier());
         }
 
         return (H) this.registryHelpers.get(registryResourceKey);
@@ -97,6 +97,6 @@ public record RegistryManager(String modId,
     }
 
     public <T> ResourceKeyHelper<T> createKeyHelper(ResourceKey<? extends Registry<T>> registry) {
-        return new ResourceKeyHelper<>(registry, s -> ResourceLocation.fromNamespaceAndPath(this.modId(), s));
+        return new ResourceKeyHelper<>(registry, s -> Identifier.fromNamespaceAndPath(this.modId(), s));
     }
 }

@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T> {
 
-    private static final ItemFunction DEFAULT_ITEM_FUNCTION = registryObject -> new BlockItem(registryObject.get(), new Item.Properties().setId(ResourceKey.create(Registries.ITEM, registryObject.key.location())).overrideDescription(registryObject.get().getDescriptionId()));
+    private static final ItemFunction DEFAULT_ITEM_FUNCTION = registryObject -> new BlockItem(registryObject.get(), new Item.Properties().setId(ResourceKey.create(Registries.ITEM, registryObject.key.identifier())).overrideDescription(registryObject.get().getDescriptionId()));
 
     private final String name;
 
@@ -33,7 +33,7 @@ public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T>
 
     public BlockRegistryEntry(ResourceKey<Block> key) {
         super(key);
-        this.name = key.location().getPath();
+        this.name = key.identifier().getPath();
     }
 
     public <O extends T> BlockRegistryEntry<O> withItem() {

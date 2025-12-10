@@ -3,8 +3,8 @@ package net.valhelsia.valhelsia_core.api.common.registry.helper.datapack;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryCollector;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 
@@ -27,7 +27,7 @@ public class DatapackRegistryHelper<T> extends RegistryHelper<T, DatapackRegistr
     }
 
     public ResourceKey<T> createKey(String name) {
-        return ResourceKey.create(this.getRegistry(), ResourceLocation.fromNamespaceAndPath(this.getModId(), name));
+        return ResourceKey.create(this.getRegistry(), Identifier.fromNamespaceAndPath(this.getModId(), name));
     }
 
     public RegistryCollector.DatapackClassCollector getClassCollector() {
