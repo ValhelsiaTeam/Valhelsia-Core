@@ -5,9 +5,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.valhelsia.valhelsia_core.core.registry.ValhelsiaLootConditions;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
@@ -20,15 +17,9 @@ public record DateCondition(int month,
                             int endDay) implements LootItemCondition {
 
     public static final MapCodec<DateCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.INT.fieldOf("month").forGetter(condition -> {
-                return condition.month;
-            }),
-            Codec.INT.fieldOf("start_day").forGetter(condition -> {
-                return condition.startDay;
-            }),
-            Codec.INT.fieldOf("end_day").forGetter(condition -> {
-                return condition.endDay;
-            })
+            Codec.INT.fieldOf("month").forGetter(DateCondition::month),
+            Codec.INT.fieldOf("start_day").forGetter(DateCondition::startDay),
+            Codec.INT.fieldOf("end_day").forGetter(DateCondition::endDay)
     ).apply(instance, DateCondition::new));
 
     public static Builder builder(int month, int startDay, int endDay) {
@@ -36,14 +27,13 @@ public record DateCondition(int month,
     }
 
     @Override
-    @NotNull
-    public LootItemConditionType getType() {
-        return ValhelsiaLootConditions.DATE.get();
-    }
-
-    @Override
     public boolean test(LootContext lootContext) {
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.MONTH) + 1 == this.month && calendar.get(Calendar.DATE) >= this.startDay && calendar.get(Calendar.DATE) <= this.endDay;
+    }
+
+    @Override
+    public MapCodec<? extends LootItemCondition> codec() {
+        return CODEC;
     }
 }

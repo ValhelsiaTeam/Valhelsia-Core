@@ -2,7 +2,7 @@ package net.valhelsia.valhelsia_core.api.common.registry.helper.block;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FireBlock;
+import net.valhelsia.valhelsia_core.core.mixin.FireBlockAccessor;
 
 /**
  * Flammable Helper <br>
@@ -21,7 +21,7 @@ public class FlammableHelper {
     }
 
     public void register(Block block, int encouragement, int flammability) {
-         ((FireBlock) Blocks.FIRE).setFlammable(block, encouragement, flammability);
+         ((FireBlockAccessor) Blocks.FIRE).callSetFlammable(block, encouragement, flammability);
     }
 
     public void registerLog(Block block) {

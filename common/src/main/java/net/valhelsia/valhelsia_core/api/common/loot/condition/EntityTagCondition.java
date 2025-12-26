@@ -11,8 +11,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.valhelsia.valhelsia_core.core.registry.ValhelsiaLootConditions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -38,12 +36,6 @@ public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemC
 
     @Override
     @NotNull
-    public LootItemConditionType getType() {
-        return ValhelsiaLootConditions.ENTITY_TAG.get();
-    }
-
-    @Override
-    @NotNull
     public Set<ContextKey<?>> getReferencedContextParams() {
         return ImmutableSet.of(LootContextParams.THIS_ENTITY);
     }
@@ -52,6 +44,11 @@ public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemC
     public boolean test(LootContext lootContext) {
         Entity entity = lootContext.getOptionalParameter(LootContextParams.THIS_ENTITY);
 
-        return entity != null && entity.getType().is(this.tag);
+        return entity != null && entity.is(this.tag);
+    }
+
+    @Override
+    public MapCodec<? extends LootItemCondition> codec() {
+        return CODEC;
     }
 }
