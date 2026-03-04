@@ -4,12 +4,14 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -64,6 +66,12 @@ public class RegistryEntry<R, T extends R> implements Holder<R>, Supplier<T> {
     }
 
     @Override
+    public boolean areComponentsBound() {
+        this.bind();
+        return this.holder != null && this.holder.areComponentsBound();
+    }
+
+    @Override
     public boolean is(Identifier identifier) {
         this.bind();
         return identifier.equals(this.key.identifier());
@@ -97,6 +105,12 @@ public class RegistryEntry<R, T extends R> implements Holder<R>, Supplier<T> {
     public @NotNull Stream<TagKey<R>> tags() {
         this.bind();
         return this.holder != null ? this.holder.tags() : Stream.empty();
+    }
+
+    @Override
+    public @NonNull DataComponentMap components() {
+        this.bind();
+        return this.holder != null ? this.holder.components() : DataComponentMap.EMPTY;
     }
 
     @Override

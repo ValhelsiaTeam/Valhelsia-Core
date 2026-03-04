@@ -46,8 +46,8 @@ public class RemoveWaterProcessor extends StructureProcessor {
     @Override
     public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader level, @NotNull BlockPos jigsawPiecePos, @NotNull BlockPos jigsawPieceBottomCenterPos, @NotNull StructureTemplate.StructureBlockInfo blockInfoLocal, @NotNull StructureTemplate.StructureBlockInfo blockInfoGlobal, @NotNull StructurePlaceSettings settings) {
         if (blockInfoGlobal.state().hasProperty(BlockStateProperties.WATERLOGGED) && !blockInfoGlobal.state().getValue(BlockStateProperties.WATERLOGGED)) {
-            ChunkPos chunkPos = new ChunkPos(blockInfoGlobal.pos());
-            ChunkAccess chunk = level.getChunk(chunkPos.x, chunkPos.z);
+            ChunkPos chunkPos = ChunkPos.containing(blockInfoGlobal.pos());
+            ChunkAccess chunk = level.getChunk(chunkPos.x(), chunkPos.z());
             int sectionIndex = chunk.getSectionIndex(blockInfoGlobal.pos().getY());
 
             if (sectionIndex < 0) {
@@ -63,9 +63,9 @@ public class RemoveWaterProcessor extends StructureProcessor {
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             for (Direction direction : Direction.values()) {
                 mutable.set(blockInfoGlobal.pos()).move(direction);
-                if (chunkPos.x != mutable.getX() >> 4 || chunkPos.z != mutable.getZ() >> 4) {
-                    chunkPos = new ChunkPos(mutable);
-                    chunk = level.getChunk(chunkPos.x, chunkPos.z);
+                if (chunkPos.x() != mutable.getX() >> 4 || chunkPos.z() != mutable.getZ() >> 4) {
+                    chunkPos = ChunkPos.containing(mutable);
+                    chunk = level.getChunk(chunkPos.x(), chunkPos.z());
                     sectionIndex = chunk.getSectionIndex(mutable.getY());
                     if (sectionIndex < 0) {
                         return blockInfoGlobal;
