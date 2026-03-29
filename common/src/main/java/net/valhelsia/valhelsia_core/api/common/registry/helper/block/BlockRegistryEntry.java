@@ -5,7 +5,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.valhelsia.valhelsia_core.api.client.ValhelsiaRenderType;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,8 +27,6 @@ public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T>
 
     @Nullable
     private ItemFunction itemFunction;
-
-    private ValhelsiaRenderType renderType = ValhelsiaRenderType.SOLID;
 
     public BlockRegistryEntry(ResourceKey<Block> key) {
         super(key);
@@ -58,12 +55,6 @@ public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T>
         return (BlockRegistryEntry<O>) this;
     }
 
-    public final <O extends T> BlockRegistryEntry<O> renderType(ValhelsiaRenderType renderType) {
-        this.renderType = renderType;
-
-        return (BlockRegistryEntry<O>) this;
-    }
-
     public String getName() {
         return this.name;
     }
@@ -79,10 +70,6 @@ public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T>
 
     public Optional<ToolTier> getToolTier() {
         return Optional.ofNullable(this.toolTier);
-    }
-
-    public ValhelsiaRenderType getRenderType() {
-        return this.renderType;
     }
 
     @FunctionalInterface
