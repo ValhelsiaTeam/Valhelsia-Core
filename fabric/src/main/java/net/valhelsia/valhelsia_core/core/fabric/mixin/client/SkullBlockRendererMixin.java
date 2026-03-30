@@ -18,8 +18,8 @@ import java.util.HashMap;
 @Mixin(SkullBlockRenderer.class)
 public class SkullBlockRendererMixin {
 
-    @Inject(at = @At(value = "HEAD"), method = "method_3580")
-    private static void valhelsia_createSkullRenderers(HashMap<SkullBlock.Type, SkullModelBase> hashMap, CallbackInfo ci) {
-        FabricClientSetupHelper.getSkullModels().forEach(consumer -> consumer.accept(hashMap));
-    }
+//    @Inject(at = @At(value = "HEAD"), method = "method_3580")
+//    private static void valhelsia_createSkullRenderers(HashMap<SkullBlock.Type, SkullModelBase> hashMap, CallbackInfo ci) {
+//        FabricClientSetupHelper.getSkullModels().forEach(consumer -> consumer.accept(hashMap));
+//    }
 }
