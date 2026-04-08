@@ -1,16 +1,21 @@
 plugins {
     id("net.neoforged.moddev")
+    id "maven-publish"
 }
 
-version = mod_version
+group = "${mod_group_id}"
+version = "${minecraft_version}-${mod_version}"
 
 neoForge {
     neoFormVersion = "26.1-1"
+
+    accessTransformers {
+        publish(file("src/main/resources/META-INF/accesstransformer.cfg"))
+    }
 }
 
-
 base {
-    archivesName = "${mod_id}-common-${minecraft_version}"
+    archivesName = "${mod_id}-common-${version}"
 }
 
 dependencies {
@@ -28,5 +33,24 @@ configurations {
     commonResources {
         canBeResolved = false
         canBeConsumed = true
+    }
+}
+
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            artifactId = "valhelsia_core-common"
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ValhelsiaTeam/Valhelsia-Core")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
