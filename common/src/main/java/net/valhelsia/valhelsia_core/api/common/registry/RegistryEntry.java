@@ -45,18 +45,22 @@ public class RegistryEntry<R, T extends R> implements Holder<R>, Supplier<T> {
             return;
         }
 
-        Optional.ofNullable((Registry<R>) BuiltInRegistries.REGISTRY.getValue(this.key.registry()))
-                .flatMap(objects -> objects.get(this.key))
-                .ifPresent(reference -> this.holder = reference);
+        Registry<R> registry = (Registry<R>) BuiltInRegistries.REGISTRY.getValue(this.key.registry());
+
+        if (registry != null) {
+            this.holder = registry.get(this.key).orElse(null);
+        }
     }
 
     @Override
     public @NotNull T value() {
         this.bind();
 
-        return (T) Optional.ofNullable(this.holder)
-                .map(Holder::value)
-                .orElseThrow(() -> new IllegalStateException("Registry entry for key " + this.key + " is not bound."));
+        if (this.holder == null) {
+            throw new IllegalStateException("Registry entry for key " + this.key + " is not bound.");
+        }
+
+        return (T) this.holder.value();
     }
 
     @Override
