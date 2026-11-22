@@ -14,11 +14,8 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.material.FluidState;
-import net.valhelsia.valhelsia_core.core.registry.ValhelsiaStructureProcessors;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -27,13 +24,11 @@ import org.jetbrains.annotations.Nullable;
  * @author Valhelsia Team
  * @since 2022-10-31
  */
-public class RemoveWaterProcessor extends StructureProcessor {
+public class RemoveWaterProcessor implements StructureProcessor {
 
     public static final RemoveWaterProcessor INSTANCE = new RemoveWaterProcessor();
 
-    public static final MapCodec<RemoveWaterProcessor> CODEC = MapCodec.unit(() -> {
-        return RemoveWaterProcessor.INSTANCE;
-    });
+    public static final MapCodec<RemoveWaterProcessor> CODEC = MapCodec.unit(() -> RemoveWaterProcessor.INSTANCE);
 
     /**
      * Use {@link RemoveWaterProcessor#INSTANCE} instead of creating a new processor instance.
@@ -42,33 +37,32 @@ public class RemoveWaterProcessor extends StructureProcessor {
 
     }
 
-    @Nullable
     @Override
-    public StructureTemplate.StructureBlockInfo processBlock(@NotNull LevelReader level, @NotNull BlockPos jigsawPiecePos, @NotNull BlockPos jigsawPieceBottomCenterPos, @NotNull StructureTemplate.StructureBlockInfo blockInfoLocal, @NotNull StructureTemplate.StructureBlockInfo blockInfoGlobal, @NotNull StructurePlaceSettings settings) {
-        if (blockInfoGlobal.state().hasProperty(BlockStateProperties.WATERLOGGED) && !blockInfoGlobal.state().getValue(BlockStateProperties.WATERLOGGED)) {
-            ChunkPos chunkPos = ChunkPos.containing(blockInfoGlobal.pos());
+    public StructureTemplate.@Nullable StructureBlockInfo processBlock(LevelReader level, BlockPos targetPosition, BlockPos referencePos, BlockPos templateRelativePos, StructureTemplate.StructureBlockInfo processedBlockInfo, StructurePlaceSettings settings) {
+        if (processedBlockInfo.state().hasProperty(BlockStateProperties.WATERLOGGED) && !processedBlockInfo.state().getValue(BlockStateProperties.WATERLOGGED)) {
+            ChunkPos chunkPos = ChunkPos.containing(processedBlockInfo.pos());
             ChunkAccess chunk = level.getChunk(chunkPos.x(), chunkPos.z());
-            int sectionIndex = chunk.getSectionIndex(blockInfoGlobal.pos().getY());
+            int sectionIndex = chunk.getSectionIndex(processedBlockInfo.pos().getY());
 
             if (sectionIndex < 0) {
-                return blockInfoGlobal;
+                return processedBlockInfo;
             }
 
             LevelChunkSection section = chunk.getSection(sectionIndex);
 
-            if (this.getFluidState(section, blockInfoGlobal.pos()).is(FluidTags.WATER)) {
-                this.setBlock(section, blockInfoGlobal.pos(), blockInfoGlobal.state());
+            if (this.getFluidState(section, processedBlockInfo.pos()).is(FluidTags.WATER)) {
+                this.setBlock(section, processedBlockInfo.pos(), processedBlockInfo.state());
             }
 
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             for (Direction direction : Direction.values()) {
-                mutable.set(blockInfoGlobal.pos()).move(direction);
+                mutable.set(processedBlockInfo.pos()).move(direction);
                 if (chunkPos.x() != mutable.getX() >> 4 || chunkPos.z() != mutable.getZ() >> 4) {
                     chunkPos = ChunkPos.containing(mutable);
                     chunk = level.getChunk(chunkPos.x(), chunkPos.z());
                     sectionIndex = chunk.getSectionIndex(mutable.getY());
                     if (sectionIndex < 0) {
-                        return blockInfoGlobal;
+                        return processedBlockInfo;
                     }
                     section = chunk.getSection(sectionIndex);
                 }
@@ -82,7 +76,7 @@ public class RemoveWaterProcessor extends StructureProcessor {
             }
         }
 
-        return blockInfoGlobal;
+        return processedBlockInfo;
     }
 
     private void setBlock(LevelChunkSection section, BlockPos pos, BlockState state) {
@@ -93,9 +87,8 @@ public class RemoveWaterProcessor extends StructureProcessor {
         return section.getFluidState(SectionPos.sectionRelative(pos.getX()), SectionPos.sectionRelative(pos.getY()), SectionPos.sectionRelative(pos.getZ()));
     }
 
-    @NotNull
     @Override
-    protected StructureProcessorType<?> getType() {
-        return ValhelsiaStructureProcessors.REMOVE_WATER.get();
+    public MapCodec<? extends StructureProcessor> codec() {
+        return CODEC;
     }
 }

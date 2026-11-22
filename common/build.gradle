@@ -7,7 +7,7 @@ group = "${mod_group_id}"
 version = "${minecraft_version}-${mod_version}"
 
 neoForge {
-    neoFormVersion = "26.1-1"
+    neoFormVersion = "26.2-2"
 
     accessTransformers {
         publish(file("src/main/resources/META-INF/accesstransformer.cfg"))

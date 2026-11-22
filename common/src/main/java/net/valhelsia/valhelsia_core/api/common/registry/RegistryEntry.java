@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  * @author Valhelsia Team
  * @since 2023-05-01
  */
-public class RegistryEntry<R, T extends R> implements Holder<R>, Supplier<T> {
+public class RegistryEntry<R, T extends R> implements Supplier<T> {
 
     protected final ResourceKey<R> key;
 
@@ -52,7 +52,6 @@ public class RegistryEntry<R, T extends R> implements Holder<R>, Supplier<T> {
         }
     }
 
-    @Override
     public @NotNull T value() {
         this.bind();
 
@@ -63,76 +62,59 @@ public class RegistryEntry<R, T extends R> implements Holder<R>, Supplier<T> {
         return (T) this.holder.value();
     }
 
-    @Override
     public boolean isBound() {
         this.bind();
         return this.holder != null && this.holder.isBound();
     }
 
-    @Override
     public boolean areComponentsBound() {
         this.bind();
         return this.holder != null && this.holder.areComponentsBound();
     }
 
-    @Override
     public boolean is(Identifier identifier) {
         this.bind();
         return identifier.equals(this.key.identifier());
     }
 
-    @Override
     public boolean is(ResourceKey<R> resourceKey) {
         this.bind();
         return resourceKey.equals(this.key);
     }
 
-    @Override
     public boolean is(Predicate<ResourceKey<R>> predicate) {
         this.bind();
         return predicate.test(this.key);
     }
 
-    @Override
     public boolean is(TagKey<R> tagKey) {
         this.bind();
         return this.holder != null && this.holder.is(tagKey);
     }
 
-    @Override
     public boolean is(Holder<R> holder) {
         this.bind();
         return this.holder != null && this.holder.is(holder);
     }
 
-    @Override
     public @NotNull Stream<TagKey<R>> tags() {
         this.bind();
         return this.holder != null ? this.holder.tags() : Stream.empty();
     }
 
-    @Override
     public @NonNull DataComponentMap components() {
         this.bind();
         return this.holder != null ? this.holder.components() : DataComponentMap.EMPTY;
     }
 
-    @Override
     public @NotNull Either<ResourceKey<R>, R> unwrap() {
         return Either.left(this.key);
     }
 
-    @Override
     public @NotNull Optional<ResourceKey<R>> unwrapKey() {
         return Optional.of(this.key);
     }
 
-    @Override
-    public @NotNull Kind kind() {
-        return Kind.REFERENCE;
-    }
-
-    @Override
     public boolean canSerializeIn(HolderOwner<R> owner) {
         this.bind();
         return this.holder != null && this.holder.canSerializeIn(owner);
@@ -141,7 +123,8 @@ public class RegistryEntry<R, T extends R> implements Holder<R>, Supplier<T> {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        return obj instanceof Holder<?> h && h.kind() == Kind.REFERENCE && h.unwrapKey().orElseThrow() == this.key;
+
+        return false;
     }
 
     @Override
