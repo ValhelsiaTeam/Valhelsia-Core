@@ -36,7 +36,7 @@ public record RegistryManager(String modId,
 
     public <T, H extends RegistryHelper<T>> H getHelper(ResourceKey<Registry<T>> registryResourceKey) {
         if (!this.hasHelper(registryResourceKey)) {
-            throw new NullPointerException("Registry Manager for '" + this.modId() + "' has no Helper for registry: " + registryResourceKey.identifier());
+            throw new IllegalStateException("Registry Manager for '" + this.modId() + "' has no Helper for registry: " + registryResourceKey.identifier());
         }
 
         return (H) this.registryHelpers.get(registryResourceKey);
@@ -57,21 +57,23 @@ public record RegistryManager(String modId,
     @DoNotCall
     public void register() {
         for (RegistryHelper<?> registryHelper : this.registryHelpers.values()) {
-            if (registryHelper instanceof MappedRegistryHelper<?> mappedRegistryHelper) {
-                registryHelper.getRegistryClasses().forEach(registryClass -> {
-                    try {
-                        Class.forName(registryClass.getName());
-                    } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-                mappedRegistryHelper.internalRegister();
-            }
+            registryHelper.getRegistryClasses().forEach(registryClass -> {
+                try {
+                    Class.forName(registryClass.getName(), true, registryClass.getClassLoader());
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
 
         if (this.hasHelper(Registries.ITEM) && this.hasHelper(Registries.BLOCK)) {
             this.getItemHelper().registerBlockItems(this.getBlockHelper());
+        }
+
+        for (RegistryHelper<?> registryHelper : this.registryHelpers.values()) {
+            if (registryHelper instanceof MappedRegistryHelper<?> mappedRegistryHelper) {
+                mappedRegistryHelper.internalRegister();
+            }
         }
     }
 

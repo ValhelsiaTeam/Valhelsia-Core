@@ -12,7 +12,7 @@ import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegist
 import net.valhelsia.valhelsia_core.api.common.registry.helper.item.ItemRegistryHelper;
 import org.apache.commons.lang3.function.TriFunction;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public abstract class RegistryCollector {
 
-    private final Map<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers = new HashMap<>();
+    private final Map<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers = new LinkedHashMap<>();
 
     private final String modId;
 
