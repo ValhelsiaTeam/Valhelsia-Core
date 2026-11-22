@@ -20,7 +20,7 @@ import net.valhelsia.valhelsia_core.api.common.util.ResourceKeyHelper;
  * @since 2020-11-18
  */
 public record RegistryManager(String modId,
-                              ImmutableMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?, ? extends RegistryClass>> registryHelpers) {
+                              ImmutableMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers) {
 
     public static RegistryManager constructEmpty(String modId) {
         return new RegistryManager(modId, ImmutableMap.of());
@@ -34,7 +34,7 @@ public record RegistryManager(String modId,
         return this.registryHelpers.containsKey(registryResourceKey);
     }
 
-    public <T, H extends RegistryHelper<T, ?>> H getHelper(ResourceKey<Registry<T>> registryResourceKey) {
+    public <T, H extends RegistryHelper<T>> H getHelper(ResourceKey<Registry<T>> registryResourceKey) {
         if (!this.hasHelper(registryResourceKey)) {
             throw new NullPointerException("Registry Manager for '" + this.modId() + "' has no Helper for registry: " + registryResourceKey.identifier());
         }
@@ -56,7 +56,7 @@ public record RegistryManager(String modId,
      */
     @DoNotCall
     public void register() {
-        for (RegistryHelper<?, ?> registryHelper : this.registryHelpers.values()) {
+        for (RegistryHelper<?> registryHelper : this.registryHelpers.values()) {
             if (registryHelper instanceof MappedRegistryHelper<?> mappedRegistryHelper) {
                 registryHelper.getRegistryClasses().forEach(registryClass -> {
                     try {

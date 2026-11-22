@@ -3,13 +3,12 @@ package net.valhelsia.valhelsia_core.api.common.registry.helper;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 
 /**
  * @author Valhelsia Team
  * @since 2022-12-20
  */
-public abstract class RegistryHelper<T, R extends RegistryClass> {
+public abstract class RegistryHelper<T> {
 
     private final ResourceKey<? extends Registry<T>> registry;
     private final String modId;

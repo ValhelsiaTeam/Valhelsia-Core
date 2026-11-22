@@ -7,7 +7,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.ValhelsiaRegistry;
 
@@ -25,7 +24,7 @@ import java.util.function.Supplier;
  * @author Valhelsia Team
  * @since 2022-12-20
  */
-public abstract class MappedRegistryHelper<T> extends RegistryHelper<T, RegistryClass> {
+public abstract class MappedRegistryHelper<T> extends RegistryHelper<T> {
 
     private final ValhelsiaRegistry<T> registry;
     private final ImmutableList<Class<?>> registryClasses;

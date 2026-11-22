@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public abstract class RegistryCollector {
 
-    private final Map<ResourceKey<? extends Registry<?>>, RegistryHelper<?, ?>> registryHelpers = new HashMap<>();
+    private final Map<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> registryHelpers = new HashMap<>();
 
     private final String modId;
 
@@ -52,7 +52,7 @@ public abstract class RegistryCollector {
         this.registryHelpers.put(key, registryHelper.apply(key, this.modId, ImmutableList.copyOf(registryClasses)));
     }
 
-    protected ImmutableMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?, ? extends RegistryClass>> getHelpers() {
+    protected ImmutableMap<ResourceKey<? extends Registry<?>>, RegistryHelper<?>> getHelpers() {
         return ImmutableMap.copyOf(this.registryHelpers);
     }
 
