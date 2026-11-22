@@ -2,6 +2,7 @@ package net.valhelsia.valhelsia_core.api.common.registry.helper;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.DoNotCall;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -54,14 +55,14 @@ public abstract class MappedRegistryHelper<T> extends RegistryHelper<T, Registry
     }
 
     public <O extends T, E extends RegistryEntry<T, O>> E registerInternal(String name, Supplier<O> object) {
-        var entry = this.registry.register(name, object, supplier -> this.createEntry(ResourceKey.create(this.registry.getRegistryKey(), Identifier.fromNamespaceAndPath(this.getModId(), name))));
+        var entry = this.registry.register(name, object, holder -> this.createEntry(ResourceKey.create(this.registry.getRegistryKey(), Identifier.fromNamespaceAndPath(this.getModId(), name)), holder));
 
         this.entries.add(entry);
 
         return (E) entry;
     }
 
-    protected abstract <O extends T> RegistryEntry<T, O> createEntry(ResourceKey<T> key);
+    protected abstract <O extends T> RegistryEntry<T, O> createEntry(ResourceKey<T> key, Holder<T> holder);
 
     @Override
     public ImmutableList<Class<?>> getRegistryClasses() {

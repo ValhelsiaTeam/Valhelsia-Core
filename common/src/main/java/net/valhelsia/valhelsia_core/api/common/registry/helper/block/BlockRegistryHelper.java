@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.api.common.registry.helper.block;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -31,8 +32,8 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
         super(registry, modId, registryClasses);
     }
     @Override
-    protected <O extends Block> RegistryEntry<Block, O> createEntry(ResourceKey<Block> key) {
-        return new BlockRegistryEntry<>(key);
+    protected <O extends Block> RegistryEntry<Block, O> createEntry(ResourceKey<Block> key, Holder<Block> holder) {
+        return new BlockRegistryEntry<>(key, holder);
     }
 
     public <O extends Block> BlockRegistryEntry<O> register(String name, Function<BlockBehaviour.Properties, ? extends O> func, Supplier<BlockBehaviour.Properties> properties) {

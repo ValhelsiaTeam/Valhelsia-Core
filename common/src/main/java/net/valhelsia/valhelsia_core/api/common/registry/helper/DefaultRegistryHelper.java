@@ -1,6 +1,7 @@
 package net.valhelsia.valhelsia_core.api.common.registry.helper;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
@@ -18,7 +19,7 @@ public class DefaultRegistryHelper<T> extends MappedRegistryHelper<T> {
     }
 
     @Override
-    protected <O extends T> RegistryEntry<T, O> createEntry(ResourceKey<T> key) {
-        return new RegistryEntry<>(key);
+    protected <O extends T> RegistryEntry<T, O> createEntry(ResourceKey<T> key, Holder<T> holder) {
+        return new RegistryEntry<>(key, holder);
     }
 }

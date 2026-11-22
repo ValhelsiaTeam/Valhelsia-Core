@@ -1,5 +1,6 @@
 package net.valhelsia.valhelsia_core.api.common.registry.helper.item;
 
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -12,8 +13,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ItemRegistryEntry<T extends Item> extends RegistryEntry<Item, T> implements ItemLike {
 
-    public ItemRegistryEntry(ResourceKey<Item> key) {
-        super(key);
+    public ItemRegistryEntry(ResourceKey<Item> key, Holder<Item> holder) {
+        super(key, holder);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package net.valhelsia.valhelsia_core.api.common.registry.helper.block;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
@@ -28,8 +29,8 @@ public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T>
     @Nullable
     private ItemFunction itemFunction;
 
-    public BlockRegistryEntry(ResourceKey<Block> key) {
-        super(key);
+    public BlockRegistryEntry(ResourceKey<Block> key, Holder<Block> holder) {
+        super(key, holder);
         this.name = key.identifier().getPath();
     }
 

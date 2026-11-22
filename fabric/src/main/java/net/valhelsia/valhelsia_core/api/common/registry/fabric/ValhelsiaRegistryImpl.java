@@ -1,9 +1,6 @@
 package net.valhelsia.valhelsia_core.api.common.registry.fabric;
 
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -16,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 /**
  * @author Valhelsia Team
@@ -33,14 +29,10 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
     }
 
     @Override
-    public ValhelsiaRegistry<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId) {
-        return new ValhelsiaRegistryImpl<>(modId, registryKey);
-    }
-
-    @Override
-    public <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> supplier, Function<Supplier<O>, RegistryEntry<T, O>> function) {
-        O object = Registry.register(this.registry, Identifier.fromNamespaceAndPath(this.getModId(), name), supplier.get());
-        var entry = function.apply(() -> object);
+    public <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> supplier, Function<Holder<T>, RegistryEntry<T, O>> function) {
+        T value = supplier.get();
+        Holder<T> holder = Registry.registerForHolder(this.registry, Identifier.fromNamespaceAndPath(this.getModId(), name), value);
+        var entry = function.apply(holder);
 
         this.entries.add(entry);
 
@@ -54,25 +46,5 @@ public class ValhelsiaRegistryImpl<T> extends ValhelsiaRegistry<T> {
     @Override
     public Collection<RegistryEntry<T, ? extends T>> getEntries() {
         return this.entries;
-    }
-
-    @Override
-    public Codec<T> getCodec() {
-        return this.registry.byNameCodec();
-    }
-
-    @Override
-    public <T1> DataResult<Pair<T, T1>> decode(DynamicOps<T1> ops, T1 input) {
-        return null;
-    }
-
-    @Override
-    public <T1> DataResult<T1> encode(T input, DynamicOps<T1> ops, T1 prefix) {
-        return null;
-    }
-
-    @Override
-    public <T> Stream<T> keys(DynamicOps<T> ops) {
-        return null;
     }
 }
