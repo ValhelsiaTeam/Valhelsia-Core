@@ -3,21 +3,14 @@ package net.valhelsia.valhelsia_core.api.common.registry;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.core.Registry;
-import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.datapack.DatapackRegistryClass;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.datapack.DatapackRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.item.ItemRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.util.ResourceKeyHelper;
-
-import java.util.List;
-import java.util.function.Function;
 
 /**
  * Registry Helper <br>
@@ -80,20 +73,6 @@ public record RegistryManager(String modId,
         if (this.hasHelper(Registries.ITEM) && this.hasHelper(Registries.BLOCK)) {
             this.getItemHelper().registerBlockItems(this.getBlockHelper());
         }
-    }
-
-    public RegistrySetBuilder buildRegistrySet() {
-        RegistrySetBuilder builder = new RegistrySetBuilder();
-
-        for (RegistryHelper<?, ? extends RegistryClass> helper : this.registryHelpers.values()) {
-            if (helper instanceof DatapackRegistryHelper<?> datapackRegistryHelper) {
-                Function<BootstrapContext<?>, List<DatapackRegistryClass<?>>> function = context -> datapackRegistryHelper.getClassCollector().collect(context);
-
-                builder.add(datapackRegistryHelper.getRegistry(), function::apply);
-            }
-        }
-
-        return builder;
     }
 
     public <T> ResourceKeyHelper<T> createKeyHelper(ResourceKey<? extends Registry<T>> registry) {
