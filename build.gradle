@@ -1,9 +1,65 @@
 plugins {
     id("net.neoforged.moddev") version("2.0.148") apply(false)
+    id("net.fabricmc.fabric-loom") version("1.19-SNAPSHOT") apply(false)
     id("idea")
 }
 
 subprojects {
-    dependencies {
+    apply plugin: "java-library"
+    apply plugin: "maven-publish"
+    apply plugin: "idea"
+
+    group = mod_group_id
+    version = mod_version
+
+    base {
+        archivesName = "${mod_id}-${project.name}-${minecraft_version}"
+    }
+
+    java {
+        toolchain.languageVersion = JavaLanguageVersion.of(25)
+        withSourcesJar()
+    }
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = "CurseMaven"
+            url = "https://www.cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = "UTF-8"
+        it.options.release = 25
+    }
+
+    idea {
+        module {
+            downloadSources = true
+            downloadJavadoc = true
+        }
+    }
+
+    publishing {
+        publications {
+            register("mavenJava", MavenPublication) {
+                artifactId = "${mod_id}-${project.name}"
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/ValhelsiaTeam/Valhelsia-Core")
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
     }
 }

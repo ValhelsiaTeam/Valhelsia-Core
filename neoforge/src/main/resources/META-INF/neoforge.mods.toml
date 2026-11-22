@@ -17,7 +17,7 @@ description='''${mod_description}'''
    # Does this dependency have to exist - if not, ordering below must be specified
    type="required" #mandatory
    # The version range of the dependency
-   versionRange="[21.0,)" #mandatory
+   versionRange="${neo_version_range}" #mandatory
    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
    ordering="NONE"
    # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -27,11 +27,14 @@ description='''${mod_description}'''
    modId="minecraft"
    type="required"
    # This version range declares a minimum of the current minecraft version up to but not including the next major version
-   versionRange="[1.21,)"
+   versionRange="${minecraft_version_range}"
    ordering="NONE"
    side="BOTH"
 
-#[[mixins]]
-#config = "valhelsia_core-common.mixins.json"
+[[mixins]]
+config = "valhelsia_core-common.mixins.json"
 [[mixins]]
 config = "valhelsia_core.mixins.json"
+
+[[accessTransformers]]
+file = "META-INF/accesstransformer.cfg"

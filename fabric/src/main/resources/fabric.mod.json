@@ -1,12 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "valhelsia_core",
-  "version": "${version}",
-  "name": "Valhelsia Core",
-  "description": "",
-  "authors": [],
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "Khytwel",
+    "stal111",
+    "Vaelzan"
+  ],
   "contact": {},
-  "license": "All Rights Reserved",
+  "license": "${mod_license}",
   "icon": "icon.png",
   "accessWidener": "valhelsia_core.accesswidener",
   "environment": "*",
@@ -22,12 +26,14 @@
     ]
   },
   "mixins": [
+    "valhelsia_core-common.mixins.json",
     "valhelsia_core.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.15.10",
-    "fabric-api": ">=0.97.6",
-    "minecraft": ">=1.20.5"
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": "*",
+    "minecraft": ">=${minecraft_version}",
+    "java": ">=25"
   },
   "custom": {
     "modmenu": {

@@ -1,28 +1,20 @@
 plugins {
     id("net.neoforged.moddev")
-    id "maven-publish"
 }
 
-group = "${mod_group_id}"
-version = "${minecraft_version}-${mod_version}"
-
 neoForge {
-    neoFormVersion = "26.2-2"
+    neoFormVersion = neo_form_version
 
     accessTransformers {
         publish(file("src/main/resources/META-INF/accesstransformer.cfg"))
     }
 }
 
-base {
-    archivesName = "${mod_id}-common-${version}"
-}
-
 dependencies {
     compileOnly "com.google.errorprone:error_prone_annotations:2.11.0"
-    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
-    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
-    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+    compileOnly group: "org.spongepowered", name: "mixin", version: "0.8.5"
+    compileOnly group: "io.github.llamalad7", name: "mixinextras-common", version: "0.3.5"
+    annotationProcessor group: "io.github.llamalad7", name: "mixinextras-common", version: "0.3.5"
 }
 
 configurations {
@@ -36,21 +28,7 @@ configurations {
     }
 }
 
-publishing {
-    publications {
-        create("mavenJava", MavenPublication) {
-            artifactId = "valhelsia_core-common"
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ValhelsiaTeam/Valhelsia-Core")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+    commonResources sourceSets.main.resources.sourceDirectories.singleFile
 }
