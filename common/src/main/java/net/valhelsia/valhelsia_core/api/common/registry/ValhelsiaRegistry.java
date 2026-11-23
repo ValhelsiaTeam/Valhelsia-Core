@@ -4,7 +4,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
-import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -25,8 +24,6 @@ public abstract class ValhelsiaRegistry<T> {
     public abstract <O extends T> RegistryEntry<T, O> register(String name, Supplier<O> supplier, Function<Holder<T>, RegistryEntry<T, O>> function);
 
     public abstract void register();
-
-    public abstract Collection<? extends Supplier<? extends T>> getEntries();
 
     public String getModId() {
         return this.modId;

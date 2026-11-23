@@ -77,13 +77,9 @@ public class BlockRegistryHelper extends RegistryHelper<Block> {
     }
 
     public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> nameFunction, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, Function<K, BlockBehaviour.Properties> properties, UnaryOperator<BlockRegistryEntry<T>> unaryOperator) {
-        BlockEntrySet<T, K> set = new BlockEntrySet<>(keyType);
-
-        for (K key : keyType.getEnumConstants()) {
+        return new BlockEntrySet<>(keyType, key -> {
             String name = nameFunction.apply(key.getSerializedName());
-            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(this.createKey(name))))));
-        }
-
-        return set;
+            return unaryOperator.apply(this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(this.createKey(name)))));
+        });
     }
 }

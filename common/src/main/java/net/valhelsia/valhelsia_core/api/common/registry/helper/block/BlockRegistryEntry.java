@@ -1,17 +1,19 @@
 package net.valhelsia.valhelsia_core.api.common.registry.helper.block;
 
+import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.item.ItemRegistryEntry;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 /**
  * @author Valhelsia Team
@@ -19,15 +21,13 @@ import java.util.Optional;
  */
 public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T> implements ItemLike {
 
-    private static final ItemFunction DEFAULT_ITEM_FUNCTION = registryObject -> new BlockItem(registryObject.get(), new Item.Properties().setId(ResourceKey.create(Registries.ITEM, registryObject.key.identifier())).useBlockDescriptionPrefix());
+    private static final ItemFunction DEFAULT_ITEM_FUNCTION = (registryObject, properties) -> new BlockItem(registryObject.get(), properties);
 
-    @Nullable
-    private ToolType toolType = null;
-    @Nullable
-    private ToolTier toolTier = null;
+    private @Nullable ToolType toolType = null;
+    private @Nullable ToolTier toolTier = null;
 
-    @Nullable
-    private ItemFunction itemFunction;
+    private @Nullable ItemFunction itemFunction;
+    private @Nullable ItemRegistryEntry<BlockItem> itemEntry;
 
     public BlockRegistryEntry(ResourceKey<Block> key, Holder<Block> holder) {
         super(key, holder);
@@ -35,6 +35,10 @@ public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T>
 
     public BlockRegistryEntry<T> withItem() {
         return this.withItem(BlockRegistryEntry.DEFAULT_ITEM_FUNCTION);
+    }
+
+    public BlockRegistryEntry<T> withItem(UnaryOperator<Item.Properties> propertiesModifier) {
+        return this.withItem((entry, properties) -> new BlockItem(entry.get(), propertiesModifier.apply(properties)));
     }
 
     public BlockRegistryEntry<T> withItem(ItemFunction function) {
@@ -60,13 +64,24 @@ public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T>
     }
 
     @Override
-    public @NotNull Item asItem() {
+    public @NonNull Item asItem() {
         return this.value().asItem();
     }
 
-    @Nullable
-    public ItemFunction getItemFunction() {
-        return this.itemFunction;
+    @DoNotCall
+    public @Nullable ItemFunction consumeItemFunction() {
+        ItemFunction function = this.itemFunction;
+        this.itemFunction = null;
+        return function;
+    }
+
+    @DoNotCall
+    public void setItemEntry(ItemRegistryEntry<BlockItem> itemEntry) {
+        this.itemEntry = itemEntry;
+    }
+
+    public @Nullable ItemRegistryEntry<BlockItem> getItemEntry() {
+        return this.itemEntry;
     }
 
     public Optional<ToolType> getToolType() {
@@ -79,6 +94,6 @@ public class BlockRegistryEntry<T extends Block> extends RegistryEntry<Block, T>
 
     @FunctionalInterface
     public interface ItemFunction {
-        BlockItem apply(BlockRegistryEntry<? extends Block> registryEntry);
+        BlockItem apply(BlockRegistryEntry<? extends Block> registryEntry, Item.Properties properties);
     }
 }

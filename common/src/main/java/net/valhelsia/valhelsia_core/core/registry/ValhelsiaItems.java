@@ -24,6 +24,6 @@ public class ValhelsiaItems implements RegistryClass {
 
     public static final RegistryEntry<Item, BlockItem> TEST = HELPER.register("test", () -> new BlockItem(Blocks.DIAMOND_BLOCK, new Item.Properties()));
 
-    public static final BlockRegistryEntry<AmethystBlock> TEST_BLOCK = BLOCK_HELPER.register("test_block", () -> new AmethystBlock(BlockBehaviour.Properties.of())).withItem(registryEntry -> new BlockItem(registryEntry.get(), new Item.Properties()));
+    public static final BlockRegistryEntry<AmethystBlock> TEST_BLOCK = BLOCK_HELPER.register("test_block", () -> new AmethystBlock(BlockBehaviour.Properties.of())).withItem((registryEntry, properties) -> new BlockItem(registryEntry.get(), properties));
 
 }

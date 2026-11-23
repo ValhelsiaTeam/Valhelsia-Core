@@ -5,6 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
@@ -43,8 +44,16 @@ public class ItemRegistryHelper extends RegistryHelper<Item> {
 
     public void registerBlockItems(BlockRegistryHelper registryHelper) {
         registryHelper.getRegistryEntries().forEach(entry -> {
-            if (entry instanceof BlockRegistryEntry<?> blockEntry && blockEntry.getItemFunction() != null) {
-                this.register(blockEntry.getName(), () -> blockEntry.getItemFunction().apply(blockEntry));
+            if (entry instanceof BlockRegistryEntry<?> blockEntry) {
+                BlockRegistryEntry.ItemFunction itemFunction = blockEntry.consumeItemFunction();
+
+                if (itemFunction != null) {
+                    String name = blockEntry.getName();
+                    Item.Properties properties = new Item.Properties().setId(this.createKey(name)).useBlockDescriptionPrefix();
+                    ItemRegistryEntry<BlockItem> itemEntry = this.register(name, () -> itemFunction.apply(blockEntry, properties));
+
+                    blockEntry.setItemEntry(itemEntry);
+                }
             }
         });
     }
@@ -78,13 +87,9 @@ public class ItemRegistryHelper extends RegistryHelper<Item> {
     }
 
     public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> nameFunction, BiFunction<K, Item.Properties, T> function, Function<K, Item.Properties> properties, UnaryOperator<ItemRegistryEntry<T>> unaryOperator) {
-        ItemEntrySet<T, K> set = new ItemEntrySet<>(keyType);
-
-        for (K key : keyType.getEnumConstants()) {
+        return new ItemEntrySet<>(keyType, key -> {
             String name = nameFunction.apply(key.getSerializedName());
-            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key, properties.apply(key).setId(this.createKey(name))))));
-        }
-
-        return set;
+            return unaryOperator.apply(this.register(name, () -> function.apply(key, properties.apply(key).setId(this.createKey(name)))));
+        });
     }
 }
