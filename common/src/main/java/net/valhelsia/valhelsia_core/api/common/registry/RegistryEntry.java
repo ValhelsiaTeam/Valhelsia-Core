@@ -7,7 +7,6 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
@@ -24,11 +23,15 @@ public class RegistryEntry<R, T extends R> extends Holder.Reference<R> implement
     protected final ResourceKey<R> key;
 
     private final Holder<R> holder;
+    private final Either<ResourceKey<R>, R> unwrapped;
+    private final Optional<ResourceKey<R>> optionalKey;
 
     public RegistryEntry(ResourceKey<R> key, Holder<R> holder) {
         super(Type.STAND_ALONE, null, key, null);
         this.key = key;
         this.holder = holder;
+        this.unwrapped = Either.left(key);
+        this.optionalKey = Optional.of(key);
     }
 
     @Override
@@ -37,7 +40,7 @@ public class RegistryEntry<R, T extends R> extends Holder.Reference<R> implement
     }
 
     @Override
-    public @NotNull T value() {
+    public @NonNull T value() {
         return (T) this.holder.value();
     }
 
@@ -78,7 +81,7 @@ public class RegistryEntry<R, T extends R> extends Holder.Reference<R> implement
     }
 
     @Override
-    public @NotNull Stream<TagKey<R>> tags() {
+    public @NonNull Stream<TagKey<R>> tags() {
         return this.holder.tags();
     }
 
@@ -88,17 +91,17 @@ public class RegistryEntry<R, T extends R> extends Holder.Reference<R> implement
     }
 
     @Override
-    public @NotNull Either<ResourceKey<R>, R> unwrap() {
-        return Either.left(this.key);
+    public @NonNull Either<ResourceKey<R>, R> unwrap() {
+        return this.unwrapped;
     }
 
     @Override
-    public @NotNull Optional<ResourceKey<R>> unwrapKey() {
-        return Optional.of(this.key);
+    public @NonNull Optional<ResourceKey<R>> unwrapKey() {
+        return this.optionalKey;
     }
 
     @Override
-    public @NotNull Kind kind() {
+    public @NonNull Kind kind() {
         return Kind.REFERENCE;
     }
 
