@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.AmethystBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.item.ItemRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryEntry;
@@ -17,7 +16,7 @@ import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegist
  * @author Valhelsia Team
  * @since 2023-05-03
  */
-public class ValhelsiaItems implements RegistryClass {
+public class ValhelsiaItems {
 
     public static final ItemRegistryHelper HELPER = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.ITEM);
     public static final BlockRegistryHelper BLOCK_HELPER = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.BLOCK);

@@ -6,7 +6,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.common.loot.condition.DateCondition;
 import net.valhelsia.valhelsia_core.api.common.loot.condition.EntityTagCondition;
-import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 
 import java.util.function.Supplier;
@@ -15,7 +14,7 @@ import java.util.function.Supplier;
  * @author Valhelsia Team
  * @since 2023-05-03
  */
-public class ValhelsiaLootConditions implements RegistryClass {
+public class ValhelsiaLootConditions {
 
     public static final RegistryHelper<MapCodec<? extends LootItemCondition>> LOOT_CONDITION_TYPES = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.LOOT_CONDITION_TYPE);
 
