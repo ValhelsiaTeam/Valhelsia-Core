@@ -3,14 +3,12 @@ package net.valhelsia.valhelsia_core.api.common.registry.helper.item;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.DefaultRegistryHelper;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryEntry;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
 
@@ -23,7 +21,7 @@ import java.util.function.UnaryOperator;
  * @author Valhelsia Team
  * @since 2022-12-20
  */
-public class ItemRegistryHelper extends DefaultRegistryHelper<Item> {
+public class ItemRegistryHelper extends RegistryHelper<Item> {
 
     public ItemRegistryHelper(ResourceKey<? extends Registry<Item>> registry, String modId, ImmutableList<Class<?>> registryClasses) {
         super(registry, modId, registryClasses);
@@ -40,7 +38,7 @@ public class ItemRegistryHelper extends DefaultRegistryHelper<Item> {
     }
 
     public <O extends Item> ItemRegistryEntry<O> register(String name, Function<Item.Properties, O> object, Supplier<Item.Properties> properties) {
-        return super.registerInternal(name, () -> object.apply(properties.get().setId(ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(this.getModId(), name)))));
+        return super.registerInternal(name, () -> object.apply(properties.get().setId(this.createKey(name))));
     }
 
     public void registerBlockItems(BlockRegistryHelper registryHelper) {
@@ -72,14 +70,7 @@ public class ItemRegistryHelper extends DefaultRegistryHelper<Item> {
     }
 
     public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> nameFunction, BiFunction<K, Item.Properties, T> function, Function<K, Item.Properties> properties) {
-        ItemEntrySet<T, K> set = new ItemEntrySet<>(keyType);
-
-        for (K key : keyType.getEnumConstants()) {
-            String name = nameFunction.apply(key.getSerializedName());
-            set.put(key, this.register(name, () -> function.apply(key, properties.apply(key).setId(ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(this.getModId(), name))))));
-        }
-
-        return set;
+        return this.registerEntrySet(keyType, nameFunction, function, properties, UnaryOperator.identity());
     }
 
     public <K extends Enum<K> & StringRepresentable, T extends Item> ItemEntrySet<T, K> registerEntrySet(Class<K> keyType, String name, BiFunction<K, Item.Properties, T> function, Function<K, Item.Properties> properties, UnaryOperator<ItemRegistryEntry<T>> unaryOperator) {
@@ -91,7 +82,7 @@ public class ItemRegistryHelper extends DefaultRegistryHelper<Item> {
 
         for (K key : keyType.getEnumConstants()) {
             String name = nameFunction.apply(key.getSerializedName());
-            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key, properties.apply(key).setId(ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(this.getModId(), name)))))));
+            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key, properties.apply(key).setId(this.createKey(name))))));
         }
 
         return set;

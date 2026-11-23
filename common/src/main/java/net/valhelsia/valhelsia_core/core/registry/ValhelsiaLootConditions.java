@@ -7,7 +7,7 @@ import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.common.loot.condition.DateCondition;
 import net.valhelsia.valhelsia_core.api.common.loot.condition.EntityTagCondition;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.DefaultRegistryHelper;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 
 import java.util.function.Supplier;
 
@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  */
 public class ValhelsiaLootConditions implements RegistryClass {
 
-    public static final DefaultRegistryHelper<MapCodec<? extends LootItemCondition>> LOOT_CONDITION_TYPES = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.LOOT_CONDITION_TYPE);
+    public static final RegistryHelper<MapCodec<? extends LootItemCondition>> LOOT_CONDITION_TYPES = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.LOOT_CONDITION_TYPE);
 
     public static final Supplier<MapCodec<? extends LootItemCondition>> DATE = LOOT_CONDITION_TYPES.register("date", () -> DateCondition.CODEC);
     public static final Supplier<MapCodec<? extends LootItemCondition>> ENTITY_TAG = LOOT_CONDITION_TYPES.register("entity_tag", () -> EntityTagCondition.CODEC);

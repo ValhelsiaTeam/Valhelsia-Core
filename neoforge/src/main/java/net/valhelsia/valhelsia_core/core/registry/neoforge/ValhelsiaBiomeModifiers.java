@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryClass;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.core.neoforge.ValhelsiaCoreForge;
 
 /**
@@ -13,6 +13,6 @@ import net.valhelsia.valhelsia_core.core.neoforge.ValhelsiaCoreForge;
  */
 public class ValhelsiaBiomeModifiers implements RegistryClass {
 
-    public static final MappedRegistryHelper<MapCodec<? extends BiomeModifier>> HELPER = ValhelsiaCoreForge.REGISTRY_MANAGER.getHelper(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS);
+    public static final RegistryHelper<MapCodec<? extends BiomeModifier>> HELPER = ValhelsiaCoreForge.REGISTRY_MANAGER.getHelper(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS);
 
 }

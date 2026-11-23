@@ -3,8 +3,6 @@ package net.valhelsia.valhelsia_core.api.common.registry.helper.block;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.DyeColor;
@@ -13,7 +11,7 @@ import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -26,18 +24,19 @@ import java.util.function.UnaryOperator;
  * @author Valhelsia Team
  * @since 2020-11-18
  */
-public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
+public class BlockRegistryHelper extends RegistryHelper<Block> {
 
     public BlockRegistryHelper(ResourceKey<? extends Registry<Block>> registry, String modId, ImmutableList<Class<?>> registryClasses) {
         super(registry, modId, registryClasses);
     }
+
     @Override
     protected <O extends Block> RegistryEntry<Block, O> createEntry(ResourceKey<Block> key, Holder<Block> holder) {
         return new BlockRegistryEntry<>(key, holder);
     }
 
     public <O extends Block> BlockRegistryEntry<O> register(String name, Function<BlockBehaviour.Properties, ? extends O> func, Supplier<BlockBehaviour.Properties> properties) {
-        return super.registerInternal(name, () -> func.apply(properties.get().setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(this.getModId(), name)))));
+        return super.registerInternal(name, () -> func.apply(properties.get().setId(this.createKey(name))));
     }
 
     @Override
@@ -70,14 +69,7 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
     }
 
     public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, UnaryOperator<String> nameFunction, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, Function<K, BlockBehaviour.Properties> properties) {
-        BlockEntrySet<T, K> set = new BlockEntrySet<>(keyType);
-
-        for (K key : keyType.getEnumConstants()) {
-            String name = nameFunction.apply(key.getSerializedName());
-            set.put(key, this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(this.getModId(), name))))));
-        }
-
-        return set;
+        return this.registerEntrySet(keyType, nameFunction, function, properties, UnaryOperator.identity());
     }
 
     public <K extends Enum<K> & StringRepresentable, T extends Block> BlockEntrySet<T, K> registerEntrySet(Class<K> keyType, String name, Function<K, Function<BlockBehaviour.Properties, ? extends T>> function, Function<K, BlockBehaviour.Properties> properties, UnaryOperator<BlockRegistryEntry<T>> unaryOperator) {
@@ -89,7 +81,7 @@ public class BlockRegistryHelper extends MappedRegistryHelper<Block> {
 
         for (K key : keyType.getEnumConstants()) {
             String name = nameFunction.apply(key.getSerializedName());
-            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(this.getModId(), name)))))));
+            set.put(key, unaryOperator.apply(this.register(name, () -> function.apply(key).apply(properties.apply(key).setId(this.createKey(name))))));
         }
 
         return set;

@@ -5,7 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.valhelsia.valhelsia_core.ValhelsiaCore;
 import net.valhelsia.valhelsia_core.api.common.registry.RegistryEntry;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
+import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.world.structure.processor.RemoveWaterProcessor;
 
 /**
@@ -14,7 +14,7 @@ import net.valhelsia.valhelsia_core.api.common.world.structure.processor.RemoveW
  */
 public class ValhelsiaStructureProcessors {
 
-    public static final MappedRegistryHelper<MapCodec<? extends StructureProcessor>> HELPER = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.STRUCTURE_PROCESSOR);
+    public static final RegistryHelper<MapCodec<? extends StructureProcessor>> HELPER = ValhelsiaCore.REGISTRY_MANAGER.getHelper(Registries.STRUCTURE_PROCESSOR);
 
     public static final RegistryEntry<MapCodec<? extends StructureProcessor>, MapCodec<RemoveWaterProcessor>> REMOVE_WATER = HELPER.register("remove_water", () -> RemoveWaterProcessor.CODEC);
 }

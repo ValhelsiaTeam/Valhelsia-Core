@@ -5,8 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.DefaultRegistryHelper;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.item.ItemRegistryHelper;
@@ -37,18 +35,18 @@ public abstract class RegistryCollector {
     protected abstract void collectHelpers();
 
     public final void addBlockHelper(Class<?>... registryClasses) {
-        this.addMappedHelper(Registries.BLOCK, BlockRegistryHelper::new, registryClasses);
+        this.addHelper(Registries.BLOCK, BlockRegistryHelper::new, registryClasses);
     }
 
     public final void addItemHelper(Class<?>... registryClasses) {
-        this.addMappedHelper(Registries.ITEM, ItemRegistryHelper::new, registryClasses);
+        this.addHelper(Registries.ITEM, ItemRegistryHelper::new, registryClasses);
     }
 
-    public final <T> void addMappedHelper(ResourceKey<Registry<T>> key, Class<?>... registryClasses) {
-        this.registryHelpers.put(key, new DefaultRegistryHelper<>(key, this.modId, ImmutableList.copyOf(registryClasses)));
+    public final <T> void addHelper(ResourceKey<Registry<T>> key, Class<?>... registryClasses) {
+        this.registryHelpers.put(key, new RegistryHelper<>(key, this.modId, ImmutableList.copyOf(registryClasses)));
     }
 
-    public final <T> void addMappedHelper(ResourceKey<Registry<T>> key, TriFunction<ResourceKey<Registry<T>>, String, ImmutableList<Class<?>>, MappedRegistryHelper<T>> registryHelper, Class<?>... registryClasses) {
+    public final <T> void addHelper(ResourceKey<Registry<T>> key, TriFunction<ResourceKey<Registry<T>>, String, ImmutableList<Class<?>>, RegistryHelper<T>> registryHelper, Class<?>... registryClasses) {
         this.registryHelpers.put(key, registryHelper.apply(key, this.modId, ImmutableList.copyOf(registryClasses)));
     }
 

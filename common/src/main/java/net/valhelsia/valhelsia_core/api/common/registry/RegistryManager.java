@@ -4,9 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.valhelsia.valhelsia_core.api.common.registry.helper.MappedRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.RegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.block.BlockRegistryHelper;
 import net.valhelsia.valhelsia_core.api.common.registry.helper.item.ItemRegistryHelper;
@@ -51,7 +49,7 @@ public record RegistryManager(String modId,
     }
 
     /**
-     * Loads all provided registry classes and registers the DeferredRegister for all {@link MappedRegistryHelper}.
+     * Loads all provided registry classes and registers the underlying {@link ValhelsiaRegistry} for all {@link RegistryHelper}s.
      * You will never need to call this method yourself.
      */
     @DoNotCall
@@ -71,13 +69,11 @@ public record RegistryManager(String modId,
         }
 
         for (RegistryHelper<?> registryHelper : this.registryHelpers.values()) {
-            if (registryHelper instanceof MappedRegistryHelper<?> mappedRegistryHelper) {
-                mappedRegistryHelper.internalRegister();
-            }
+            registryHelper.internalRegister();
         }
     }
 
     public <T> ResourceKeyHelper<T> createKeyHelper(ResourceKey<? extends Registry<T>> registry) {
-        return new ResourceKeyHelper<>(registry, s -> Identifier.fromNamespaceAndPath(this.modId(), s));
+        return new ResourceKeyHelper<>(registry, this.modId());
     }
 }
