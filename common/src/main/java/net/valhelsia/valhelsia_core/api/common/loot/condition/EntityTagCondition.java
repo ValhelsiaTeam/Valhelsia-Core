@@ -42,7 +42,7 @@ public record EntityTagCondition(TagKey<EntityType<?>> tag) implements LootItemC
 
     @Override
     public boolean test(LootContext lootContext) {
-        Entity entity = lootContext.getOptionalParameter(LootContextParams.THIS_ENTITY);
+        Entity entity = lootContext.getOptional(LootContextParams.THIS_ENTITY);
 
         return entity != null && entity.is(this.tag);
     }
